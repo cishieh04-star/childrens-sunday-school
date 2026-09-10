@@ -62,6 +62,7 @@
         .status-left { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; }
         .status-left .level-label { font-size: 10px; color: #92660f; }
         .score-display { font-size: 12px; font-weight: bold; color: #a3711f; }
+        .timer-display { font-size: 12px; font-weight: bold; color: #0284c7; margin-top: 1px; }
 
         .btn-group { display: flex; gap: 4px; flex-wrap: wrap; row-gap: 4px; }
         .control-btn {
@@ -156,6 +157,7 @@
         #completeOverlay .big-phrase { font-size: 22px; font-weight: bold; color: #92660f; font-family: Georgia, serif; }
         #completeOverlay .big-zh { font-size: 15px; color: #a3711f; }
         #completeOverlay .cheer { font-size: 15px; font-weight: bold; color: #a3711f; }
+        #completeOverlay .complete-time-text { font-size: 14px; font-weight: bold; color: #0284c7; margin-top: -4px; }
         .complete-btn-group { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
         .complete-btn {
             padding: 10px 18px; font-size: 14px; font-weight: bold; color: #fff; border: none;
@@ -199,6 +201,7 @@
             <div class="status-left">
                 <span class="level-label" id="levelLabel">關卡</span>
                 <span class="score-display" id="scoreDisplay">完成句子: 0 次</span>
+                <span class="timer-display" id="timerDisplay">⏱️ 00:00</span>
             </div>
             <div class="btn-group">
                 <button class="control-btn listen-btn" onclick="listenFullPhrase()">🔊聽整句</button>
@@ -227,6 +230,7 @@
             <div class="big-phrase" id="completePhrase">God is love.</div>
             <div class="big-zh" id="completeZh">（神就是愛。）</div>
             <div class="cheer">🌟 太棒了，拼完了！</div>
+            <div class="complete-time-text" id="completeTimeText">⏱️ 本次時間：00:00</div>
             <div class="complete-btn-group">
                 <button class="complete-btn replay-btn" onclick="replayLevel()">🔁 再玩一次</button>
                 <button class="complete-btn next-level-btn" onclick="goToNextLevel()">➡️ 進入下一關</button>
@@ -249,6 +253,11 @@
         ];
 
         let currentLevel = null;
+        // 計時器相關：用瀏覽器的 localStorage 記錄每一關的最佳時間，
+        // 讓小朋友可以挑戰自己的紀錄，屬於溫和的自我競爭，不會跟別人比較。
+        const STORAGE_PREFIX = 'godIsLove_v1_best_';
+        let timerInterval = null;
+        let elapsedSeconds = 0;
         let score = 0;
         let isProcessing = false;
         let gameInterval = null;
@@ -294,6 +303,49 @@
 
         function boomBig() { try { confetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } }); } catch (e) {} }
         function boomSmall() { try { confetti({ particleCount: 45, spread: 55, origin: { y: 0.55 }, scalar: 0.8 }); } catch (e) {} }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+        function updateTimerDisplay() {
+            const el = document.getElementById('timerDisplay');
+            if (el) el.innerText = `⏱️ ${formatTime(elapsedSeconds)}`;
+        }
+        function resetTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+        }
+        function startTimerTick() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+        function pauseTimerTick() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        function getBestTime(levelId) {
+            try {
+                const v = localStorage.getItem(STORAGE_PREFIX + levelId);
+                return v ? parseInt(v, 10) : null;
+            } catch (e) { return null; }
+        }
+        function saveBestTimeIfBetter(levelId, seconds) {
+            try {
+                const prev = getBestTime(levelId);
+                if (prev === null || seconds < prev) {
+                    localStorage.setItem(STORAGE_PREFIX + levelId, String(seconds));
+                    return true;
+                }
+                return false;
+            } catch (e) { return false; }
+        }
 
         function playCatchSound() {
             try {
@@ -373,6 +425,7 @@
                 if (gameInterval) clearInterval(gameInterval);
                 if (repeatVoiceInterval) clearInterval(repeatVoiceInterval);
                 if (nextTimeout) clearTimeout(nextTimeout);
+                pauseTimerTick();
                 try { window.speechSynthesis.cancel(); } catch (e) {}
                 options.forEach(el => el.style.animationPlayState = 'paused');
             } else {
@@ -384,6 +437,7 @@
                     hideCompletionScreen();
                     startPhraseIntro();
                 } else if (!isProcessing) {
+                    startTimerTick();
                     startLetterRepeatVoice();
                     startFallingLoop();
                 }
@@ -400,6 +454,7 @@
             isProcessing = false;
             isPaused = false;
             hideCompletionScreen();
+            resetTimer();
             document.getElementById('pauseBtn').innerText = "暫停";
             document.getElementById('pauseBtn').style.backgroundColor = "#f59e0b";
 
@@ -440,6 +495,7 @@
 
         function startWordSpelling() {
             if (isPaused) return;
+            if (currentWordIndex === 0) startTimerTick();
             const word = currentLevel.words[currentWordIndex];
             document.getElementById('questionText').innerText = `拼出這個單字：${word}`;
             document.getElementById('wordImage').innerText = WORD_IMAGES[word] || '';
@@ -535,6 +591,16 @@
         function showCompletionScreen() {
             document.getElementById('completePhrase').innerText = currentLevel.words.join(' ') + '.';
             document.getElementById('completeZh').innerText = `（${currentLevel.zh}）`;
+
+            const finalTime = elapsedSeconds;
+            const isNewRecord = saveBestTimeIfBetter(currentLevel.id, finalTime);
+            const best = getBestTime(currentLevel.id);
+            const timeTextEl = document.getElementById('completeTimeText');
+            if (timeTextEl) {
+                timeTextEl.innerText = isNewRecord
+                    ? `⏱️ 本次時間：${formatTime(finalTime)}　🏆 打破紀錄！`
+                    : `⏱️ 本次時間：${formatTime(finalTime)}　最佳紀錄：${formatTime(best)}`;
+            }
             document.getElementById('completeOverlay').style.display = 'flex';
         }
         function hideCompletionScreen() {
@@ -606,6 +672,7 @@
                         const phraseDone = currentWordIndex >= currentLevel.words.length;
 
                         if (phraseDone) {
+                            pauseTimerTick();
                             score++;
                             document.getElementById('scoreDisplay').innerText = `完成句子: ${score} 次`;
                             setTimeout(() => boomBig(), 700);
