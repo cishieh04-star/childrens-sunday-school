@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小一上數學互動遊戲</title>
+    <style>
+        body { 
+            font-family: "Helvetica Neue", Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 1200px; 
+            margin: auto; 
+            background-color: #615e5e; 
+        }
+
+        .box {
+            padding: 14px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: normal;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .header-box { 
+            background: #0b0573; color: #ffffff; 
+            font-size: 1.5em; margin-bottom: 20px;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .category-box { 
+            background: #f1c40f; color: #000000; 
+            font-size: 1.1em; width: fit-content; margin: 10px auto; 
+            justify-content: center;
+            text-align: center;
+        }
+        
+        ul { 
+            list-style-type: none; 
+            padding: 0; 
+            display: grid; 
+            /* 彈性自動適應不同裝置螢幕大小，保持整齊 */
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            gap: 15px; 
+        }
+      
+        .game-link { 
+            background: #f7ed94; color: #000000; 
+            font-size: 1.1em; 
+            transition: transform 0.2s;
+            height: 100%; 
+            margin: 0;
+            /* 讓文字靠左對齊並保留舒適的左側間距 */
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+        .game-link:hover { transform: scale(1.02); }
+
+        a { text-decoration: none; color: inherit; width: 100%; }
+
+        @media (max-width: 768px) {
+            .game-link { font-size: 0.95em; padding: 12px 15px; }
+            ul { gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box header-box">小一數學互動遊戲(iOS)</div>
+    <div class="box category-box">請選擇下列遊戲單元</div>
+
+    <ul id="game-list"></ul>
+
+    <script>
+        const version = "9";
+        const games = [
+            { file: "learning-numbers(1-10)-claude.html", name: "認識數字遊戲(1-10)" },
+            { file: "divide-integrate-claude.html", name: "數字的分與合遊戲" },
+            { file: "card-counting-claude.html", name: "撲克牌的點數遊戲" },
+            { file: "card-intergrating(10).html", name: "撲克牌的湊10遊戲" },
+            { file: "shape-identifyting-claude.html", name: "認識各種形狀" },
+            { file: "simple-addition-claude.html", name: "10以內的加法遊戲" },
+            { file: "simple-subtraction.html", name: "極簡單減法遊戲 (間隔1)" },
+            { file: "simple-math(train)-claude.html", name: "火車車廂加減法遊戲(加減1、2、3)" },
+            { file: "train(1~30)-interface1-claude.html", name: "30以內數字接力遊戲(＋1)" },
+            { file: "train(1~30)-interface2-claude.html", name: "30以內數字接力遊戲(＋2)" },
+            { file: "train(1~30)-interface3-claude.html", name: "30以內數字接力遊戲(＋3)" },
+            { file: "train(1~30)-interface（+-1)-claude.html", name: "30以內數字接力遊戲(＋1或-1)" },
+            { file: "train(1~30)-interface（+-2)-claude.html", name: "30以內數字接力遊戲(＋2或-2)" },
+            { file: "train(1~30)-interface（+-3)-claude.html", name: "30以內數字接力遊戲(＋3或-3" },
+            { file: "payment-real-claude.html", name: "購物付錢遊戲 ($1、$10)" },
+            { file: "addition-game.html", name: "一般加法遊戲" },
+            { file: "subtraction.html", name: "一般減法遊戲" },
+            { file: "simple-math.html", name: "一般加、減法遊戲" },
+            { file: "decimal.html", name: "十進位練習遊戲" },
+            { file: "setclock.html", name: "看時間轉時鐘" },
+            { file: "readclock.html", name: "看時鐘報時間" },
+            { file: "timecarry.html", name: "認識60進位制" },
+            { file: "timestable.html", name: "九九乘法互動遊戲" },
+            { file: "interactivegame.html", name: "讀懂數學問題互動遊戲" }
+        ];
+
+        const listElement = document.getElementById('game-list');
+        games.forEach((game, index) => {
+            const li = document.createElement('li');
+            const displayNumber = index + 1;
+            li.innerHTML = `<div class="box game-link"><a href="${game.file}?v=${version}">${displayNumber}. ${game.name}</a></div>`;
+            listElement.appendChild(li);
+        });
+    </script>
+</body>
+</html>
