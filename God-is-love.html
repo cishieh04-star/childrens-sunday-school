@@ -40,11 +40,17 @@
         .level-btn {
             width: 100%; text-align: left; background: #fff; border: 2px solid #e6c780;
             border-radius: 12px; padding: 9px 14px; margin-bottom: 8px; cursor: pointer;
-            display: flex; flex-direction: column; gap: 2px;
+            display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 8px;
         }
         .level-btn:active { transform: scale(0.98); background: #fff8dc; }
+        .level-btn-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
         .level-btn .lv-name { font-size: 14px; font-weight: bold; color: #92660f; }
         .level-btn .lv-desc { font-size: 11px; color: #6b4600; }
+        .song-link {
+            flex-shrink: 0; font-size: 11px; font-weight: bold; color: #fff; background: #dc2626;
+            padding: 7px 10px; border-radius: 20px; text-decoration: none; white-space: nowrap;
+        }
+        .song-link:active { background: #b91c1c; }
 
         /* 中英文短句顯示在最上方 */
         .phrase-header {
@@ -180,7 +186,8 @@
         <div class="instructions">
             <h3>📖 遊戲使用說明</h3>
             <ul>
-                <li>遊戲開始，會先完整念一次整句英文短句給你聽。</li>
+                <li>每個關卡旁邊有「🎵先聽詩歌」的按鈕，可以先聽一首詩歌再開始玩遊戲。</li>
+                <li>遊戲開始，會先完整念一次整句英文短句給你聽，再念中文意思。</li>
                 <li>接著一個單字一個單字來，會先念出單字本身，再逐字拼出來。</li>
                 <li>雲朵會飄下來，裡面藏著正確的字母，也會混著其他字母，要仔細找喔！</li>
                 <li>找對了會有「太棒了」的稱讚聲跟撒花慶祝！</li>
@@ -247,9 +254,9 @@
 
         // 三關，每一關對應一句福音短句
         const LEVELS = [
-            { id: 1, name: '第一關：God is love.', desc: '神就是愛。', words: ['GOD', 'IS', 'LOVE'], zh: '神就是愛。' },
-            { id: 2, name: '第二關：God is light.', desc: '神就是光。', words: ['GOD', 'IS', 'LIGHT'], zh: '神就是光。' },
-            { id: 3, name: '第三關：God is good.', desc: '神本為善。', words: ['GOD', 'IS', 'GOOD'], zh: '神本為善。' }
+            { id: 1, name: '第一關：God is love.', desc: '神就是愛。', words: ['GOD', 'IS', 'LOVE'], zh: '神就是愛。', songUrl: 'https://www.youtube.com/watch?v=_Dnt-IFMH30' },
+            { id: 2, name: '第二關：God is light.', desc: '神就是光。', words: ['GOD', 'IS', 'LIGHT'], zh: '神就是光。', songUrl: 'https://www.youtube.com/watch?v=pNAVXZI0eSQ' },
+            { id: 3, name: '第三關：God is good.', desc: '神本為善。', words: ['GOD', 'IS', 'GOOD'], zh: '神本為善。', songUrl: 'https://www.youtube.com/watch?v=8gLksawDMgk' }
         ];
 
         let currentLevel = null;
@@ -368,9 +375,17 @@
             LEVELS.forEach(lv => {
                 const btn = document.createElement('div');
                 btn.className = 'level-btn';
-                btn.innerHTML = `<span class="lv-name">${lv.name}</span><span class="lv-desc">${lv.desc}</span>`;
+                btn.innerHTML = `
+                    <div class="level-btn-text">
+                        <span class="lv-name">${lv.name}</span><span class="lv-desc">${lv.desc}</span>
+                    </div>
+                    <a class="song-link" href="${lv.songUrl}" target="_blank" rel="noopener noreferrer">🎵 先聽詩歌</a>
+                `;
                 // 【重要】用 click 事件觸發，這是喚醒 iOS 語音權限唯一可靠的方式。
                 btn.addEventListener('click', () => startGame(lv.id));
+                // 聽詩歌的連結要單獨處理，避免點下去也一併觸發開始遊戲。
+                const songLink = btn.querySelector('.song-link');
+                songLink.addEventListener('click', (e) => e.stopPropagation());
                 container.appendChild(btn);
             });
         }
@@ -467,7 +482,9 @@
             const fullText = currentLevel.words.join(' ');
             speak(`一起來聽聽這句話`, 'zh-TW', () => {
                 speak(fullText, 'en-US', () => {
-                    startWordSpelling();
+                    speak(currentLevel.zh, 'zh-TW', () => {
+                        startWordSpelling();
+                    });
                 });
             });
         }
@@ -503,10 +520,14 @@
             hintLevel = 0;
             hintActiveValue = null;
             renderPhraseProgress();
-            // 先念一次完整單字本身，再開始逐字拼。
+            // 先念一次完整單字本身，念完之後停頓3秒再開始逐字拼，
+            // 給孩子足夠的時間反應，不會馬上接著念字母造成混淆。
             speak(word, 'en-US', () => {
                 if (isPaused) return;
-                startLetterQuestion();
+                setTimeout(() => {
+                    if (isPaused) return;
+                    startLetterQuestion();
+                }, 3000);
             });
         }
 
