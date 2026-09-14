@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>聖經拼圖 - 約翰福音 10:11</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 10px; margin: 0; min-height: 100vh; min-height: 100dvh;
+            position: relative; overflow-x: hidden; touch-action: manipulation;
+            background: radial-gradient(ellipse at top, #f6faf0 0%, #e2ecd0 55%, #cddbaf 100%);
+            color: #3d4a26;
+        }
+        .full-width { width: 100%; max-width: 600px; text-align: center; }
+
+        #timer {
+            position: fixed; top: 14px; right: 14px; font-size: 14px; font-weight: bold;
+            color: #5d7233; background: #f9fbf4; padding: 6px 12px; border-radius: 20px;
+            border: 1.5px solid #b9cc8f; z-index: 1000; box-shadow: 0 2px 6px rgba(93,114,51,0.15);
+        }
+
+        .deco-flame { font-size: 26px; margin-bottom: 2px; filter: drop-shadow(0 0 6px rgba(140,168,84,0.6)); }
+
+        .verse-box {
+            background: linear-gradient(180deg, #fdfef9, #eef4e0);
+            padding: 22px 20px; border-radius: 18px; border: 1px solid #b9cc8f;
+            margin: 14px auto; width: 90%; max-width: 450px;
+            box-shadow: 0 8px 20px rgba(93,114,51,0.12), inset 0 0 0 1px rgba(255,255,255,0.6);
+            position: relative;
+        }
+        .verse-box::before {
+            content: '“'; position: absolute; top: -6px; left: 14px; font-size: 46px;
+            color: #b9cc8f; font-family: Georgia, serif; line-height: 1;
+        }
+        .verse-text { font-size: 21px; font-weight: bold; color: #3d4a26; margin-bottom: 10px; line-height: 1.65; letter-spacing: 0.5px; }
+        .verse-ref { font-size: 15px; color: #5d7233; font-weight: bold; letter-spacing: 1px; }
+
+        h1 { color: #5d7233; font-size: 25px; margin: 4px 0 2px 0; letter-spacing: 1px; }
+        h2 { color: #5d7233; margin: 6px 0 2px 0; font-size: 18px; letter-spacing: 1px; }
+        .subtitle { color: #728a3f; font-size: 12px; margin-bottom: 4px; opacity: 0.85; }
+
+        .action-container { margin: 8px 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .yt-link {
+            text-decoration: none; padding: 7px 14px; background: linear-gradient(180deg, #e64c3c, #c0392b);
+            color: white; border-radius: 20px; font-size: 12px; font-weight: bold; box-shadow: 0 3px 8px rgba(192,57,43,0.35);
+        }
+        .action-icon-btn {
+            padding: 7px 14px; border: none; border-radius: 20px; font-size: 12px; font-weight: bold;
+            cursor: pointer; color: white; box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        .preview-btn { background: linear-gradient(180deg, #7b8fd6, #5c6bc0); }
+        .listen-btn { background: linear-gradient(180deg, #38bdf8, #0ea5e9); }
+        .action-icon-btn:active, .yt-link:active { transform: scale(0.95); }
+
+        .progress-box { width: 90%; max-width: 450px; margin: 6px auto 10px auto; }
+        .progress-track { width: 100%; height: 10px; background: #e5efd2; border-radius: 6px; overflow: hidden; border: 1px solid #b9cc8f; box-shadow: inset 0 1px 3px rgba(93,114,51,0.15); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #a3c25c, #6f8d34); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px rgba(163,194,92,0.6); }
+        .progress-label { font-size: 11px; color: #5d7233; margin-top: 3px; }
+
+        .grid-container { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 14px 0; align-items: center; }
+        .slot {
+            width: 30px; height: 30px; border: 2px dashed #a7c072; display: flex; align-items: center;
+            justify-content: center; background-color: #fdfef9; border-radius: 7px; font-weight: bold;
+            font-size: 15px; color: #3d4a26; transition: all 0.25s;
+        }
+        .slot.filled-slot {
+            border: 2px solid #6f8d34; background: linear-gradient(180deg, #eaf3d6, #d3e6ab);
+            color: #3d4a26; box-shadow: 0 2px 5px rgba(111,141,52,0.25);
+        }
+
+        .punctuation { font-size: 16px; font-weight: bold; color: #8a9a6a; margin: 0 1px; }
+        .instruction { color: #5d7233; margin-bottom: 8px; font-weight: bold; font-size: 13px; }
+
+        #tetris-container {
+            width: 100%; max-width: 500px; height: 128px;
+            background: linear-gradient(180deg, #f9fbf4, #eef4de);
+            border-radius: 14px; position: relative; overflow: hidden; margin-top: 8px;
+            border: 1px solid #b9cc8f; box-shadow: inset 0 2px 10px rgba(93,114,51,0.08);
+        }
+        .tetris-block {
+            position: absolute; display: flex; gap: 8px; justify-content: center; left: 50%;
+            transform: translateX(-50%); transition: top 0.05s linear; width: 95%; flex-wrap: wrap;
+        }
+
+        /* 選字物品：發光的牧草綠光點，呼應「好牧人」牧養與看顧的意象 */
+        .tetris-word {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #f6ffe6 0%, #b3d878 45%, #6f8d34 100%);
+            color: #33401c; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 19px; font-weight: bold; user-select: none; flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(179,216,120,0.65), 0 4px 6px rgba(0,0,0,0.2);
+            border: 2px solid #94b85a;
+            animation: itemGlow 2.2s ease-in-out infinite;
+            transition: transform 0.12s;
+        }
+        .tetris-word:active { transform: scale(0.88); }
+        @keyframes itemGlow {
+            0%, 100% { box-shadow: 0 0 9px rgba(179,216,120,0.55), 0 4px 6px rgba(0,0,0,0.2); }
+            50% { box-shadow: 0 0 18px rgba(179,216,120,0.9), 0 4px 8px rgba(0,0,0,0.25); }
+        }
+        .tetris-word.wrong-shake {
+            animation: shakeWord 0.35s ease-in-out;
+        }
+        @keyframes shakeWord {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); background: radial-gradient(circle at 35% 30%, #ffe0da, #e0685a 55%, #b0392b 100%); }
+            75% { transform: translateX(6px); background: radial-gradient(circle at 35% 30%, #ffe0da, #e0685a 55%, #b0392b 100%); }
+        }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+        .action-btn {
+            padding: 11px 22px; border: none; border-radius: 22px; font-size: 14px; cursor: pointer;
+            font-weight: bold; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .action-btn:active { transform: scale(0.96); }
+        #undo-btn { background: linear-gradient(180deg, #a3c25c, #6f8d34); }
+        #reset-btn { background: linear-gradient(180deg, #e0685a, #c0392b); display: none; }
+
+        #home-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 82vh; text-align: center; }
+        .start-btn {
+            padding: 15px 34px; background: linear-gradient(180deg, #3cb878, #279e5f); color: white; border: none;
+            border-radius: 26px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 18px;
+            box-shadow: 0 6px 16px rgba(39,158,95,0.35); letter-spacing: 1px;
+        }
+        .start-btn:active { transform: scale(0.96); }
+
+        #game-screen { display: none; width: 100%; }
+
+        #completeOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at top, rgba(246,250,240,0.98), rgba(205,219,175,0.98));
+            z-index: 6000; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px;
+        }
+        #completeOverlay .cv-text { font-size: 21px; font-weight: bold; color: #3d4a26; max-width: 460px; line-height: 1.65; margin-bottom: 8px; }
+        #completeOverlay .cv-ref { color: #5d7233; font-weight: bold; margin-bottom: 14px; letter-spacing: 1px; }
+        #completeOverlay .cv-time { color: #5d7233; font-size: 14px; margin-bottom: 18px; }
+
+        @media screen and (max-width: 400px) {
+            .verse-text { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="timer">已練習：00:00</div>
+
+<div id="home-screen" class="full-width">
+    <div class="deco-flame">🐑</div>
+    <h1>聖經拼圖遊戲</h1>
+    <p class="subtitle">一字一句，把神的話拼回心裡</p>
+
+    <div class="verse-box">
+        <div class="verse-text">我是好牧人；好牧人為羊捨命。</div>
+        <div class="verse-ref">— 約翰福音 10:11</div>
+    </div>
+
+    <button class="start-btn" onclick="startGame()">開始聖經拼圖遊戲</button>
+</div>
+
+<div id="game-screen" class="full-width">
+    <h2>約翰福音 10:11</h2>
+
+    <div class="action-container">
+        <a href="https://youtube.com/shorts/QBUBXxR_Df0" target="_blank" class="yt-link">🎥 觀看複習影片</a>
+        <button class="action-icon-btn preview-btn" onclick="showPreview()">📖 觀看經文</button>
+        <button class="action-icon-btn listen-btn" onclick="listenVerse()">🔊 聽經文</button>
+    </div>
+
+    <div class="progress-box">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">已完成 0 / 0 字</div>
+    </div>
+
+    <div class="instruction">請點選下方正確的字，把經文一字一字找回來</div>
+
+    <div id="slots" class="grid-container"></div>
+
+    <div id="tetris-container"></div>
+
+    <div class="btn-group">
+        <button id="undo-btn" class="action-btn" onclick="undoLast()">⟲ 更正</button>
+        <button id="reset-btn" class="action-btn" onclick="resetGame()">再玩一次</button>
+    </div>
+</div>
+
+<div id="completeOverlay">
+    <div class="deco-flame">🐑</div>
+    <div class="cv-text" id="completeText">「我是好牧人；好牧人為羊捨命。」</div>
+    <div class="cv-ref">— 約翰福音 10:11</div>
+    <div class="cv-time" id="completeTime">花費時間：00:45</div>
+    <button class="start-btn" onclick="hideCompleteOverlay()">太棒了，繼續</button>
+</div>
+
+<script>
+    const verseRef = '約翰福音10:11';
+    const verseText = '我是好牧人；好牧人為羊捨命。';
+    const puncRegex = /[\-，；。、（）：「」:()?？！!～~]/;
+
+    let blocksData = [];
+    let activeBlock = null;
+    let fallAnimId = null;
+    let seconds = 0, timerStarted = false, timerInterval = null;
+    let totalSlotCount = 0, filledSlotCount = 0;
+    let audioCtx = null;
+
+    function formatTime(s) {
+        const m = Math.floor(s / 60).toString().padStart(2, '0');
+        const sec = (s % 60).toString().padStart(2, '0');
+        return `${m}:${sec}`;
+    }
+
+    /* ===== 音效與語音 ===== */
+    function initAudio() {
+        try {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC && !audioCtx) audioCtx = new AC();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        } catch (e) {}
+    }
+    function playTone(freq, type, dur, vol) {
+        if (!audioCtx) return;
+        try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + dur);
+        } catch (e) {}
+    }
+    function playCorrectSound() { playTone(660, 'sine', 0.12, 0.3); }
+    function playWrongSound() { playTone(180, 'sawtooth', 0.18, 0.3); }
+    function playFinishSound() {
+        playTone(523.25, 'sine', 0.18, 0.4);
+        setTimeout(() => playTone(659.25, 'sine', 0.18, 0.4), 140);
+        setTimeout(() => playTone(783.99, 'sine', 0.28, 0.4), 280);
+    }
+    function listenVerse() {
+        if (!('speechSynthesis' in window)) return;
+        try {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(verseText);
+            msg.lang = 'zh-TW';
+            msg.rate = 0.82;
+            window.speechSynthesis.speak(msg);
+        } catch (e) {}
+    }
+
+    function startGame() {
+        initAudio();
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        initGame();
+    }
+
+    function resetGame() {
+        if (fallAnimId) cancelAnimationFrame(fallAnimId);
+        if (timerInterval) clearInterval(timerInterval);
+        document.getElementById('tetris-container').style.display = 'block';
+        document.getElementById('reset-btn').style.display = 'none';
+        document.getElementById('undo-btn').style.display = 'inline-block';
+        if (activeBlock && activeBlock.element) activeBlock.element.remove();
+        hideCompleteOverlay();
+        initGame();
+    }
+
+    function initGame() {
+        if (timerInterval) clearInterval(timerInterval);
+        seconds = 0;
+        timerStarted = false;
+        document.getElementById('timer').innerText = `已練習：${formatTime(seconds)}`;
+
+        const slotsDiv = document.getElementById('slots');
+        slotsDiv.innerHTML = '';
+
+        const chars = verseText.split('');
+        chars.forEach((char) => {
+            if (puncRegex.test(char)) {
+                const punc = document.createElement('span');
+                punc.className = 'punctuation';
+                punc.textContent = char;
+                slotsDiv.appendChild(punc);
+            } else {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+                slot.dataset.char = char;
+                slotsDiv.appendChild(slot);
+            }
+        });
+
+        const options = chars.filter(c => !puncRegex.test(c));
+        totalSlotCount = options.length;
+        filledSlotCount = 0;
+        updateProgress();
+
+        const blockSize = 6;
+        blocksData = [];
+        for (let i = 0; i < options.length; i += blockSize) {
+            const blockChars = options.slice(i, i + blockSize);
+            blockChars.sort(() => Math.random() - 0.5);
+            blocksData.push(blockChars);
+        }
+        spawnNextBlock();
+    }
+
+    function updateProgress() {
+        const pct = totalSlotCount === 0 ? 0 : Math.round((filledSlotCount / totalSlotCount) * 100);
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('progressLabel').innerText = `已完成 ${filledSlotCount} / ${totalSlotCount} 字`;
+    }
+
+    function getEmptySlots() {
+        return Array.from(document.querySelectorAll('#slots .slot')).filter(s => !s.classList.contains('filled-slot'));
+    }
+
+    function renderBlockWords(blockDiv, chars) {
+        blockDiv.innerHTML = '';
+        chars.forEach((char) => {
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'tetris-word';
+            wordDiv.textContent = char;
+            wordDiv.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleWordTap(char, wordDiv, blockDiv, chars);
+            });
+            blockDiv.appendChild(wordDiv);
+        });
+    }
+
+    function handleWordTap(char, wordDiv, blockDiv, chars) {
+        startTimerIfNeeded();
+        const emptySlots = getEmptySlots();
+        const targetSlot = emptySlots[0];
+
+        if (targetSlot && char === targetSlot.dataset.char) {
+            playCorrectSound();
+            targetSlot.textContent = char;
+            targetSlot.classList.add('filled-slot');
+            filledSlotCount++;
+            updateProgress();
+
+            const idx = chars.indexOf(char);
+            if (idx > -1) chars.splice(idx, 1);
+
+            if (chars.length === 0) {
+                blockDiv.remove();
+                activeBlock = null;
+                spawnNextBlock();
+            } else {
+                renderBlockWords(blockDiv, chars);
+            }
+
+            if (getEmptySlots().length === 0) finish();
+        } else {
+            playWrongSound();
+            wordDiv.classList.add('wrong-shake');
+            setTimeout(() => wordDiv.classList.remove('wrong-shake'), 350);
+        }
+    }
+
+    function spawnNextBlock() {
+        if (blocksData.length === 0) return;
+        const container = document.getElementById('tetris-container');
+        container.innerHTML = '';
+        const chars = blocksData.shift();
+        const blockDiv = document.createElement('div');
+        blockDiv.className = 'tetris-block';
+        renderBlockWords(blockDiv, chars);
+        container.appendChild(blockDiv);
+
+        let currentY = -60;
+        const targetY = 34;
+        blockDiv.style.top = currentY + 'px';
+        activeBlock = { element: blockDiv, chars: chars };
+
+        if (fallAnimId) cancelAnimationFrame(fallAnimId);
+        function step() {
+            if (currentY < targetY) {
+                currentY += 4;
+                blockDiv.style.top = currentY + 'px';
+                fallAnimId = requestAnimationFrame(step);
+            }
+        }
+        fallAnimId = requestAnimationFrame(step);
+    }
+
+    function undoLast() {
+        const filled = document.querySelectorAll('#slots .slot.filled-slot');
+        if (filled.length === 0) return;
+        const lastSlot = filled[filled.length - 1];
+        const charToReturn = lastSlot.dataset.char;
+        lastSlot.textContent = '';
+        lastSlot.classList.remove('filled-slot');
+        filledSlotCount = Math.max(0, filledSlotCount - 1);
+        updateProgress();
+        playCorrectSound();
+
+        if (activeBlock) {
+            activeBlock.chars.push(charToReturn);
+            renderBlockWords(activeBlock.element, activeBlock.chars);
+        } else {
+            blocksData.unshift([charToReturn]);
+            spawnNextBlock();
+        }
+    }
+
+    function showPreview() {
+        const slots = document.querySelectorAll('#slots .slot');
+        slots.forEach(s => {
+            if (!s.classList.contains('filled-slot')) {
+                s.textContent = s.dataset.char;
+                s.style.backgroundColor = '#eef4e0';
+            }
+        });
+        setTimeout(() => {
+            document.querySelectorAll('#slots .slot').forEach(s => {
+                if (!s.classList.contains('filled-slot')) {
+                    s.textContent = '';
+                    s.style.backgroundColor = '#fdfef9';
+                }
+            });
+        }, 3000);
+    }
+
+    function startTimerIfNeeded() {
+        if (!timerStarted) {
+            timerStarted = true;
+            timerInterval = setInterval(() => {
+                seconds++;
+                document.getElementById('timer').innerText = `已練習：${formatTime(seconds)}`;
+            }, 1000);
+        }
+    }
+
+    function finish() {
+        if (fallAnimId) cancelAnimationFrame(fallAnimId);
+        if (timerInterval) clearInterval(timerInterval);
+        if (activeBlock && activeBlock.element) activeBlock.element.remove();
+        playFinishSound();
+        try { confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } }); } catch (e) {}
+        document.getElementById('reset-btn').style.display = 'inline-block';
+        document.getElementById('undo-btn').style.display = 'none';
+        document.getElementById('tetris-container').style.display = 'none';
+        showCompleteOverlay();
+    }
+
+    function showCompleteOverlay() {
+        document.getElementById('completeText').innerText = `「${verseText}」`;
+        document.getElementById('completeTime').innerText = `花費時間：${formatTime(seconds)}`;
+        document.getElementById('completeOverlay').style.display = 'flex';
+    }
+    function hideCompleteOverlay() {
+        document.getElementById('completeOverlay').style.display = 'none';
+    }
+</script>
+</body>
+</html>
