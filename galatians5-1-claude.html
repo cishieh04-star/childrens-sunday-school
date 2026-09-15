@@ -139,6 +139,7 @@
         #completeOverlay .cv-text { font-size: 20px; font-weight: bold; color: #1e3a5f; max-width: 460px; line-height: 1.65; margin-bottom: 8px; }
         #completeOverlay .cv-ref { color: #2c72ab; font-weight: bold; margin-bottom: 14px; letter-spacing: 1px; }
         #completeOverlay .cv-time { color: #2c72ab; font-size: 14px; margin-bottom: 18px; }
+        #completeOverlay .cv-blessing { color: inherit; font-size: 15px; font-weight: bold; margin: 2px auto 18px auto; max-width: 380px; line-height: 1.6; background: rgba(255,255,255,0.4); border-radius: 14px; padding: 10px 18px; }
 
         @media screen and (max-width: 400px) {
             .verse-text { font-size: 17px; }
@@ -195,15 +196,32 @@
     <div class="cv-text" id="completeText">「基督釋放了我們，叫我們得以自由。所以要站立得穩，不要再被奴僕的軛挾制。」</div>
     <div class="cv-ref">— 加拉太書 5:1</div>
     <div class="cv-time" id="completeTime">花費時間：00:45</div>
+    <div class="cv-blessing" id="completeBlessing"></div>
     <button class="start-btn" onclick="hideCompleteOverlay()">太棒了，繼續</button>
 </div>
 
 <script>
     const verseRef = '加拉太書5：1';
     const verseText = '基督釋放了我們，叫我們得以自由。所以要站立得穩，不要再被奴僕的軛挾制。';
-    // 標點符號：只用來判斷「顯示用、不用拼」的字元。經節出處已經獨立顯示，
-    // 不會混進這裡的拆字流程，所以不需要（也不應該）把數字排除在外處理。
-    const puncRegex = /[\-，；。、（）：「」:()?？！!]/;
+    const blessingText = '願你天天記得，耶穌已經讓你自由，你是被愛、被釋放的孩子！';
+    const puncRegex = /[\-，；。、（）：「」:()?？！!～~]/;
+    const lineBoundary = /[，、；。！？]/;
+
+    function splitLines(text) {
+        const result = [];
+        let current = '';
+        for (const ch of text) {
+            current += ch;
+            if (lineBoundary.test(ch)) {
+                result.push(current);
+                current = '';
+            }
+        }
+        if (current.length > 0) result.push(current);
+        return result;
+    }
+    const lines = splitLines(verseText);
+    let currentLineIdx = 0;
 
     let blocksData = [];
     let activeBlock = null;
@@ -247,19 +265,19 @@
         setTimeout(() => playTone(659.25, 'sine', 0.18, 0.4), 140);
         setTimeout(() => playTone(783.99, 'sine', 0.28, 0.4), 280);
     }
-    function listenVerse() {
+
+    function speak(text) {
         if (!('speechSynthesis' in window)) return;
         try {
             window.speechSynthesis.cancel();
-            setTimeout(() => {
-                try {
-                    const msg = new SpeechSynthesisUtterance(verseText);
-                    msg.lang = 'zh-TW';
-                    msg.rate = 0.82;
-                    window.speechSynthesis.speak(msg);
-                } catch (e) {}
-            }, 80);
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'zh-TW';
+            msg.rate = 0.82;
+            window.speechSynthesis.speak(msg);
         } catch (e) {}
+    }
+    function listenVerse() {
+        speak(verseText);
     }
 
     /* ===== 沉思背景音樂（使用者提供的音樂片段） ===== */
@@ -282,7 +300,7 @@
 
     function startGame() {
         initAudio();
-        try { if (window.speechSynthesis.speaking || window.speechSynthesis.pending) window.speechSynthesis.cancel(); } catch (e) {}
+        try { window.speechSynthesis.cancel(); } catch (e) {}
         document.getElementById('home-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
         initGame();
@@ -305,10 +323,20 @@
         timerStarted = false;
         document.getElementById('timer').innerText = `已練習：${formatTime(seconds)}`;
 
+        const allChars = verseText.split('');
+        totalSlotCount = allChars.filter(c => !puncRegex.test(c)).length;
+        filledSlotCount = 0;
+        updateProgress();
+
+        currentLineIdx = 0;
+        loadLine(currentLineIdx);
+    }
+
+    function loadLine(idx) {
         const slotsDiv = document.getElementById('slots');
         slotsDiv.innerHTML = '';
 
-        const chars = verseText.split('');
+        const chars = lines[idx].split('');
         chars.forEach((char) => {
             if (puncRegex.test(char)) {
                 const punc = document.createElement('span');
@@ -324,11 +352,7 @@
         });
 
         const options = chars.filter(c => !puncRegex.test(c));
-        totalSlotCount = options.length;
-        filledSlotCount = 0;
-        updateProgress();
-
-        const blockSize = 7;
+        const blockSize = 6;
         blocksData = [];
         for (let i = 0; i < options.length; i += blockSize) {
             const blockChars = options.slice(i, i + blockSize);
@@ -336,6 +360,8 @@
             blocksData.push(blockChars);
         }
         spawnNextBlock();
+
+        setTimeout(() => speak(lines[idx]), 300);
     }
 
     function updateProgress() {
@@ -386,7 +412,16 @@
                 renderBlockWords(blockDiv, chars);
             }
 
-            if (getEmptySlots().length === 0) finish();
+            if (getEmptySlots().length === 0) {
+                if (currentLineIdx >= lines.length - 1) {
+                    finish();
+                } else {
+                    setTimeout(() => {
+                        currentLineIdx++;
+                        loadLine(currentLineIdx);
+                    }, 900);
+                }
+            }
         } else {
             playWrongSound();
             wordDiv.classList.add('wrong-shake');
@@ -445,17 +480,17 @@
         slots.forEach(s => {
             if (!s.classList.contains('filled-slot')) {
                 s.textContent = s.dataset.char;
-                s.style.backgroundColor = '#dceefc';
+                s.style.backgroundColor = '#fce3e0';
             }
         });
         setTimeout(() => {
             document.querySelectorAll('#slots .slot').forEach(s => {
                 if (!s.classList.contains('filled-slot')) {
                     s.textContent = '';
-                    s.style.backgroundColor = '#ffffff';
+                    s.style.backgroundColor = '#fffcfb';
                 }
             });
-        }, 4000);
+        }, 3000);
     }
 
     function startTimerIfNeeded() {
@@ -477,13 +512,16 @@
         document.getElementById('reset-btn').style.display = 'inline-block';
         document.getElementById('undo-btn').style.display = 'none';
         document.getElementById('tetris-container').style.display = 'none';
-        showCompleteOverlay();
+        speak(verseText);
+        setTimeout(showCompleteOverlay, 1400);
     }
 
     function showCompleteOverlay() {
         document.getElementById('completeText').innerText = `「${verseText}」`;
         document.getElementById('completeTime').innerText = `花費時間：${formatTime(seconds)}`;
+        document.getElementById('completeBlessing').innerText = `💝 ${blessingText}`;
         document.getElementById('completeOverlay').style.display = 'flex';
+        setTimeout(() => speak(blessingText), 600);
     }
     function hideCompleteOverlay() {
         document.getElementById('completeOverlay').style.display = 'none';
