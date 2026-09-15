@@ -139,6 +139,7 @@
         #completeOverlay .cv-text { font-size: 21px; font-weight: bold; color: #2c2760; max-width: 460px; line-height: 1.65; margin-bottom: 8px; }
         #completeOverlay .cv-ref { color: #4b3f96; font-weight: bold; margin-bottom: 14px; letter-spacing: 1px; }
         #completeOverlay .cv-time { color: #4b3f96; font-size: 14px; margin-bottom: 18px; }
+        #completeOverlay .cv-blessing { color: inherit; font-size: 15px; font-weight: bold; margin: 2px auto 18px auto; max-width: 380px; line-height: 1.6; background: rgba(255,255,255,0.4); border-radius: 14px; padding: 10px 18px; }
 
         @media screen and (max-width: 400px) {
             .verse-text { font-size: 18px; }
@@ -193,13 +194,32 @@
     <div class="cv-text" id="completeText">「我的心默默無聲，專等候神；我的救恩是從祂而來。」</div>
     <div class="cv-ref">— 詩篇 62:1</div>
     <div class="cv-time" id="completeTime">花費時間：00:45</div>
+    <div class="cv-blessing" id="completeBlessing"></div>
     <button class="start-btn" onclick="hideCompleteOverlay()">太棒了，繼續</button>
 </div>
 
 <script>
     const verseRef = '詩篇62:1';
     const verseText = '我的心默默無聲，專等候神；我的救恩是從祂而來。';
+    const blessingText = '願你學會安靜等候，相信神會幫助你！';
     const puncRegex = /[\-，；。、（）：「」:()?？！!～~]/;
+    const lineBoundary = /[，、；。！？]/;
+
+    function splitLines(text) {
+        const result = [];
+        let current = '';
+        for (const ch of text) {
+            current += ch;
+            if (lineBoundary.test(ch)) {
+                result.push(current);
+                current = '';
+            }
+        }
+        if (current.length > 0) result.push(current);
+        return result;
+    }
+    const lines = splitLines(verseText);
+    let currentLineIdx = 0;
 
     let blocksData = [];
     let activeBlock = null;
@@ -207,6 +227,7 @@
     let seconds = 0, timerStarted = false, timerInterval = null;
     let totalSlotCount = 0, filledSlotCount = 0;
     let audioCtx = null;
+    let musicPlaying = false;
 
     function formatTime(s) {
         const m = Math.floor(s / 60).toString().padStart(2, '0');
@@ -242,15 +263,37 @@
         setTimeout(() => playTone(659.25, 'sine', 0.18, 0.4), 140);
         setTimeout(() => playTone(783.99, 'sine', 0.28, 0.4), 280);
     }
-    function listenVerse() {
+
+    function speak(text) {
         if (!('speechSynthesis' in window)) return;
         try {
             window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(verseText);
+            const msg = new SpeechSynthesisUtterance(text);
             msg.lang = 'zh-TW';
             msg.rate = 0.82;
             window.speechSynthesis.speak(msg);
         } catch (e) {}
+    }
+    function listenVerse() {
+        speak(verseText);
+    }
+
+    /* ===== 沉思背景音樂（使用者提供的音樂片段） ===== */
+    function toggleMusic() {
+        initAudio();
+        const audio = document.getElementById('bgMusic');
+        if (!audio) return;
+        const btn = document.getElementById('musicBtn');
+        if (musicPlaying) {
+            audio.pause();
+            musicPlaying = false;
+            if (btn) btn.textContent = '🎵 背景音樂';
+        } else {
+            audio.volume = 0.5;
+            audio.play().catch(() => {});
+            musicPlaying = true;
+            if (btn) btn.textContent = '🔇 關閉音樂';
+        }
     }
 
     function startGame() {
@@ -278,10 +321,20 @@
         timerStarted = false;
         document.getElementById('timer').innerText = `已練習：${formatTime(seconds)}`;
 
+        const allChars = verseText.split('');
+        totalSlotCount = allChars.filter(c => !puncRegex.test(c)).length;
+        filledSlotCount = 0;
+        updateProgress();
+
+        currentLineIdx = 0;
+        loadLine(currentLineIdx);
+    }
+
+    function loadLine(idx) {
         const slotsDiv = document.getElementById('slots');
         slotsDiv.innerHTML = '';
 
-        const chars = verseText.split('');
+        const chars = lines[idx].split('');
         chars.forEach((char) => {
             if (puncRegex.test(char)) {
                 const punc = document.createElement('span');
@@ -297,10 +350,6 @@
         });
 
         const options = chars.filter(c => !puncRegex.test(c));
-        totalSlotCount = options.length;
-        filledSlotCount = 0;
-        updateProgress();
-
         const blockSize = 6;
         blocksData = [];
         for (let i = 0; i < options.length; i += blockSize) {
@@ -309,6 +358,8 @@
             blocksData.push(blockChars);
         }
         spawnNextBlock();
+
+        setTimeout(() => speak(lines[idx]), 300);
     }
 
     function updateProgress() {
@@ -359,7 +410,16 @@
                 renderBlockWords(blockDiv, chars);
             }
 
-            if (getEmptySlots().length === 0) finish();
+            if (getEmptySlots().length === 0) {
+                if (currentLineIdx >= lines.length - 1) {
+                    finish();
+                } else {
+                    setTimeout(() => {
+                        currentLineIdx++;
+                        loadLine(currentLineIdx);
+                    }, 900);
+                }
+            }
         } else {
             playWrongSound();
             wordDiv.classList.add('wrong-shake');
@@ -418,14 +478,14 @@
         slots.forEach(s => {
             if (!s.classList.contains('filled-slot')) {
                 s.textContent = s.dataset.char;
-                s.style.backgroundColor = '#e9e6f9';
+                s.style.backgroundColor = '#fce3e0';
             }
         });
         setTimeout(() => {
             document.querySelectorAll('#slots .slot').forEach(s => {
                 if (!s.classList.contains('filled-slot')) {
                     s.textContent = '';
-                    s.style.backgroundColor = '#fdfdff';
+                    s.style.backgroundColor = '#fffcfb';
                 }
             });
         }, 3000);
@@ -450,13 +510,16 @@
         document.getElementById('reset-btn').style.display = 'inline-block';
         document.getElementById('undo-btn').style.display = 'none';
         document.getElementById('tetris-container').style.display = 'none';
-        showCompleteOverlay();
+        speak(verseText);
+        setTimeout(showCompleteOverlay, 1400);
     }
 
     function showCompleteOverlay() {
         document.getElementById('completeText').innerText = `「${verseText}」`;
         document.getElementById('completeTime').innerText = `花費時間：${formatTime(seconds)}`;
+        document.getElementById('completeBlessing').innerText = `💝 ${blessingText}`;
         document.getElementById('completeOverlay').style.display = 'flex';
+        setTimeout(() => speak(blessingText), 600);
     }
     function hideCompleteOverlay() {
         document.getElementById('completeOverlay').style.display = 'none';
