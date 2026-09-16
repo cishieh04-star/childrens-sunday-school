@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>聖經拼圖 - 馬太福音 5:14</title>
+    <title>聖經拼圖 - 民數記 6:24-25</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -12,36 +12,36 @@
             display: flex; flex-direction: column; align-items: center;
             padding: 10px; margin: 0; min-height: 100vh; min-height: 100dvh;
             position: relative; overflow-x: hidden; touch-action: manipulation;
-            background: radial-gradient(ellipse at top, #fff5ec 0%, #ffdfc4 55%, #ffc8a0 100%);
-            color: #6b3d1f;
+            background: radial-gradient(ellipse at top, #fffdf0 0%, #fff2c9 55%, #ffe49a 100%);
+            color: #5c4a12;
         }
         .full-width { width: 100%; max-width: 600px; text-align: center; }
 
         #timer {
             position: fixed; top: 14px; right: 14px; font-size: 14px; font-weight: bold;
-            color: #b3641f; background: #fff8f1; padding: 6px 12px; border-radius: 20px;
-            border: 1.5px solid #f2be8f; z-index: 1000; box-shadow: 0 2px 6px rgba(179,100,31,0.15);
+            color: #9a7a10; background: #fffef5; padding: 6px 12px; border-radius: 20px;
+            border: 1.5px solid #f0d878; z-index: 1000; box-shadow: 0 2px 6px rgba(154,122,16,0.15);
         }
 
-        .deco-flame { font-size: 26px; margin-bottom: 2px; filter: drop-shadow(0 0 8px rgba(255,164,84,0.75)); }
+        .deco-flame { font-size: 26px; margin-bottom: 2px; filter: drop-shadow(0 0 8px rgba(255,214,79,0.8)); }
 
         .verse-box {
-            background: linear-gradient(180deg, #fffefb, #ffece0);
-            padding: 22px 20px; border-radius: 18px; border: 1px solid #f2be8f;
+            background: linear-gradient(180deg, #fffffb, #fff6d9);
+            padding: 22px 20px; border-radius: 18px; border: 1px solid #f0d878;
             margin: 14px auto; width: 90%; max-width: 450px;
-            box-shadow: 0 8px 20px rgba(179,100,31,0.13), inset 0 0 0 1px rgba(255,255,255,0.6);
+            box-shadow: 0 8px 20px rgba(154,122,16,0.12), inset 0 0 0 1px rgba(255,255,255,0.6);
             position: relative;
         }
         .verse-box::before {
             content: '“'; position: absolute; top: -6px; left: 14px; font-size: 46px;
-            color: #f2be8f; font-family: Georgia, serif; line-height: 1;
+            color: #f0d878; font-family: Georgia, serif; line-height: 1;
         }
-        .verse-text { font-size: 21px; font-weight: bold; color: #6b3d1f; margin-bottom: 10px; line-height: 1.65; letter-spacing: 0.5px; }
-        .verse-ref { font-size: 15px; color: #b3641f; font-weight: bold; letter-spacing: 1px; }
+        .verse-text { font-size: 21px; font-weight: bold; color: #5c4a12; margin-bottom: 10px; line-height: 1.65; letter-spacing: 0.5px; }
+        .verse-ref { font-size: 15px; color: #9a7a10; font-weight: bold; letter-spacing: 1px; }
 
-        h1 { color: #b3641f; font-size: 25px; margin: 4px 0 2px 0; letter-spacing: 1px; }
-        h2 { color: #b3641f; margin: 6px 0 2px 0; font-size: 18px; letter-spacing: 1px; }
-        .subtitle { color: #cc7a2c; font-size: 12px; margin-bottom: 4px; opacity: 0.85; }
+        h1 { color: #9a7a10; font-size: 25px; margin: 4px 0 2px 0; letter-spacing: 1px; }
+        h2 { color: #9a7a10; margin: 6px 0 2px 0; font-size: 18px; letter-spacing: 1px; }
+        .subtitle { color: #b3900f; font-size: 12px; margin-bottom: 4px; opacity: 0.85; }
 
         .action-container { margin: 8px 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .yt-link {
@@ -57,50 +57,50 @@
         .action-icon-btn:active, .yt-link:active { transform: scale(0.95); }
 
         .progress-box { width: 90%; max-width: 450px; margin: 6px auto 10px auto; }
-        .progress-track { width: 100%; height: 10px; background: #ffe2c6; border-radius: 6px; overflow: hidden; border: 1px solid #f2be8f; box-shadow: inset 0 1px 3px rgba(179,100,31,0.15); }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #ffa554, #d97e26); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px rgba(255,165,84,0.7); }
-        .progress-label { font-size: 11px; color: #b3641f; margin-top: 3px; }
+        .progress-track { width: 100%; height: 10px; background: #ffedb0; border-radius: 6px; overflow: hidden; border: 1px solid #f0d878; box-shadow: inset 0 1px 3px rgba(154,122,16,0.15); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #ffd648, #d9a812); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px rgba(255,214,72,0.7); }
+        .progress-label { font-size: 11px; color: #9a7a10; margin-top: 3px; }
 
         .grid-container { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 14px 0; align-items: center; }
         .slot {
-            width: 30px; height: 30px; border: 2px dashed #f0b57e; display: flex; align-items: center;
-            justify-content: center; background-color: #fffefb; border-radius: 7px; font-weight: bold;
-            font-size: 15px; color: #6b3d1f; transition: all 0.25s;
+            width: 30px; height: 30px; border: 2px dashed #e0c265; display: flex; align-items: center;
+            justify-content: center; background-color: #fffffb; border-radius: 7px; font-weight: bold;
+            font-size: 15px; color: #5c4a12; transition: all 0.25s;
         }
         .slot.filled-slot {
-            border: 2px solid #d97e26; background: linear-gradient(180deg, #ffe7cd, #ffce9d);
-            color: #6b3d1f; box-shadow: 0 2px 5px rgba(217,126,38,0.25);
+            border: 2px solid #d9a812; background: linear-gradient(180deg, #fff3c4, #fbe08a);
+            color: #5c4a12; box-shadow: 0 2px 5px rgba(217,168,18,0.25);
         }
 
-        .punctuation { font-size: 16px; font-weight: bold; color: #c39268; margin: 0 1px; }
-        .instruction { color: #b3641f; margin-bottom: 8px; font-weight: bold; font-size: 13px; }
+        .punctuation { font-size: 16px; font-weight: bold; color: #b8a06a; margin: 0 1px; }
+        .instruction { color: #9a7a10; margin-bottom: 8px; font-weight: bold; font-size: 13px; }
 
         #tetris-container {
             width: 100%; max-width: 500px; height: 128px;
-            background: linear-gradient(180deg, #fff8f1, #ffe9d4);
+            background: linear-gradient(180deg, #fffef5, #fff2c4);
             border-radius: 14px; position: relative; overflow: hidden; margin-top: 8px;
-            border: 1px solid #f2be8f; box-shadow: inset 0 2px 10px rgba(179,100,31,0.08);
+            border: 1px solid #f0d878; box-shadow: inset 0 2px 10px rgba(154,122,16,0.08);
         }
         .tetris-block {
             position: absolute; display: flex; gap: 8px; justify-content: center; left: 50%;
             transform: translateX(-50%); transition: top 0.05s linear; width: 95%; flex-wrap: wrap;
         }
 
-        /* 選字物品：發光的日出光點，呼應「世上的光」照亮不能隱藏的意象 */
+        /* 選字物品：發光的陽光光點，呼應「祂的臉光照你」的祝福意象 */
         .tetris-word {
             width: 48px; height: 48px; border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #fff6ea 0%, #ffb066 45%, #d97e26 100%);
-            color: #4a2c10; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at 35% 30%, #fffdf0 0%, #ffe066 45%, #d9a812 100%);
+            color: #5c4a10; display: flex; align-items: center; justify-content: center;
             cursor: pointer; font-size: 19px; font-weight: bold; user-select: none; flex-shrink: 0;
-            box-shadow: 0 0 12px rgba(255,176,102,0.75), 0 4px 6px rgba(0,0,0,0.2);
-            border: 2px solid #ea9a4c;
+            box-shadow: 0 0 12px rgba(255,224,102,0.75), 0 4px 6px rgba(0,0,0,0.2);
+            border: 2px solid #e8c247;
             animation: itemGlow 2.2s ease-in-out infinite;
             transition: transform 0.12s;
         }
         .tetris-word:active { transform: scale(0.88); }
         @keyframes itemGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(255,176,102,0.65), 0 4px 6px rgba(0,0,0,0.2); }
-            50% { box-shadow: 0 0 20px rgba(255,176,102,1), 0 4px 8px rgba(0,0,0,0.25); }
+            0%, 100% { box-shadow: 0 0 10px rgba(255,224,102,0.6), 0 4px 6px rgba(0,0,0,0.2); }
+            50% { box-shadow: 0 0 20px rgba(255,224,102,1), 0 4px 8px rgba(0,0,0,0.25); }
         }
         .tetris-word.wrong-shake {
             animation: shakeWord 0.35s ease-in-out;
@@ -117,7 +117,7 @@
             font-weight: bold; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .action-btn:active { transform: scale(0.96); }
-        #undo-btn { background: linear-gradient(180deg, #ffa554, #d97e26); }
+        #undo-btn { background: linear-gradient(180deg, #ffd648, #d9a812); }
         #reset-btn { background: linear-gradient(180deg, #e0685a, #c0392b); display: none; }
 
         #home-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 82vh; text-align: center; }
@@ -132,13 +132,13 @@
 
         #completeOverlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at top, rgba(255,245,236,0.98), rgba(255,200,160,0.98));
+            background: radial-gradient(ellipse at top, rgba(255,253,240,0.98), rgba(255,228,154,0.98));
             z-index: 6000; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 20px;
         }
-        #completeOverlay .cv-text { font-size: 21px; font-weight: bold; color: #6b3d1f; max-width: 460px; line-height: 1.65; margin-bottom: 8px; }
-        #completeOverlay .cv-ref { color: #b3641f; font-weight: bold; margin-bottom: 14px; letter-spacing: 1px; }
-        #completeOverlay .cv-time { color: #b3641f; font-size: 14px; margin-bottom: 18px; }
+        #completeOverlay .cv-text { font-size: 21px; font-weight: bold; color: #5c4a12; max-width: 460px; line-height: 1.65; margin-bottom: 8px; }
+        #completeOverlay .cv-ref { color: #9a7a10; font-weight: bold; margin-bottom: 14px; letter-spacing: 1px; }
+        #completeOverlay .cv-time { color: #9a7a10; font-size: 14px; margin-bottom: 18px; }
         #completeOverlay .cv-blessing { color: inherit; font-size: 15px; font-weight: bold; margin: 2px auto 18px auto; max-width: 380px; line-height: 1.6; background: rgba(255,255,255,0.4); border-radius: 14px; padding: 10px 18px; }
 
         @media screen and (max-width: 400px) {
@@ -196,23 +196,23 @@
 <div id="timer">已練習：00:00</div>
 
 <div id="home-screen" class="full-width">
-    <div class="deco-flame">🌄</div>
+    <div class="deco-flame">☀️</div>
     <h1>聖經拼圖遊戲</h1>
     <p class="subtitle">一字一句，把神的話拼回心裡</p>
 
     <div class="verse-box">
-        <div class="verse-text">你們是世上的光，城造在山上是不能隱藏的。</div>
-        <div class="verse-ref">— 馬太福音 5:14</div>
+        <div class="verse-text">願耶和華賜福給你，保護你，願耶和華使祂的臉光照你，賜恩給你。</div>
+        <div class="verse-ref">— 民數記 6:24、25</div>
     </div>
 
     <button class="start-btn" onclick="startGame()">開始聖經拼圖遊戲</button>
 </div>
 
 <div id="game-screen" class="full-width">
-    <h2>馬太福音 5:14</h2>
+    <h2>民數記 6:24-25</h2>
 
     <div class="action-container">
-        <a href="https://youtube.com/shorts/Wy6oWAU33Tg" target="_blank" class="yt-link">🎥 觀看複習影片</a>
+        <a href="https://youtube.com/shorts/pso-vdGlbHg" target="_blank" class="yt-link">🎥 觀看複習影片</a>
         <button class="action-icon-btn preview-btn" onclick="showPreview()">📖 觀看經文</button>
         <button class="action-icon-btn listen-btn" onclick="listenVerse()">🔊 聽經文</button>
     </div>
@@ -235,18 +235,18 @@
 </div>
 
 <div id="completeOverlay">
-    <div class="deco-flame">🌄</div>
-    <div class="cv-text" id="completeText">「你們是世上的光，城造在山上是不能隱藏的。」</div>
-    <div class="cv-ref">— 馬太福音 5:14</div>
+    <div class="deco-flame">☀️</div>
+    <div class="cv-text" id="completeText">「願耶和華賜福給你，保護你，願耶和華使祂的臉光照你，賜恩給你。」</div>
+    <div class="cv-ref">— 民數記 6:24、25</div>
     <div class="cv-time" id="completeTime">花費時間：00:45</div>
     <div class="cv-blessing" id="completeBlessing"></div>
     <button class="start-btn" onclick="hideCompleteOverlay()">太棒了，繼續</button>
 </div>
 
 <script>
-    const verseRef = '馬太福音5:14';
-    const verseText = '你們是世上的光，城造在山上是不能隱藏的。';
-    const blessingText = '願你像一盞小燈，把神的愛照亮給大家看見！';
+    const verseRef = '民數記6:24-25';
+    const verseText = '願耶和華賜福給你，保護你，願耶和華使祂的臉光照你，賜恩給你。';
+    const blessingText = '願神天天賜福給你、保護你，看顧你所做的每一件事！';
     const puncRegex = /[\-，；。、（）：「」:()?？！!～~]/;
     const lineBoundary = /[，、；。！？]/;
 

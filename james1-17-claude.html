@@ -144,9 +144,54 @@
         @media screen and (max-width: 400px) {
             .verse-text { font-size: 17px; }
         }
+        /* ===== 更活潑的動畫效果 ===== */
+        .bg-sparkles { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+        .bg-sparkle {
+            position: absolute; bottom: -30px; font-size: 16px; opacity: 0;
+            animation-name: sparkleDrift; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+        }
+        @keyframes sparkleDrift {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.75; }
+            90% { opacity: 0.75; }
+            100% { transform: translateY(-100vh) rotate(200deg); opacity: 0; }
+        }
+        #home-screen, #game-screen { position: relative; z-index: 1; }
+        @keyframes decoWiggle {
+            0%, 100% { transform: rotate(-6deg) translateY(0); }
+            25% { transform: rotate(6deg) translateY(-2px); }
+            50% { transform: rotate(-4deg) translateY(1px); }
+            75% { transform: rotate(5deg) translateY(-1px); }
+        }
+        .deco-flame, [class^="deco-"] { animation: decoWiggle 1.8s ease-in-out infinite; display: inline-block; }
+        @keyframes slotPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.28); }
+            100% { transform: scale(1); }
+        }
+        .slot.filled-slot { animation: slotPop 0.35s ease-out; }
+        @keyframes tokenBob {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-3px) rotate(3deg); }
+        }
+        .tetris-word { animation-name: itemGlow, tokenBob; }
+        @keyframes startBtnBreathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.045); }
+        }
+        .start-btn { animation: startBtnBreathe 1.6s ease-in-out infinite; }
+        .start-btn:active { animation: none; }
     </style>
 </head>
 <body>
+
+<div class="bg-sparkles" aria-hidden="true">
+    <span class="bg-sparkle" style="left:8%; animation-duration:5.5s; animation-delay:0s;">✨</span>
+    <span class="bg-sparkle" style="left:24%; animation-duration:6.5s; animation-delay:1.2s;">⭐</span>
+    <span class="bg-sparkle" style="left:62%; animation-duration:5.8s; animation-delay:0.6s;">✨</span>
+    <span class="bg-sparkle" style="left:80%; animation-duration:7s; animation-delay:2s;">⭐</span>
+    <span class="bg-sparkle" style="left:45%; animation-duration:6.2s; animation-delay:3s;">🌟</span>
+</div>
 
 <div id="timer">已練習：00:00</div>
 
@@ -264,18 +309,72 @@
         setTimeout(() => playTone(783.99, 'sine', 0.28, 0.4), 280);
     }
 
-    function speak(text) {
+    /* 語音佇列：一次只播一句，一定要等上一句完全唱完，
+       才會接下一句，不會中途被打斷 */
+    let speechQueue = [];
+    let isSpeaking = false;
+    let speechGeneration = 0;
+
+    function enqueueSpeech(text, onDone) {
+        if (!text) { if (onDone) onDone(); return; }
+        speechQueue.push({ text: text, onDone: onDone, gen: speechGeneration });
+        processSpeechQueue();
+    }
+
+    function processSpeechQueue() {
+        if (isSpeaking || speechQueue.length === 0) return;
+        const item = speechQueue.shift();
+        if (item.gen !== speechGeneration) { processSpeechQueue(); return; }
+        if (!('speechSynthesis' in window)) {
+            if (item.onDone) item.onDone();
+            processSpeechQueue();
+            return;
+        }
+        isSpeaking = true;
+        const myGen = speechGeneration;
+        try {
+            const msg = new SpeechSynthesisUtterance(item.text);
+            msg.lang = 'zh-TW';
+            msg.rate = 0.82;
+            let settled = false;
+            const doneSpeaking = () => {
+                if (settled) return;
+                settled = true;
+                if (myGen !== speechGeneration) return;
+                isSpeaking = false;
+                if (item.onDone) item.onDone();
+                processSpeechQueue();
+            };
+            msg.onend = doneSpeaking;
+            msg.onerror = doneSpeaking;
+            window.speechSynthesis.speak(msg);
+            // Fallback for devices that never fire onend/onerror.
+            setTimeout(doneSpeaking, Math.max(4000, item.text.length * 450));
+        } catch (e) {
+            isSpeaking = false;
+            if (item.onDone) item.onDone();
+            processSpeechQueue();
+        }
+    }
+
+    function speakNow(text) {
+        // Manual interrupt (the "聽經文" button): clears anything queued
+        // and restarts speech a beat later. The short delay avoids a stray
+        // "ㄛ" glitch some Android/MIUI text-to-speech engines make when
+        // speak() is called in the same tick as cancel().
+        if (!text) return;
+        speechGeneration++;
+        speechQueue = [];
+        isSpeaking = false;
         if (!('speechSynthesis' in window)) return;
         try {
             window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.lang = 'zh-TW';
-            msg.rate = 0.82;
-            window.speechSynthesis.speak(msg);
+            setTimeout(() => { enqueueSpeech(text); }, 60);
         } catch (e) {}
     }
+
     function listenVerse() {
-        speak(verseText);
+        speakNow(verseText);
     }
 
     /* ===== 沉思背景音樂（使用者提供的音樂片段） ===== */
@@ -298,6 +397,9 @@
 
     function startGame() {
         initAudio();
+        speechGeneration++;
+        speechQueue = [];
+        isSpeaking = false;
         try { window.speechSynthesis.cancel(); } catch (e) {}
         document.getElementById('home-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
@@ -307,6 +409,10 @@
     function resetGame() {
         if (fallAnimId) cancelAnimationFrame(fallAnimId);
         if (timerInterval) clearInterval(timerInterval);
+        speechGeneration++;
+        speechQueue = [];
+        isSpeaking = false;
+        try { window.speechSynthesis.cancel(); } catch (e) {}
         document.getElementById('tetris-container').style.display = 'block';
         document.getElementById('reset-btn').style.display = 'none';
         document.getElementById('undo-btn').style.display = 'inline-block';
@@ -350,16 +456,13 @@
         });
 
         const options = chars.filter(c => !puncRegex.test(c));
-        const blockSize = 6;
         blocksData = [];
-        for (let i = 0; i < options.length; i += blockSize) {
-            const blockChars = options.slice(i, i + blockSize);
-            blockChars.sort(() => Math.random() - 0.5);
-            blocksData.push(blockChars);
-        }
+        const blockChars = options.slice();
+        blockChars.sort(() => Math.random() - 0.5);
+        blocksData.push(blockChars);
         spawnNextBlock();
 
-        setTimeout(() => speak(lines[idx]), 300);
+        setTimeout(() => enqueueSpeech(lines[idx]), 300);
     }
 
     function updateProgress() {
@@ -510,8 +613,9 @@
         document.getElementById('reset-btn').style.display = 'inline-block';
         document.getElementById('undo-btn').style.display = 'none';
         document.getElementById('tetris-container').style.display = 'none';
-        speak(verseText);
-        setTimeout(showCompleteOverlay, 1400);
+        // Read the whole verse to completion first, then show the finish
+        // screen and speak the blessing - queued, so it never gets cut off.
+        enqueueSpeech(verseText, showCompleteOverlay);
     }
 
     function showCompleteOverlay() {
@@ -519,7 +623,7 @@
         document.getElementById('completeTime').innerText = `花費時間：${formatTime(seconds)}`;
         document.getElementById('completeBlessing').innerText = `💝 ${blessingText}`;
         document.getElementById('completeOverlay').style.display = 'flex';
-        setTimeout(() => speak(blessingText), 600);
+        setTimeout(() => enqueueSpeech(blessingText), 400);
     }
     function hideCompleteOverlay() {
         document.getElementById('completeOverlay').style.display = 'none';
