@@ -6,7 +6,7 @@
 :root{--ink:#4a2a1a;--ink2:#7a5a4a;--bg:#fff6ee;--p:var(--p);--p2:var(--p2);--pl:var(--pl);--mint:#5fd0b8;--mint2:#2fa58c;--lemon:#ffd54d;--lemon2:#e0a800;--choc:#8a5434;--choc2:#5e3420;--sky:#7cc8ff;--sky2:#3a96e0;--grape:#a98af0;--grape2:#7a5ad0;--shadow:0 .3rem 0 rgba(0,0,0,.15)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden}
-body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--pl);user-select:none;-webkit-user-select:none;touch-action:manipulation;font-size:17px}
+body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--pl);user-select:none;-webkit-user-select:none;touch-action:manipulation;font-size:1.06rem}
 .en{font-family:"Comic Sans MS","Chalkboard SE","Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.02em}
 button{font-family:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 ruby{ruby-align:center}rt{font-size:.42em;color:#c4401f;font-weight:700;letter-spacing:0}
@@ -81,7 +81,7 @@ ruby{ruby-align:center}rt{font-size:.42em;color:#c4401f;font-weight:700;letter-s
 .opt.no{background:#eee!important;opacity:.5;animation:shake .35s}
 .opt.hint{animation:pulse 1s infinite}
 .c0{--oc:var(--pl2)}.c1{--oc:#d8f0ff}.c2{--oc:#fff1b8}.c3{--oc:#dff7e8}.c4{--oc:#efe4ff}.c5{--oc:#ffe6d2}
-.fb{margin-top:.8rem;background:#fffbe8;border:.18rem solid #ffe08a;border-radius:1.1rem;padding:.8rem;text-align:center;animation:pop .3s}
+.fb{position:fixed;left:0;right:0;bottom:calc(.6rem + env(safe-area-inset-bottom));margin:0 auto;width:min(530px,calc(100vw - 1.2rem));z-index:30;box-shadow:0 .4rem 1.4rem rgba(0,0,0,.25);background:#fffbe8;border:.18rem solid #ffe08a;border-radius:1.1rem;padding:.8rem;text-align:center;animation:pop .3s}
 .fb .ans{font-size:1.3rem;font-weight:900;color:var(--mint2);margin-bottom:.3rem}
 .fb .why{font-weight:700;line-height:1.7}
 .fb .row{margin-top:.6rem;justify-content:center}
@@ -176,7 +176,7 @@ ruby{ruby-align:center}rt{font-size:.42em;color:#c4401f;font-weight:700;letter-s
 .seg{display:flex;gap:.3rem}.seg button{border:.15rem solid var(--pl3);background:#fff;border-radius:.7rem;padding:.3rem .6rem;font-weight:900}.seg button.on{border-color:var(--p);background:var(--pl2)}
 
 /* 夾娃娃機 */
-.clawm{position:relative;height:290px;border-radius:1.4rem;background:radial-gradient(circle at 50% 120%,var(--pl) 0 40%,transparent 41%),linear-gradient(#e8f6ff,#fff 60%,var(--pl2));border:.45rem solid var(--p);box-shadow:0 .35rem 0 var(--p2),inset 0 0 0 .2rem #fff;overflow:hidden;margin-bottom:.4rem}
+.clawm{position:relative;height:17rem;border-radius:1.4rem;background:radial-gradient(circle at 50% 120%,var(--pl) 0 40%,transparent 41%),linear-gradient(#e8f6ff,#fff 60%,var(--pl2));border:.45rem solid var(--p);box-shadow:0 .35rem 0 var(--p2),inset 0 0 0 .2rem #fff;overflow:hidden;margin-bottom:.4rem}
 .clawm .lights{position:absolute;top:0;left:0;right:0;height:10px;display:flex;justify-content:space-around;z-index:3}
 .clawm .lights i{width:8px;height:8px;border-radius:50%;background:#ffd54d;animation:blink 1s infinite}.clawm .lights i:nth-child(2n){animation-delay:.5s;background:#7cc8ff}
 .clawm .rail{position:absolute;top:12px;left:8px;right:8px;height:10px;border-radius:5px;background:var(--p2);z-index:2}
@@ -204,7 +204,7 @@ ruby{ruby-align:center}rt{font-size:.42em;color:#c4401f;font-weight:700;letter-s
 @keyframes pop{from{transform:scale(.85);opacity:0}}
 @keyframes floatup{to{transform:translateY(-3rem);opacity:0}}
 @keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
-@media (max-width:380px){body{font-size:16px}.lt{width:3rem;height:3.3rem;font-size:1.7rem}.word{font-size:2.2rem}}
+@media (max-width:380px){.lt{width:3rem;height:3.3rem;font-size:1.7rem}.word{font-size:2.2rem}}
 
 .dock .btn{font-size:.86rem;padding:.6rem .15rem}
 .tbtn{border:none;background:#fff;border-radius:.7rem;padding:.25rem .5rem;font-weight:900;font-size:.8rem;box-shadow:0 .15rem 0 var(--pl3);flex:none;line-height:1.25;color:var(--ink)}
@@ -228,16 +228,20 @@ ruby{ruby-align:center}rt{font-size:.42em;color:#c4401f;font-weight:700;letter-s
 .fc .fb2{background:var(--oc,#fff);transform:rotateY(180deg);font-size:1.25rem;padding:.2rem}
 .fc .fb2 .pe{font-size:2rem;line-height:1.1}.fc .fb2 small{font-size:.8rem}
 .fc.done .fb2{background:#b8f0c8}
-.tank{position:relative;height:250px;border-radius:1.4rem;overflow:hidden;background:linear-gradient(#d4f2ff,#8fd4f5 60%,#5ab8e6);box-shadow:inset 0 0 0 .3rem #fff,0 .3rem 0 var(--sh)}
+.tank{position:relative;height:15rem;border-radius:1.4rem;overflow:hidden;background:linear-gradient(#d4f2ff,#8fd4f5 60%,#5ab8e6);box-shadow:inset 0 0 0 .3rem #fff,0 .3rem 0 var(--sh)}
 .bub{position:absolute;left:0;top:0;border-radius:50%;border:none;padding:0;font-size:1.8rem;font-weight:900;color:var(--ink);background:radial-gradient(circle at 30% 28%,#fff 0 14%,rgba(255,255,255,.6) 15% 45%,rgba(255,255,255,.3) 70%,rgba(255,255,255,.7));box-shadow:inset 0 0 0 .15rem rgba(255,255,255,.95)}
 .bub.popd{animation:popb .3s forwards}.bub.shake{animation:shake .4s}.bub.hintb{box-shadow:0 0 0 .3rem #ffd54d,0 0 1rem #ffb02e}
 @keyframes popb{to{transform:scale(1.6);opacity:0}}
-.sky2{position:relative;height:250px;border-radius:1.4rem;overflow:hidden;background:var(--scene);box-shadow:0 .3rem 0 var(--sh)}
+.sky2{position:relative;height:15rem;border-radius:1.4rem;overflow:hidden;background:var(--scene);box-shadow:0 .3rem 0 var(--sh)}
 .fall{position:absolute;left:0;top:-70px;width:58px;height:58px;border:none;border-radius:1rem;font-size:2rem;font-weight:900;background:var(--oc,#fff);box-shadow:0 .25rem 0 rgba(0,0,0,.18);padding:0;z-index:2}
 .fall.no{animation:shake .4s;opacity:.55}.fall.hintb{box-shadow:0 0 0 .3rem #ffd54d,0 0 1rem #ffb02e}
 .basket{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:2.8rem;transition:left .35s;z-index:3;pointer-events:none}
 .spin{display:inline-block;animation:spin 6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .hbig{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);font-size:6.5rem;line-height:1}
+
+html{font-size:clamp(12.5px,calc(1.4vh + 5.5px),17px)}
+.fb.inl{position:static;width:auto;box-shadow:none;margin-top:.8rem}
+.scr{transform-origin:top center}
 </style></head>
 <body>
 <div id="app"></div><div id="toast"></div>
@@ -403,6 +407,11 @@ const spell=w=>[...w].map(LN).join('、');
 /* ====== 畫面 ====== */
 const APP_=$('#app');
 let RAF=0;function go(html,cls){clearTimers();cancelAnimationFrame(RAF);stopSay();KEYH=null;APP_.innerHTML=`<div class="scr ${cls||''} ${DB.set.zy?'':'nozy'}">${html}</div>`;return APP_.firstChild}
+let FITQ=0;function fitNow(){FITQ=0;const s=APP_.firstElementChild;if(!s)return;const b=s.querySelector('.body');if(!b||b.querySelector('.map')){s.style.zoom='';return}
+  s.style.zoom='';const over=b.scrollHeight-b.clientHeight;if(over<=2)return;const H=s.clientHeight;let z=Math.max(.6,H/(H+over));s.style.zoom=z;
+  for(let k=0;k<3;k++){const o2=b.scrollHeight-b.clientHeight;if(o2<=2||z<=.6)break;z=Math.max(.6,z*H/(H+o2*z)-.01);s.style.zoom=z}}
+function fit(){if(!FITQ)FITQ=requestAnimationFrame(fitNow)}
+new MutationObserver(ms=>{if(ms.some(m=>!(m.target.closest&&m.target.closest('#balls,.tank,.sky2,.hd,#hd'))))fit()}).observe(APP_,{childList:true,subtree:true});addEventListener('resize',fit);
 let KEYH=null;document.addEventListener('keydown',e=>{if(KEYH)KEYH(e)});
 function hud(o){const k=K();return `<div class="hud">${o.back?`<button class="back" id="bk" aria-label="返回">⬅️</button>`:`<span style="font-size:1.8rem">${k.av}</span>`}<div class="ttl">${T(o.title)}</div><span class="chip" id="cc">${TH().ce} ${T('今天')} <b id="ct">${k.today.n}</b> · ${T('共')} <b id="ca">${k.total}</b></span><button class="zybtn ${DB.set.zy?'':'off'}" id="zyb">${T('注音')}<small>ㄅㄆㄇ</small></button></div>`+(o.prog?`<div class="hud2"><div class="prog"><i id="pb" style="width:0"></i></div><span class="chip" id="pg">0/0</span><button class="tbtn ${DB.set.rate==='s'?'on':''}" id="hSlow">${T(DB.set.rate==='s'?'正常速度':'唸慢一點')}</button><button class="tbtn ${DB.set.auto?'':'on'}" id="hMute">${T(DB.set.auto?'不要語音說明':'要語音說明')}</button></div>`:'')}
 function bindHud(back){const z=$('#zyb');if(z)z.onclick=()=>{DB.set.zy=DB.set.zy?0:1;saveDB();$('.scr').classList.toggle('nozy',!DB.set.zy);z.classList.toggle('off',!DB.set.zy)};const b=$('#bk');if(b)b.onclick=()=>{sfx('pop');(back||hub)()};const hs=$('#hSlow');if(hs)hs.onclick=()=>{getAC();DB.set.rate=DB.set.rate==='s'?'n':'s';saveDB();hs.classList.toggle('on',DB.set.rate==='s');hs.innerHTML=T(DB.set.rate==='s'?'正常速度':'唸慢一點');say(DB.set.rate==='s'?'好，我會唸慢一點。':'好，用正常速度唸。')};const hm=$('#hMute');if(hm)hm.onclick=()=>{getAC();DB.set.auto=DB.set.auto?0:1;saveDB();hm.classList.toggle('on',!DB.set.auto);hm.innerHTML=T(DB.set.auto?'不要語音說明':'要語音說明');if(DB.set.auto)say('好，我會唸題目。');else{stopSay();toast('不會自動唸了。想聽就按 🔊。')}}}
@@ -425,8 +434,8 @@ function title(){let selAv=AVS[0];const th=TH();
    <button class="btn g big" style="width:100%;margin-top:.9rem" id="go">${th.ce} ${T('出發！')}</button>
    <div class="hint2">${T(`答對就得到${th.cn}。每 10 ${th.u}${th.cn}，${th.hs}就多一個${th.item}！`)}</div></div></div>`,'');
   const TSAY=`歡迎來到${th.home}！我們要學一句英文經文：${VERSE.en} ${VERSE.zh}。先點你的名字；第一次玩，點新增，寫上名字，選一個夥伴，再按出發。答對就得到${th.cn}！`;
-  $('#howT').onclick=()=>{getAC();say(TSAY)};$('#thB').onclick=()=>{getAC();themePick(title)};
-  const el0=$('.scr');const first=e=>{el0.removeEventListener('pointerdown',first,true);if(e.target.closest('#howT,#go,#zyb,.kid,#avs,#nm,#thB'))return;say(TSAY)};el0.addEventListener('pointerdown',first,true);
+  $('#howT').onclick=()=>{getAC();say(TSAY)};later(()=>say(TSAY),500);$('#thB').onclick=()=>{getAC();themePick(title)};
+  const el0=$('.scr');const first=e=>{el0.removeEventListener('pointerdown',first,true);if(e.target.closest('#howT,#go,#zyb,.kid,#avs,#nm,#thB'))return;try{if(!speechSynthesis.speaking)say(TSAY)}catch(x){}};el0.addEventListener('pointerdown',first,true);
   const bindK=()=>{$$('.kid[data-k]').forEach(b=>b.onclick=()=>{DB.cur=b.dataset.k;saveDB();sfx('pop');$('#newk').hidden=true;$('#kids').innerHTML=kidsH();bindK();say(b.dataset.k)});
     $('#addk').onclick=()=>{$('#newk').hidden=false;sfx('pop');$('#nm').focus();say('寫上你的名字，再選一個夥伴。')}};bindK();
   $$('#avs button').forEach(b=>b.onclick=()=>{selAv=b.dataset.a;$$('#avs button').forEach(x=>x.classList.toggle('on',x===b));sfx('pop')});
@@ -463,7 +472,7 @@ function rounds(sb,list,fn){let i=0;const next=()=>{if(i>=list.length)return end
 /* 答對：第一次就答對才給糖果 */
 function correct(el,first,key){SES.done++;if(first){SES.first++;addCandy(1,el)}else if(key)SES.wrong.push(key);sfx('ok');if(key){const k=K();if(first&&k.wrong[key])delete k.wrong[key];if(!first)k.wrong[key]=(k.wrong[key]||0)+1;saveDB()}}
 function feedback(sb,html,sayT,next,delay){const d=document.createElement('div');d.className='fb';d.innerHTML=html+`<div class="row"><button class="ibtn" data-say="${esc(sayT)}">🔊</button><button class="btn g" id="nx">${T('下一題')} ➜</button></div><div class="hint2">${T('聽完會自動跳到下一題')}</div>`;sb.appendChild(d);
-  setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'nearest'}),50);let gone=false;const g=()=>{if(gone)return;gone=true;stopSay();next()};$('#nx',d).onclick=()=>{sfx('pop');g()};window.CUR={next:g};const t0=Date.now();say(sayT,()=>later(g,Math.max(700,1800-(Date.now()-t0))))}
+  let gone=false;const g=()=>{if(gone)return;gone=true;stopSay();next()};$('#nx',d).onclick=()=>{sfx('pop');g()};window.CUR={next:g};const t0=Date.now();say(sayT,()=>later(g,Math.max(700,1800-(Date.now()-t0))))}
 function endStage(){const s=STAGES.find(x=>x.id===SES.id),k=K();const r=SES.n?SES.first/SES.n:1;const st=r>=.9?3:r>=.6?2:1;const bonus=st===3?3:st===2?1:0;
   const old=k.stars[s.id]||0;if(st>old)k.stars[s.id]=st;saveDB();if(bonus)addCandy(bonus);checkBadges();
   setProg(SES.n,SES.n);confetti(st*8);sfx('win');
@@ -768,7 +777,7 @@ function verse(){const k=K();let lv=0;const VW=VERSE.words;
   $('#v3').onclick=()=>{getAC();if(lv===0){lv=1;$$('.lvl').forEach((x,j)=>x.classList.toggle('on',j===1));hid=pick(VW.map((_,i)=>i),1)}draw();quiz()};
   function quiz(){const miss=hid.slice().sort();if(!miss.length)return;let j=0,first=true;
     const ask=()=>{if(j>=miss.length){const key='l'+lv;const firstTime=!k.verse[key];k.verse[key]=1;saveDB();confetti(14);sfx('win');if(firstTime)addCandy(2,$('#vws'));
-        $('#vq').innerHTML=`<div class="fb"><div class="ans en">${esc(VERSE.en)}</div><div class="why">${T('背起來了！')}${firstTime?' +2 '+TH().ce:''}</div></div>`;hid=[];draw();say('背起來了！'+VERSE.en+' '+VERSE.zh);checkBadges();window.CUR={end:1};return}
+        $('#vq').innerHTML=`<div class="fb inl"><div class="ans en">${esc(VERSE.en)}</div><div class="why">${T('背起來了！')}${firstTime?' +2 '+TH().ce:''}</div></div>`;hid=[];draw();say('背起來了！'+VERSE.en+' '+VERSE.zh);checkBadges();window.CUR={end:1};return}
       const i=miss[j];const right=VW[i][0];const ds=pick(W.map(x=>x.en).filter(x=>!VW.some(v=>v[0].toLowerCase()===x.toLowerCase())),2).map(x=>i===0?cap(x):x);const ord=shuffle([right].concat(ds));
       $('#vq').innerHTML=`<div class="hint2">${T(`第 ${i+1} 個字是哪一個？`)}</div><div class="opts c3">${ord.map((o,k2)=>`<button class="opt c${k2} en" data-o="${o}">${o}</button>`).join('')}</div>`;say(`第${i+1}個字是哪一個？`);
       window.CUR={tap:()=>$$('#vq .opt').find(b=>b.dataset.o===right).click(),auto:1};
