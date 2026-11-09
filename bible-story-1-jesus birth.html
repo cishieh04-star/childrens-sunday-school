@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>耶穌誕生 The Story of the Birth of Jesus</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
+<style>
+/* 介面：聖誕馬廄（暖木頭色＋小花草，沿用 3-4 的介面）。
+   版面：上方工具列＋一個不必往下捲的舞台，手機直放、平板橫放都放得下。 */
+:root{
+  --bg:#f7ead2; --bg2:#ecd3a8; --wood:#a8693f; --wood2:#7b4527; --ink:#3a2414; --card:#fffaf0;
+  --roof:#d9533c; --leaf:#5f9e46; --sky:#cfe9f4; --gold:#f2b632; --good:#2f9e5b; --blue:#2f6db5; --red:#e2513c;
+  --en:"Andika","Comic Sans MS","Chalkboard SE","Trebuchet MS",sans-serif;
+  --zh:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
+body{background:var(--bg);color:var(--ink);font-family:var(--zh);-webkit-user-select:none;user-select:none;touch-action:manipulation}
+html.tracing,html.tracing body{touch-action:none}
+button{font-family:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+.en{font-family:var(--en)}
+#bgdeco{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:0;
+  background:radial-gradient(circle at 12% 88%,rgba(95,158,70,.18) 0 60px,transparent 61px),radial-gradient(circle at 92% 92%,rgba(95,158,70,.16) 0 80px,transparent 81px),
+  repeating-linear-gradient(90deg,rgba(123,69,39,.05) 0 2px,transparent 2px 46px)}
+#bgdeco span{position:absolute;font-size:28px;opacity:.5}
+#fx{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:60}
+
+/* ---------- 上方工具列（所有畫面共用） ---------- */
+#bar{position:fixed;left:0;right:0;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;
+  padding:calc(6px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px));
+  background:linear-gradient(var(--wood),var(--wood2));box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.tb{font:800 15px/1 var(--zh);padding:9px 12px;border-radius:14px;border:2.5px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:0 3px 0 var(--ink)}
+.tb:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.tb.back{background:var(--roof);color:#fff}
+.tb.pause{background:var(--gold)}
+.starPill{font:800 16px/1 var(--en);padding:8px 12px;border-radius:999px;background:var(--ink);color:#fff3d6}
+.starPill.bump{animation:bump .5s}
+@keyframes bump{40%{transform:scale(1.35)}}
+
+.screen{position:fixed;left:0;right:0;bottom:0;top:var(--barH,56px);z-index:2;display:flex;flex-direction:column;overflow:auto;
+  padding:8px max(14px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+.screen.full{top:0}
+
+/* ---------- 木頭按鈕 ---------- */
+.wb{font:900 clamp(18px,4.8vmin,26px)/1.1 var(--zh);padding:13px 22px;border-radius:22px;border:3px solid var(--ink);color:#fff;background:var(--wood);box-shadow:0 5px 0 var(--ink)}
+.wb:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.wb.green{background:var(--good)}.wb.red{background:var(--roof)}.wb.gold{background:var(--gold);color:var(--ink)}
+.chip{font:800 15px/1 var(--zh);padding:9px 12px;border-radius:12px;border:2.5px solid var(--ink);background:var(--card)}
+.chip.on{background:var(--ink);color:#fff3d6}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.lbl{font-weight:900;font-size:15px}
+
+/* ---------- 封面 ---------- */
+#cover{align-items:center;justify-content:center;text-align:center;gap:1.8vh;cursor:pointer;background:linear-gradient(var(--sky),var(--bg) 70%)}
+#cover .house{width:min(48vw,30vh)}
+.ttl{font:700 clamp(30px,8.5vmin,58px)/1.05 var(--en);color:var(--roof);text-shadow:3px 3px 0 var(--ink);margin:0}
+.sub{font-weight:900;font-size:clamp(15px,4vmin,21px)}
+.go{font-size:clamp(24px,7vmin,40px);padding:14px 40px;animation:breathe 1.3s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.06)}}
+.lineTip{padding:8px 12px;border-radius:12px;background:#fff3c4;border:2px solid #6b4a00;font-weight:800;font-size:14px}
+
+/* ---------- 首頁 ---------- */
+#home{align-items:center;justify-content:center;gap:1.6vh;text-align:center}
+.buddies{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.bd{font-size:clamp(30px,8vmin,44px);line-height:1;padding:6px 8px;border-radius:16px;border:3px solid var(--ink);background:var(--card);box-shadow:0 3px 0 var(--ink);min-width:62px}
+.bd small{display:block;font:800 12px/1.2 var(--zh);margin-top:2px}
+.bd.sel{background:var(--gold);transform:scale(1.08)}
+#nameIn{font:800 18px var(--zh);padding:10px 14px;border-radius:14px;border:3px solid var(--ink);width:min(80vw,320px);text-align:center;background:#fff;color:var(--ink)}
+
+/* ---------- 闖關地圖：聖誕馬廄的 14 扇窗 ---------- */
+#map{align-items:center}
+.houseBox{position:relative;width:min(100%,920px);flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center}
+.roof{width:100%;height:clamp(54px,11vh,90px);position:relative;flex:none}
+.roof svg{width:100%;height:100%;display:block}
+.facade{flex:1 1 auto;min-height:0;width:94%;background:var(--wood);border:4px solid var(--ink);border-top:0;border-radius:0 0 18px 18px;padding:10px;
+  display:grid;grid-template-columns:repeat(var(--mc,2),1fr);gap:10px;align-content:stretch;grid-auto-rows:minmax(0,1fr);max-height:min(100%,560px);
+  background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.08) 0 2px,transparent 2px 22px)}
+.win{position:relative;border:4px solid var(--ink);border-radius:14px 14px 8px 8px;background:var(--sky);padding:6px 4px;display:flex;align-items:center;gap:6px;min-height:58px;box-shadow:inset 0 0 0 3px #fff8;text-align:left}
+.win .num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--roof);color:#fff;font:900 16px/30px var(--en);text-align:center;border:2px solid var(--ink)}
+.win .ic{flex:none;font-size:clamp(22px,6vmin,46px);line-height:1}
+.win .nm{font-weight:900;font-size:clamp(13px,3.5vmin,24px);line-height:1.15}
+.win.done{background:#e8f6d9}
+.win.done::after{content:"⭐ 過關";position:absolute;right:4px;top:-12px;background:var(--good);color:#fff;font:900 12px/1 var(--zh);padding:4px 6px;border-radius:8px;border:2px solid var(--ink)}
+.win.next{background:#fff3b0;animation:glowW 1.1s ease-in-out infinite}
+.win.next .me{position:absolute;right:-8px;top:-16px;font-size:24px;animation:hop .8s ease-in-out infinite}
+@keyframes glowW{50%{box-shadow:0 0 0 6px var(--gold),inset 0 0 0 3px #fff8}}
+@keyframes hop{50%{transform:translateY(-5px)}}
+.facade.wide .win{flex-direction:column;justify-content:center;text-align:center;gap:3px;padding:6px 3px}
+.facade.wide .win .num{width:26px;height:26px;line-height:26px;font-size:14px}
+.mapFoot{flex:none;padding-top:10px}
+
+/* ---------- 遊戲畫面 ---------- */
+#game{gap:6px}
+.head{flex:none;display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:center;align-items:center}
+#lvTitle{font-weight:900;font-size:clamp(16px,4.3vmin,21px)}
+.dots{display:flex;gap:5px}.dots i{width:13px;height:13px;border-radius:50%;border:2px solid var(--ink);background:var(--card)}
+.dots i.d{background:var(--good)}.dots i.c{background:var(--roof)}
+.board{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.team{font:900 14px/1 var(--zh);padding:7px 10px;border-radius:12px;border:2.5px solid var(--ink);color:#222}
+.team.now{transform:scale(1.12);box-shadow:0 0 0 4px var(--gold)}
+#instr{flex:none;text-align:center;font-weight:900;font-size:clamp(15px,4vmin,19px);min-height:1.3em}
+#stage{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;position:relative}
+#prompt{flex:none;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
+#field{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative}
+.foot{flex:none;display:flex;justify-content:center;gap:8px}
+.again{font:900 18px/1 var(--zh);padding:11px 22px;border-radius:999px;border:3px solid var(--ink);background:var(--card);box-shadow:0 4px 0 var(--ink)}
+
+/* 選項（木頭牌子） */
+.opts{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:stretch;width:100%}
+.opt{font:700 clamp(20px,5.6vmin,34px)/1.2 var(--en);background:var(--card);color:var(--ink);border:4px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--wood2);padding:10px 16px;min-width:84px;min-height:60px;display:flex;align-items:center;justify-content:center;transition:transform .15s,opacity .2s}
+.opt:active{transform:translateY(4px);box-shadow:0 2px 0 var(--wood2)}
+.opt.col{flex-direction:column;gap:4px}
+.opt.sent{font-size:clamp(18px,5vmin,28px)}
+.opt.pic{padding:6px;width:clamp(96px,28vmin,170px)}
+@media (orientation:portrait){.opt.pic{width:clamp(96px,30vw,190px)}}
+.opt .zhs{font:800 clamp(13px,3.4vmin,16px)/1.2 var(--zh);color:var(--wood2)}
+.no{opacity:.3!important;filter:grayscale(1);pointer-events:none}
+.yes{background:var(--good)!important;color:#fff!important;transform:scale(1.07)}
+.hint{animation:glow 1s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 8px var(--gold),0 6px 0 var(--wood2);transform:scale(1.06)}}
+.reading{outline:5px solid var(--roof);outline-offset:3px;transform:scale(1.05)}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.heard{font:700 clamp(24px,7vmin,40px)/1.2 var(--en);background:var(--card);border:4px solid var(--ink);border-radius:18px;padding:6px 16px;opacity:0;transform:scale(.8);transition:opacity .35s,transform .35s,background .2s}
+.heard.show{opacity:1;transform:scale(1)}
+.heard.say{background:#fff3b0}
+.peekBox{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px}
+.peek{font:700 clamp(24px,7vmin,40px)/1.2 var(--en);background:#fff3b0;border:3px dashed var(--ink);border-radius:14px;padding:3px 14px;letter-spacing:1px}
+.peek.off{display:none}
+.heardBox{display:flex;flex-direction:column;align-items:center;gap:6px}
+.heard .q{display:none;letter-spacing:4px}
+.heard.off .txt{display:none}
+.heard.off .q{display:inline}
+.tb.sm{font-size:14px;padding:5px 12px}
+.listen{font-size:clamp(44px,12vmin,74px);width:clamp(80px,20vmin,116px);height:clamp(80px,20vmin,116px);border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--card);border:4px solid var(--ink);animation:breathe 1.6s infinite}
+.clk{display:block;width:clamp(130px,36vmin,230px);height:auto}
+.clk.sm{width:clamp(84px,24vmin,140px)}
+.digi{font:700 clamp(22px,6vmin,34px)/1 var(--en);background:#222;color:#7fff7a;padding:6px 12px;border-radius:10px;border:3px solid var(--ink);letter-spacing:2px}
+.speech{position:relative;font:700 clamp(19px,5.2vmin,30px)/1.25 var(--en);background:var(--card);border:4px solid var(--ink);border-radius:20px;padding:8px 14px;max-width:min(86vw,520px)}
+.speech.me{background:var(--gold)}
+.talking{animation:talk .45s ease-in-out infinite alternate;box-shadow:0 0 0 5px var(--blue)}
+@keyframes talk{to{transform:scale(1.05)}}
+.zhLine{font-weight:900;font-size:clamp(15px,4vmin,20px);color:var(--wood2)}
+
+/* 教學卡（小教室） */
+.lesson{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.lcard{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card);border:5px solid var(--ink);border-radius:26px;box-shadow:0 8px 0 var(--wood2);padding:12px 18px;max-width:min(94vw,560px);text-align:center;animation:lin .35s}
+@keyframes lin{from{transform:translateY(14px) scale(.96);opacity:0}}
+.lcard .big{font:700 clamp(34px,10vmin,62px)/1.1 var(--en);color:var(--roof)}
+.lcard .zh{font-weight:900;font-size:clamp(18px,5vmin,28px)}
+.lcard .tip{font-weight:800;font-size:clamp(15px,4vmin,19px);color:var(--wood2);line-height:1.5}
+.lcard .pic{font-size:clamp(54px,15vmin,96px);line-height:1}
+@media (orientation:landscape) and (max-height:540px){
+ .lcard{display:grid;grid-template-columns:auto auto;align-items:center;justify-items:center;column-gap:16px;row-gap:4px;padding:8px 16px;max-width:96vw}
+ .lcard>.clk,.lcard>.pic{grid-column:1;grid-row:1/span 6}
+ .lcard>*{grid-column:2}
+ .lcard .clk{width:min(38vh,160px)}
+ .lcard .pic{font-size:min(16vh,70px)}
+ .lcard .big{font-size:clamp(24px,8vh,40px)}
+ .lcard .zh{font-size:clamp(15px,5vh,22px)}
+ .lcard .tip{font-size:clamp(12px,3.8vh,16px);line-height:1.35}
+ .lesson{gap:6px}
+ .lesson>.zhLine{display:none}
+ .lcard .numGrid{grid-template-columns:repeat(6,auto)}
+ .clk.sm{width:clamp(60px,24vh,96px)}
+ .bossTop>div:first-child{display:none}
+ #field .cq{gap:6px}
+ #prompt .bossTop{display:none}
+ #prompt:has(.bossTop){display:none}
+ #field .slot{width:clamp(26px,5.2vw,40px);height:clamp(32px,11vh,46px);font-size:clamp(18px,7vh,30px)}
+ #field .tile{min-width:clamp(34px,10vh,50px);height:clamp(34px,10vh,50px);padding:0 5px;font-size:clamp(18px,6.5vh,28px)}
+ #field .tiles{gap:6px;margin-top:8px}
+ #prompt .sched{gap:4px}
+ #prompt .sched div{padding:2px 5px;font-size:12px}
+ #prompt .sched div .e{font-size:16px}
+ #prompt .sched div b{font-size:14px}
+ .opt.pic{width:clamp(70px,21vh,110px)}
+ .cqP .heard{font-size:22px;padding:4px 10px}
+ .listen{width:64px;height:64px;font-size:38px}
+ .gears{font-size:16px}
+ .bossTop .zhLine{display:none}
+ .comic .who{font-size:36px}
+ .comic .zhLine{font-size:14px}
+ .foot{position:absolute;right:6px;bottom:2px;z-index:3}
+ #stage{flex-direction:row;align-items:center;padding-right:118px;gap:10px}
+ #prompt{flex:0 1 auto;flex-direction:column;max-width:42%;flex-wrap:nowrap}
+ #prompt:empty{display:none}
+ #field{flex:1 1 0;min-width:0;align-self:stretch}
+ .opts{gap:8px}
+ .lcard .clk{width:min(32vh,140px)}
+}
+.lnav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.tb[disabled]{opacity:.35}
+.numGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.numGrid span{font:700 clamp(15px,4vmin,20px)/1.1 var(--en);background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 6px}
+.numGrid span b{display:block;font-size:1.3em;color:var(--blue)}
+.numGrid span.on{background:var(--gold);transform:scale(1.08)}
+.hlH{color:var(--blue)}.hlM{color:var(--red)}
+
+/* 糖果罐 */
+.candies{display:flex;gap:clamp(10px,4vw,30px);justify-content:center;flex-wrap:wrap}
+.candy{width:clamp(86px,24vmin,140px);height:clamp(86px,24vmin,140px);border-radius:50%;border:4px solid var(--ink);font:700 clamp(32px,10vmin,56px)/1 var(--en);color:var(--ink);
+  background:radial-gradient(circle at 32% 28%,#fff 0 10%,var(--c) 45%);box-shadow:0 6px 0 rgba(0,0,0,.2);animation:hop 2.2s ease-in-out infinite;animation-delay:var(--d)}
+.jars{display:flex;gap:18px;justify-content:center;margin-top:14px}
+.jar{width:clamp(110px,30vmin,170px);height:clamp(80px,20vmin,120px);border:4px solid var(--ink);border-top-width:8px;border-radius:14px 14px 30px 30px;background:rgba(255,255,255,.6);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:6px;position:relative;overflow:hidden}
+.jar b{font:700 clamp(18px,5vmin,26px)/1 var(--en);background:#fff;border:2px solid var(--ink);border-radius:8px;padding:2px 8px}
+.jar.yes b{color:var(--ink)!important}
+.jar .in{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin-top:6px;font:700 13px var(--en)}
+.jar .in i{font-style:normal;background:var(--gold);border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;border:2px solid var(--ink)}
+
+/* 字卡／拼字 */
+.slots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.slot{width:clamp(30px,8.5vw,52px);height:clamp(40px,10vw,60px);border:3px solid var(--ink);border-radius:10px;background:var(--card);display:flex;align-items:center;justify-content:center;font:700 clamp(22px,6.5vw,38px)/1 var(--en)}
+.slot.next{box-shadow:0 0 0 4px var(--roof);animation:breathe 1.2s infinite}
+.slot.full{background:#e8f6d9}
+.tiles{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:12px}
+.tile{min-width:clamp(52px,14vmin,74px);height:clamp(52px,14vmin,74px);padding:0 10px}
+.wtile{font-size:clamp(20px,5.6vmin,30px);min-height:54px}
+.sentRow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:58px;align-items:center;padding:6px 10px;border:3px dashed var(--wood);border-radius:16px;background:#fff8;min-width:min(86vw,420px)}
+.sentRow span{font:700 clamp(20px,5.6vmin,30px)/1 var(--en);background:#e8f6d9;border:3px solid var(--ink);border-radius:12px;padding:8px 10px}
+.used{opacity:.25;pointer-events:none}
+
+/* 魔法 e */
+.magic{font:700 clamp(40px,12vmin,70px)/1 var(--en);display:flex;align-items:center;gap:6px}
+.magic .e{color:var(--roof)}
+.wand{display:inline-block;animation:wave 1s ease-in-out infinite}
+@keyframes wave{50%{transform:rotate(-20deg)}}
+
+/* 漫畫對話 */
+.comic{display:flex;justify-content:center;align-items:flex-end;gap:10px;width:100%;max-width:640px}
+.side{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;flex:1}
+.who{font-size:clamp(50px,14vmin,84px);line-height:1}
+.sched{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.sched div{background:var(--card);border:3px solid var(--ink);border-radius:12px;padding:4px 8px;text-align:center;font-weight:900;font-size:13px}
+.sched div b{display:block;font:700 18px/1.1 var(--en)}
+.sched div .e{font-size:24px;line-height:1.1}
+
+/* 大魔王：跟著星星走 */
+@media (max-height:760px){.bossTop>div:first-child{display:none!important}}
+@media (orientation:portrait) and (max-height:760px){.bossTop .zhLine{display:none}#field .cq{gap:6px}#field .cq .opts{gap:8px}}
+.cq{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.cqP{display:flex;flex-direction:column;align-items:center;gap:6px}
+.bossTop{display:flex;align-items:center;justify-content:center;gap:12px}
+.bossTop .clk{width:clamp(110px,26vmin,170px)}
+.gears{font-size:22px;letter-spacing:2px}
+
+/* 描字 */
+.traceHost{position:relative;width:100%;flex:1 1 auto;min-height:260px}
+.traceWrap{position:absolute;left:0;top:0;right:0;bottom:0}
+.traceWrap canvas,.traceWrap .sov{position:absolute;left:0;top:0;width:100%;height:100%}
+.traceWrap canvas.cv{touch-action:none}
+.traceWrap .sov,.traceWrap canvas.gridcv{pointer-events:none}
+.board2{position:absolute;left:4px;top:4px;right:4px;bottom:4px;border-radius:22px;background:#4f7d48;border:8px solid var(--wood);box-shadow:inset 0 0 0 3px rgba(0,0,0,.25)}
+.sov .sdemo{fill:none;stroke:#ffb020;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.sov .scur{fill:none;stroke:#ffb020;stroke-width:2.6;stroke-dasharray:3 3;stroke-linecap:round;animation:sdash .8s linear infinite}
+@keyframes sdash{to{stroke-dashoffset:-6}}
+.sov .sbadge{transition:opacity .3s}
+.sov .sbadge.now{animation:bblink .9s ease-in-out infinite}
+@keyframes bblink{50%{opacity:.35}}
+.sov .sbadge.past circle{fill:#9aa7b4}
+.tbtn{position:absolute;bottom:12px;font:900 clamp(15px,4vmin,20px)/1 var(--zh);padding:8px 14px;border-radius:14px;background:var(--card);border:3px solid var(--ink);z-index:4}
+.tbtn.redo{right:14px}.tbtn.sob{right:110px;background:#fff3b0}
+.tbar{position:absolute;left:16px;bottom:18px;width:min(30vw,200px);height:16px;border-radius:9px;background:#fff;border:3px solid var(--ink);overflow:hidden;z-index:4}
+.tbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd23f,#ff8a00);transition:width .15s}
+.lineb{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:6;font:900 clamp(14px,3.6vmin,18px)/1.2 var(--zh);padding:8px 12px;border-radius:14px;background:var(--roof);color:#fff;border:3px solid #fff;white-space:nowrap}
+.tside{position:absolute;left:12px;top:16px;bottom:56px;z-index:3;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--card);border:4px solid var(--ink);border-radius:20px;padding:6px 4px}
+.tside.top{left:12px;right:12px;bottom:auto;flex-direction:row;gap:12px;padding:4px 10px}
+.tside .tpic{font:700 clamp(30px,9vmin,56px)/1 var(--en);color:var(--blue)}
+.tside .tword{display:flex;align-items:flex-end;justify-content:center;gap:1px;background:#fff;border-radius:10px;padding:2px}
+.tside .tword img,.tside .tword svg{display:block;flex:none}
+.tside .tzh{font-weight:900;font-size:clamp(15px,4vmin,20px);white-space:nowrap}
+.wDone{display:flex;align-items:flex-end;gap:2px;background:var(--card);border:4px solid var(--ink);border-radius:18px;padding:6px 12px}
+.wDone img{height:clamp(70px,18vmin,120px);width:auto;display:block}
+.wDone .lt.say{background:#fff3b0;transform:scale(1.12)}
+
+/* 故事屋 */
+#story{gap:6px}
+.sTop{flex:none;display:flex;justify-content:center;align-items:center;gap:8px;font-weight:900}
+.scene .act,.scene .actC{transform-box:fill-box;transform-origin:50% 100%}
+.scene.snd .act{animation:actHop .45s ease-in-out infinite alternate}
+.scene.snd .actC{transform-origin:50% 50%;animation:actShake .25s ease-in-out infinite alternate}
+@keyframes actHop{from{transform:translateY(0) rotate(-6deg)}to{transform:translateY(-8px) rotate(6deg)}}
+@keyframes actShake{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+.scene{cursor:pointer;flex:1 1 auto;min-height:120px;display:flex;justify-content:center;align-items:center}
+.scene svg{height:100%;max-height:60vh;width:auto;max-width:100%;border:5px solid var(--ink);border-radius:22px;background:linear-gradient(#bfe6ff 50%,#8fcf6a 50%)}
+.sText{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.sEn{font:700 clamp(21px,5.8vmin,34px)/1.3 var(--en);background:var(--card);border:4px solid var(--ink);border-radius:20px;padding:8px 14px;max-width:min(94vw,640px)}
+.sEn .w{display:inline-block;padding:0 2px;border-radius:6px;cursor:pointer}
+.sEn .w.say{background:#fff3b0}
+.sWho{font-size:28px;margin-right:6px;vertical-align:-4px}
+.sZh{font-weight:900;font-size:clamp(17px,4.6vmin,24px)}
+.sTip{font-weight:800;font-size:clamp(14px,3.8vmin,18px);color:var(--wood2);background:#fff3c4;border-radius:12px;padding:6px 10px;max-width:min(94vw,640px);line-height:1.5}
+.sNar{font-weight:900;font-size:clamp(15px,4.2vmin,20px);color:var(--wood2);background:#fff3c4;border-radius:12px;padding:4px 12px;max-width:min(94vw,640px)}
+.sNar.say{background:#ffe28a}
+.sLine{display:flex;align-items:center;gap:8px;background:var(--card);border:3px solid var(--ink);border-radius:16px;padding:4px 12px 4px 6px;width:min(94vw,560px);text-align:left;transition:transform .2s}
+.sLine.say{background:#fff3b0;transform:scale(1.03)}
+.sNo{flex:none;width:24px;height:24px;border-radius:50%;background:var(--roof);color:#fff;font:900 13px/24px var(--en);text-align:center}
+.sWho{flex:none;font-size:clamp(26px,7vmin,36px);line-height:1}
+.sEn2{font:700 clamp(18px,5.2vmin,28px)/1.25 var(--en)}
+.sEn2 .w{display:inline-block;padding:0 2px;border-radius:6px;cursor:pointer}
+.sEn2 .w.say{background:#ffd54a}
+.sZh2{font-weight:900;font-size:clamp(14px,4vmin,19px);color:#5a3b22}
+.scene .who{transform-box:fill-box;transform-origin:50% 100%}
+.scene .who.talk>.idle{animation:actHop .35s ease-in-out infinite alternate}
+@media (orientation:landscape) and (max-height:540px){
+ #story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);grid-template-rows:auto minmax(0,1fr) auto;column-gap:10px}
+ #story .sTop,#story .sNav{grid-column:1/3}
+ #story .scene{min-height:0}
+ #story .scene svg{max-height:100%}
+ #story .sText{justify-content:center;overflow:hidden}
+ .sLine{width:100%;padding:2px 10px 2px 4px}
+ .sEn2{font-size:clamp(15px,5.4vh,24px)}
+ .sZh2{font-size:clamp(12px,3.8vh,16px)}
+ .sWho{font-size:clamp(20px,7vh,30px)}
+ .sNar{font-size:clamp(13px,4vh,17px);padding:2px 10px}
+ .sText{gap:4px}
+ .sTip{font-size:clamp(12px,3.8vh,16px);padding:4px 8px;line-height:1.35}
+}
+.sLine.one{padding:8px 16px 8px 10px;gap:12px}
+.sLine.one .sNo{width:32px;height:32px;font-size:17px;line-height:32px}
+.sLine.one .sEn2{font-size:clamp(24px,7vmin,40px)}
+.sLine.one .sZh2{font-size:clamp(17px,5vmin,26px)}
+.sTip.say{background:#ffe28a}
+.sNav{flex:none;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.sQ{display:flex;gap:12px;justify-content:center}
+
+/* 小視窗 */
+.overlay{position:fixed;left:0;top:0;right:0;bottom:0;z-index:50;background:rgba(40,20,10,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.panel{background:var(--card);border:5px solid var(--ink);border-radius:28px;padding:20px;text-align:center;max-width:440px;width:100%;box-shadow:0 10px 0 var(--wood2);animation:lin .35s}
+.panel .big{font-weight:900;font-size:clamp(24px,7vw,34px)}
+.panel .trophy{font-size:72px;line-height:1.1;animation:bump 1s infinite}
+.panel p{font-weight:800;font-size:18px;margin:8px 0}
+.rank{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.rank div{font-weight:900;font-size:20px;padding:8px;border-radius:12px;border:3px solid var(--ink);color:#222}
+.fitHint{position:fixed;left:50%;bottom:calc(8px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:var(--ink);color:#fff;font-weight:800;padding:8px 14px;border-radius:999px;font-size:14px;white-space:nowrap}
+.puff{position:fixed;font-size:40px;pointer-events:none;z-index:55;animation:puff 1s forwards}
+@keyframes puff{to{transform:translateY(-60px) scale(1.5);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<style>.sTip.sNar{background:#efe6ff;color:#3b2a6b;text-align:center;font-weight:900}.sTip.sNar.say{background:#dccbff}</style>
+<style>
+/* ===== 故事動畫 ===== */
+#sScene .who,#sScene .idle,#sScene .pp,#sScene .bal,#sScene .flg{transform-box:fill-box;transform-origin:50% 100%}
+#sScene .idle{animation:aIdle 2.4s ease-in-out infinite}
+#sScene .who.talk>.idle{animation:aTalk .35s ease-in-out infinite alternate}
+@keyframes aTalk{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-8px) rotate(5deg)}}
+@keyframes aIdle{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,.97) translateY(1px)}}
+#sScene .bal{animation:aBal 3s ease-in-out infinite}@keyframes aBal{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(5deg) translateY(-6px)}}
+#sScene .flg{transform-origin:50% 0;animation:aFlg 1.6s ease-in-out infinite}@keyframes aFlg{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+#sScene .aEnter{animation:aEnter .9s cubic-bezier(.3,1.4,.6,1) both}@keyframes aEnter{from{transform:translateX(var(--fx));opacity:0}to{transform:none;opacity:1}}
+#sScene .aJump{animation:aJump .7s ease-out 2}@keyframes aJump{0%,100%{transform:none}40%{transform:translateY(-40px) scale(1.08)}70%{transform:translateY(0) scale(1.08,.88)}}
+#sScene .aHop{animation:aJump .6s ease-out 2}
+#sScene .aBounce{animation:aBounce .5s ease-in-out 4}@keyframes aBounce{0%,100%{transform:scale(1,1)}30%{transform:scale(1.15,.85)}60%{transform:scale(.9,1.12) translateY(-10px)}}
+#sScene .aTiptoe{animation:aTiptoe .5s ease-in-out 5}@keyframes aTiptoe{0%,100%{transform:translateX(0)}25%{transform:translate(-8px,-6px) rotate(-4deg)}75%{transform:translate(8px,-6px) rotate(4deg)}}
+#sScene .aHide{animation:aHide 2.6s ease-in-out}@keyframes aHide{0%,100%{transform:none}20%,70%{transform:translateY(30px) scale(1,.75)}85%{transform:translateY(-6px)}}
+#sScene .aStartle{animation:aStartle .9s ease-out}@keyframes aStartle{0%{transform:none}25%{transform:translateY(-30px) rotate(-10deg) scale(1.1)}50%{transform:translate(10px,0) rotate(6deg)}75%{transform:translateX(-6px)}100%{transform:none}}
+#sScene .aTilt{animation:aTilt 1s ease-in-out 2}@keyframes aTilt{0%,100%{transform:rotate(0)}40%,60%{transform:rotate(-12deg)}}
+#sScene .aSway{animation:aSway 1.4s ease-in-out 2}@keyframes aSway{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+#sScene .aProud{animation:aProud 1.6s ease-in-out}@keyframes aProud{0%,100%{transform:none}40%,70%{transform:scale(1.15) translateY(-6px)}}
+#sScene .aShake{animation:aShakeX .4s 4}@keyframes aShakeX{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#sScene .aWobble{animation:aWobble .3s 6}@keyframes aWobble{50%{transform:rotate(6deg)}}
+#sScene .aChomp{animation:aChomp .35s ease-in-out 6}@keyframes aChomp{0%,100%{transform:scale(1,1)}50%{transform:scale(1.1,.85)}}
+#sScene .aGrowBig{animation:aGrowBig 2.4s cubic-bezier(.3,1.3,.6,1) both}@keyframes aGrowBig{0%{transform:scale(.62)}20%{transform:scale(.72) rotate(-4deg)}40%{transform:scale(.8) rotate(4deg)}60%{transform:scale(.9) rotate(-3deg)}80%{transform:scale(1.04) rotate(2deg)}100%{transform:none}}
+#sScene .aShrinkBack{animation:aShrinkBack 2s cubic-bezier(.3,1.3,.6,1) both}@keyframes aShrinkBack{0%{transform:scale(1.5)}25%{transform:scale(1.3) rotate(6deg)}50%{transform:scale(1.1) rotate(-6deg)}75%{transform:scale(.95) rotate(3deg)}100%{transform:none}}
+#sScene .aRun{animation:aRun 1.2s ease-in-out both}@keyframes aRun{0%{transform:translateX(-90px)}20%,60%{transform:translateY(-6px)}40%,80%{transform:translateY(0)}100%{transform:none}}
+#sScene .aSlip{animation:aSlip 1.2s ease-in both}@keyframes aSlip{0%{transform:none}30%{transform:translateX(20px) rotate(-20deg)}60%{transform:translate(30px,10px) rotate(-80deg)}80%{transform:translate(30px,10px) rotate(-80deg)}100%{transform:none}}
+#sScene .aCry{animation:aCry .5s ease-in-out 6}@keyframes aCry{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,.94) translateX(3px)}}
+#sScene .aDizzy{animation:aDizzy 1.6s ease-in-out}@keyframes aDizzy{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+#sScene .aFloatUp{animation:aFloatUp 3s ease-in-out both}@keyframes aFloatUp{0%{transform:none}30%{transform:translateY(-50px) rotate(-15deg)}60%{transform:translateY(-70px) rotate(20deg)}85%{transform:translateY(-40px) rotate(-8deg)}100%{transform:none}}
+#sScene .aLand{animation:aLand .9s cubic-bezier(.5,0,.7,1.4) both}@keyframes aLand{0%{transform:translateY(-240px) rotate(-30deg)}70%{transform:translateY(0) scale(1.15,.8)}100%{transform:none}}
+#sScene .pp.aPop{animation:aPopP .7s ease-out both}@keyframes aPopP{0%{transform:scale(0)}60%{transform:scale(1.4)}100%{transform:scale(1)}}
+#sScene .pp.aRise{animation:aRise 1s ease-out both}@keyframes aRise{0%{transform:translateY(40px) scale(.4);opacity:0}100%{transform:none;opacity:1}}
+#sScene .pp.aSpin{transform-origin:50% 50%;animation:aSpin 1.2s ease-out}@keyframes aSpin{0%{transform:scale(.3) rotate(-180deg)}100%{transform:none}}
+#sScene .pp.aGiftShake{animation:aGift 1.3s ease-in-out both}@keyframes aGift{0%,60%{transform:none}10%,30%,50%{transform:rotate(-10deg)}20%,40%{transform:rotate(10deg)}80%{transform:translateY(-20px) scale(1.25)}100%{transform:scale(0);opacity:0}}
+#sScene .pp.aGive{animation:aGive 1.4s ease-in-out both}@keyframes aGive{0%{transform:translateX(-60px)}30%{transform:translate(-30px,-24px)}100%{transform:none}}
+#sScene .pp.aEaten{animation:aEaten 1.4s ease-in both}@keyframes aEaten{0%{transform:none}30%{transform:translateY(-10px) rotate(15deg)}100%{transform:scale(0) rotate(90deg);opacity:0}}
+#sScene .pp.aWave{animation:aWaveP .35s ease-in-out 6}@keyframes aWaveP{0%,100%{transform:rotate(0)}50%{transform:rotate(18deg)}}
+#sScene .pp.aDrop{animation:aDropP .8s cubic-bezier(.5,0,.7,1.3) both}@keyframes aDropP{0%{transform:translateY(-160px)}75%{transform:translateY(0) scale(1.2,.8)}100%{transform:none}}
+#sScene .pp.aBall{animation:aBallP 1.6s ease-out both}@keyframes aBallP{0%{transform:translateY(-70px)}25%{transform:translateY(0) scale(1.2,.8)}45%{transform:translateY(-35px)}65%{transform:translateY(0) scale(1.1,.9)}80%{transform:translateY(-12px)}100%{transform:none}}
+#sScene .pp.aDriveIn{animation:aDriveP 1.3s ease-out both}@keyframes aDriveP{0%{transform:translateX(200px)}70%{transform:translateX(-10px)}85%{transform:translateX(4px) translateY(-3px)}100%{transform:none}}
+#sScene .pp.aSlideIn{animation:aSlideP 1.3s ease-out both}@keyframes aSlideP{0%{transform:translateX(-160px);opacity:0}30%{opacity:1}100%{transform:none}}
+#sScene .pp.aFloat{animation:aFloatP 1.6s ease-in-out 2}@keyframes aFloatP{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(12px,-14px) rotate(8deg)}}
+#sScene .pp.aBlowAway{animation:aBlowP 2.2s ease-in both}@keyframes aBlowP{0%{transform:none}100%{transform:translate(260px,-120px) rotate(540deg);opacity:0}}
+#sScene .pp.aDrip{animation:aDripP 1s ease-in 3}@keyframes aDripP{0%{transform:translateY(-10px);opacity:0}30%{opacity:1}100%{transform:translateY(30px);opacity:0}}
+#sScene .pp.aPoint{animation:aPointP .5s ease-in-out 4}@keyframes aPointP{50%{transform:translateX(14px)}}
+@media (prefers-reduced-motion:reduce){#sScene .idle,#sScene .bal,#sScene .flg{animation:none!important}}
+</style>
+<style>
+#sScene .amb{pointer-events:none;transform-box:fill-box;transform-origin:50% 50%}
+#sScene .amb-tw{animation:ambTw 2.2s ease-in-out infinite}#sScene .amb-tw.d2{animation-delay:-1.1s}
+@keyframes ambTw{0%,100%{opacity:.2;transform:scale(.6)}50%{opacity:1;transform:scale(1.2)}}
+#sScene .amb-fl{animation:ambFl 3.4s ease-in-out infinite}@keyframes ambFl{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(6deg)}}
+#sScene .amb-rot{animation:ambRot 4s linear infinite}#sScene .amb-rot.d2{animation-direction:reverse}@keyframes ambRot{to{transform:rotate(360deg)}}
+#sScene .amb-fly{animation:ambFly 6s ease-in-out infinite}@keyframes ambFly{0%,100%{transform:translate(0,0) rotate(-8deg)}25%{transform:translate(40px,-20px) rotate(8deg)}50%{transform:translate(80px,5px) rotate(-6deg)}75%{transform:translate(30px,15px) rotate(6deg)}}
+#sScene .amb-cross{animation:ambCross 9s linear infinite}@keyframes ambCross{0%{transform:translate(-20px,0)}50%{transform:translate(220px,-12px)}100%{transform:translate(440px,0)}}
+#sScene .amb-drift{animation:ambDrift 10s ease-in-out infinite}@keyframes ambDrift{0%,100%{transform:translateX(-30px)}50%{transform:translateX(30px)}}
+#sScene .flake{animation:flakeF 5s linear infinite}@keyframes flakeF{from{transform:translateY(-20px)}to{transform:translateY(80px)}}
+#sScene .idle{animation:aIdle2 2.2s ease-in-out infinite}
+@keyframes aIdle2{0%,100%{transform:translateY(0) rotate(0) scale(1,1)}25%{transform:translateY(-3px) rotate(-2deg)}50%{transform:translateY(0) scale(1.03,.97)}75%{transform:translateY(-3px) rotate(2deg)}}
+#sScene .pp{animation:ppIdle 3s ease-in-out infinite}@keyframes ppIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){#sScene .amb,#sScene .idle,#sScene .pp{animation:none!important}}
+</style>
+<style>
+/* 文具圖 */
+.item{display:block;width:clamp(110px,30vmin,190px);height:auto}
+.item.sm{width:clamp(72px,20vmin,124px)}
+.item.xs{width:clamp(46px,12vmin,72px)}
+span.pic .item,.tpic .item{display:inline-block;width:1.3em;height:1.3em;vertical-align:middle}
+.opt.pic .item{width:clamp(78px,22vmin,150px);height:auto}
+.hold{display:flex;align-items:center;justify-content:center;gap:4px}
+.hold .who{font-size:clamp(40px,11vmin,66px)}
+.think{position:relative;background:#fff;border:3px solid var(--ink);border-radius:46%;padding:6px 12px}
+.think::after{content:"";position:absolute;left:22%;bottom:-16px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--ink)}
+.speech u{text-decoration:none;border-bottom:4px solid var(--roof);display:inline-block;min-width:2.4em}
+@media (orientation:landscape) and (max-height:540px){
+ .item{width:min(34vh,150px)} .item.sm{width:min(22vh,96px)} .item.xs{width:min(14vh,56px)}
+ .hold .who{font-size:min(14vh,48px)} .opt.pic .item{width:min(20vh,96px)}
+}
+</style>
+<style>#sScene .shakeBg{animation:shkBg .25s linear infinite}@keyframes shkBg{25%{transform:translate(-3px,1px)}75%{transform:translate(3px,-1px)}}@media (prefers-reduced-motion:reduce){#sScene .shakeBg{animation:none}}</style>
+<style>
+.think{position:relative}
+.mk{position:absolute;right:-8px;top:-10px;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);font:900 18px/24px var(--en);text-align:center;color:#fff}
+.mk.y{background:var(--good)}.mk.n{background:var(--red)}
+.lcard .hold .who{font-size:clamp(40px,11vmin,60px)}
+.opt.col .item{width:clamp(70px,20vmin,120px);height:auto}
+</style>
+<style>.sLine.one .sEn2{font-size:clamp(18px,5vmin,30px)}.sLine.one .sZh2{font-size:clamp(15px,4.2vmin,22px)}
+.evp{display:inline-flex;align-items:flex-end;gap:2px}.evp svg{display:inline-block}
+.chainRow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;font-weight:900;font-size:clamp(18px,5vmin,28px)}
+.chainRow span{background:var(--card);border:3px solid var(--ink);border-radius:12px;padding:4px 10px}.chainRow span.cur{background:#fff3b0}.chainRow b{color:var(--red);font-size:1.25em}
+.chainRow span.q{background:#ffe2ea;color:var(--red);animation:breathe 1.2s infinite}
+.cp .item{width:clamp(60px,16vmin,96px);height:auto}
+.opt.col .item{width:clamp(70px,20vmin,120px);height:auto}</style>
+</head>
+<body>
+<div id="bgdeco"><span style="left:3%;top:70%">🌼</span><span style="right:4%;top:62%">🌷</span><span style="left:6%;top:30%">🍃</span><span style="right:8%;top:24%">🌸</span></div>
+<canvas id="fx"></canvas>
+
+<div id="bar" hidden>
+  <button class="tb back" id="bBack">回首頁</button>
+  <button class="tb pause" id="bPause">暫停</button>
+  <button class="tb" id="bVoice">不要語音說明</button>
+  <button class="tb" id="bSlow">唸慢一點</button>
+  <button class="tb" id="bFast">唸快一點</button>
+  <span class="starPill" id="starPill">⭐ <b id="starN">0</b></span>
+</div>
+
+<section id="cover" class="screen full">
+  <div class="house" id="coverHouse"></div>
+  <h1 class="ttl" style="font-size:clamp(26px,7vmin,48px)">The Story of the<br>Birth of Jesus</h1>
+  <div class="sub">耶穌誕生的溫馨故事</div>
+  <button class="wb green go" id="coverGo">點一下開始</button>
+</section>
+
+<section id="home" class="screen" hidden>
+  <h1 class="ttl" style="font-size:clamp(24px,6.5vmin,44px)">The Story of the Birth of Jesus</h1>
+  <div class="sub">耶穌誕生的溫馨故事</div>
+  <div class="lbl">選一個好朋友</div>
+  <div class="buddies" id="buddies"></div>
+  <input id="nameIn" maxlength="8" placeholder="寫上你的名字（可以不寫）" autocomplete="off">
+  <div class="row">
+    <button class="wb green" id="goMap">開始闖關</button>
+    <button class="wb red" id="goGroup">小組競賽</button>
+  </div>
+  <div class="row"><span class="lbl">語音說明</span><button class="chip on" id="vOn">要</button><button class="chip" id="vOff">不要</button></div>
+</section>
+
+<section id="map" class="screen" hidden>
+  <div class="houseBox">
+    <div class="roof" id="roof"></div>
+    <div class="facade" id="facade"></div>
+  </div>
+  <div class="mapFoot"><button class="wb green" id="goNext">開始</button></div>
+</section>
+
+<section id="game" class="screen" hidden>
+  <div class="head"><span id="lvTitle"></span><span class="dots" id="dots"></span><div class="board" id="board" hidden></div></div>
+  <div id="instr"></div>
+  <div id="stage">
+    <div id="prompt"></div>
+    <div id="field"></div>
+    <div class="foot"><button class="again" id="bAgain">再聽一次</button></div>
+  </div>
+</section>
+
+<section id="story" class="screen" hidden>
+  <div class="sTop"><span>📖 聖誕故事屋</span><span id="sPage"></span></div>
+  <div class="scene" id="sScene"></div>
+  <div class="sText" id="sText"></div>
+  <div class="sNav"><button class="tb" id="sPrev">上一頁</button><button class="again" id="sAgain">再聽一次</button><button class="tb" id="sNext">下一頁</button></div>
+</section>
+
+<div id="fitHint" class="fitHint" hidden>下面還有，請往下滑</div>
+<div id="ov" class="overlay" hidden><div class="panel" id="ovPanel"></div></div>
+<script>
+/* MIX_VOICE：中文句子裡的英文字，改用英文聲音唸（例如 Kevin、Boka、party、fifty），中文聲音唸英文常常會唸錯 */
+(function(){var ss=window.speechSynthesis;if(!ss||ss.__mix)return;var orig=ss.speak.bind(ss);ss.__mix=1;
+  var RX=/([A-Za-z][A-Za-z'’\-]*(?:[ ,.!?&]+[A-Za-z][A-Za-z'’\-]*)*[.!?]?)/;
+  ss.speak=function(u){try{
+    var t=String(u.text||''),lang=String(u.lang||'');
+    if(!/^zh/i.test(lang)||!/[A-Za-z]{2,}/.test(t)||!/[㐀-鿿]/.test(t))return orig(u);
+    var parts=t.split(RX).map(function(x){return x.trim()}).filter(function(x){return x&&!/^[，。、！？「」：；…（）\s,.!?]+$/.test(x)});
+    if(parts.length<2)return orig(u);
+    var Ctor=window.SpeechSynthesisUtterance;
+    parts.forEach(function(x,i){var en=/[A-Za-z]/.test(x)&&!/[㐀-鿿]/.test(x);var p=new Ctor(x);
+      p.lang=en?'en-US':lang;p.rate=en?Math.max(.5,Math.min(1.4,(u.rate||1)*.9)):(u.rate||1);p.pitch=u.pitch||1;p.volume=u.volume==null?1:u.volume;
+      if(!en&&u.voice)p.voice=u.voice;
+      if(i===0&&u.onstart)p.onstart=u.onstart;
+      if(i===parts.length-1){p.onend=u.onend;p.onerror=u.onerror}else p.onerror=function(e){u.onerror&&u.onerror(e)};
+      orig(p)});
+  }catch(e){return orig(u)}};
+})();
+</script>
+<script>
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const UA=navigator.userAgent;
+const LINEISH=/\bLine\//i.test(UA);
+const INAPP=LINEISH||/FBAN|FBAV|Instagram/i.test(UA);
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ================= 狀態（星星每次打開都從 0 開始） ================= */
+const BUDDIES=[{e:'🐑',n:'小羊'},{e:'🐶',n:'小狗'},{e:'🐸',n:'青蛙'},{e:'🦜',n:'鸚鵡'},{e:'🐱',n:'小貓'},{e:'🐰',n:'兔子'}];
+const G={screen:'cover',mode:'solo',lv:0,qs:[],qi:0,stars:0,cleared:{},teams:[],turn:0,locked:false,wrong:0,run:0,
+  promptItems:[],seen:{},onReplay:null,buddy:0,name:'',stayHere:false};
+G.name=store.get('bible1name')||'';G.buddy=+(store.get('bible1buddy')||0)||0;
+
+/* ================= 語音 ================= */
+const synth=window.speechSynthesis;
+const SP={rate:1,voice:true,homeVoice:true,tok:0,paused:false};
+/* 字母名稱用固定拼法，手機不會唸出 capital，也不會把 F、H、W 唸錯 */
+const LNM={A:'eh',B:'bee',C:'see',D:'dee',E:'ee',F:'eff',G:'gee',H:'aitch',I:'eye',J:'jay',K:'kay',L:'el',M:'em',N:'en',O:'oh',P:'pee',Q:'cue',R:'ar',S:'ess',T:'tee',U:'you',V:'vee',W:'double you',X:'ex',Y:'why',Z:'zee','-':'dash',"'":'apostrophe'};
+const LN=c=>LNM[c.toUpperCase()]||c;
+let unlockAt=-1e9,unlocked=false;
+/* 手指放開（或點一下）的那一瞬間把聲音打開；iPhone 只認這一下 */
+function gestureUnlock(){if(unlocked)return;unlocked=true;unlockAt=performance.now();ac();
+  try{if(synth){const u=new SpeechSynthesisUtterance(' ');u.volume=0;synth.speak(u)}}catch(e){}}
+['touchend','click','keydown'].forEach(t=>document.addEventListener(t,gestureUnlock,{capture:true,passive:true}));
+/* iPhone 開靜音（側邊靜音鍵）時，音效會被關掉，但語音照樣有聲音。
+   播一段無聲的 <audio>，並把聲音類型設成「播放」，音效就不會被靜音鍵關掉。 */
+let silentEl=null;
+function silentWav(){const n=4000,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,s)=>{for(let i=0;i<s.length;i++)b[o+i]=s.charCodeAt(i)};
+  w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);
+  for(let i=44;i<b.length;i++)b[i]=128;let s='';for(let i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return 'data:audio/wav;base64,'+btoa(s)}
+function audioWake(){try{const a=ac();if(a&&a.state!=='running')a.resume()}catch(e){}}
+['touchend','click'].forEach(t=>document.addEventListener(t,audioWake,{capture:true,passive:true}));
+function say(items,done){
+  if(!synth){if(done)setTimeout(done,400);return}
+  try{if(!(performance.now()-unlockAt<600&&!synth.speaking))synth.cancel()}catch(e){}
+  const tok=++SP.tok;let i=0;
+  const next=()=>{
+    if(tok!==SP.tok)return;
+    if(SP.paused){setTimeout(next,300);return}
+    if(i>=items.length){done&&done();return}
+    let it=items[i++]; if(typeof it==='string')it={t:it};
+    if(it.zh&&!SP.voice){next();return}
+    it.on&&it.on();
+    const isZh=it.zh||it.mean;
+    const u=new SpeechSynthesisUtterance(it.t);
+    u.lang=isZh?'zh-TW':'en-US';
+    u.rate=Math.max(.4,Math.min(1.6,(isZh?.95:.75)*(it.r||1)*SP.rate));
+    let fired=false;
+    const fin=()=>{if(fired)return;fired=true;clearTimeout(tm);it.off&&it.off();setTimeout(next,(it.gap===undefined?500:it.gap)/SP.rate)};
+    u.onend=fin;u.onerror=fin;
+    const tm=setTimeout(fin,(1400+it.t.length*(isZh?360:140))/SP.rate);
+    try{synth.speak(u)}catch(e){fin()}
+  };
+  setTimeout(next,90);
+}
+function hush(){SP.tok++;$$('.reading,.talking').forEach(e=>e.classList.remove('reading','talking'));try{synth&&synth.cancel()}catch(e){}}
+function later(fn,ms){const r=G.run;const t=()=>{if(r!==G.run)return;if(SP.paused){setTimeout(t,300);return}fn()};return setTimeout(t,ms)}
+
+/* ================= 音效 ================= */
+let AC=null;
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,t0,d,type,v,f2){const a=ac();if(!a)return;type=type||'sine';v=v||.16;const t=a.currentTime+t0,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05)}
+function noise(t0,d,v,freq){const a=ac();if(!a)return;const b=a.createBuffer(1,Math.max(1,a.sampleRate*d|0),a.sampleRate),ch=b.getChannelData(0);for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*Math.pow(1-i/ch.length,3);const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=freq||1800;const g=a.createGain();g.gain.value=v;s.connect(f);f.connect(g);g.connect(a.destination);s.start(a.currentTime+t0)}
+const FX={
+  coo(){tone(760,0,.3,'sine',.22,720);tone(600,.34,.45,'sine',.22,570)},
+  ding(){tone(988,0,.22);tone(1319,.1,.4)},
+  arp(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.07,.3,'triangle',.14))},
+  boop(){tone(200,0,.2,'sine',.07)},
+  pop(){tone(500,0,.1,'sine',.2,1500)},
+  tick(){noise(0,.03,.5,3500);noise(.25,.03,.4,3000)},
+  clap(){for(let i=0;i<16;i++)noise(i*.055+Math.random()*.04,.09,.55,1500+Math.random()*900)},
+  chime(){[784,988,1175].forEach((f,i)=>tone(f,i*.12,.6,'sine',.12))},
+  fanfare(){[[523,0],[659,.12],[784,.24],[1047,.4],[784,.58],[1047,.7]].forEach(([f,t])=>tone(f,t,.35,'triangle',.15));FX.clap()}
+};
+
+/* ================= 彩帶、煙火 ================= */
+const cv=$('#fx'),cx=cv.getContext('2d');let parts=[],raf=0;
+function fitCanvas(){const d=Math.min(2,window.devicePixelRatio||1);cv.width=innerWidth*d;cv.height=innerHeight*d;cx.setTransform(d,0,0,d,0,0)}
+fitCanvas();
+function emit(x,y,n,kind){
+  const cols=['#d9533c','#f2b632','#5f9e46','#2f6db5','#a8693f','#ff8fb1'],emo=['⭐','👼','❤️','🎁','✨','🌟'];
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=kind==='rain'?0:2+Math.random()*6;
+    parts.push({x:kind==='rain'?Math.random()*innerWidth:x,y:kind==='rain'?-20-Math.random()*200:y,vx:Math.cos(a)*s,vy:kind==='rain'?2+Math.random()*3:Math.sin(a)*s-(kind==='fire'?0:3),
+      r:4+Math.random()*5,c:rnd(cols),life:kind==='rain'?160:75,rot:Math.random()*6,e:(kind==='rain'||kind==='emo')?rnd(emo):null,sq:Math.random()<.5})}
+  if(!raf)raf=requestAnimationFrame(step)}
+function step(){cx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.life-->0&&p.y<innerHeight+40);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=p.e&&p.vx===0?.02:.18;p.vx*=.99;p.rot+=.1;cx.globalAlpha=Math.min(1,p.life/30);
+    if(p.e){cx.font='26px serif';cx.fillText(p.e,p.x,p.y)}else{cx.fillStyle=p.c;cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);if(p.sq)cx.fillRect(-p.r,-p.r/2,p.r*2,p.r);else{cx.beginPath();cx.arc(0,0,p.r,0,7);cx.fill()}cx.restore()}}
+  cx.globalAlpha=1;raf=parts.length?requestAnimationFrame(step):0}
+/* 答對的鼓勵：每次隨機換一種（不用機器人說「你好棒」） */
+function celebrate(el){let x=innerWidth/2,y=innerHeight/2;if(el&&el.getBoundingClientRect){const r=el.getBoundingClientRect();x=r.left+r.width/2;y=r.top+r.height/2}
+  const k=Math.random()*5|0;
+  if(k===0){emit(x,y,40,'conf');FX.ding()}else if(k===1){emit(x,y,14,'emo');FX.coo()}else if(k===2){emit(0,0,24,'rain');FX.chime()}
+  else if(k===3){emit(x,y,30,'conf');FX.clap()}else{emit(x*.6,y*.7,26,'fire');setTimeout(()=>emit(x*1.3,y*.6,26,'fire'),180);FX.arp()}}
+function fireworks(n){for(let i=0;i<n;i++)setTimeout(()=>{emit(innerWidth*(.2+Math.random()*.6),innerHeight*(.15+Math.random()*.4),40,'fire');FX.pop()},i*420)}
+
+/* ================= 圖：耶穌誕生的故事（人物穿古代的長袍、頭巾） ================= */
+const K='#3a2414';
+const HZ=['零','一','二','三','四','五','六','七','八','九','十','十一','十二'];
+/* 人物（60×90，腳在下面）：mary 馬利亞（藍色頭紗）、joseph 約瑟（條紋頭巾、鬍子）、shep 年輕牧羊人、shep2 老牧羊人、keeper 客棧老闆、angel 天使 */
+function figG(k){const S=`stroke="${K}" stroke-width="2" stroke-linejoin="round"`,skin='#e2b48a';
+  const face=(cx,cy)=>`<circle cx="${cx}" cy="${cy}" r="8.5" fill="${skin}" ${S}/><circle cx="${cx-3}" cy="${cy-1}" r="1.2" fill="${K}"/><circle cx="${cx+3}" cy="${cy-1}" r="1.2" fill="${K}"/><path d="M${cx-2.5} ${cy+3.5} q2.5 2 5 0" fill="none" stroke="${K}" stroke-width="1.2" stroke-linecap="round"/>`;
+  const robe=(c,c2)=>`<path d="M17 38 Q11 66 8 90 L52 90 Q49 66 43 38 Q30 33 17 38Z" fill="${c}" ${S}/>${c2?`<path d="M27 38 L25 90 M33 38 L35 90" stroke="${c2}" stroke-width="3"/>`:''}`;
+  const head=(c,band)=>`<path d="M19 30 Q18 14 30 14 Q42 14 41 30 L45 44 L15 44Z" fill="${c}" ${S}/>${band?`<path d="M20 20 Q30 15 40 20" fill="none" stroke="${band}" stroke-width="3"/>`:''}`;
+  const beard=c=>`<path d="M22.5 28 Q30 42 37.5 28 Q34 32 30 32 Q26 32 22.5 28Z" fill="${c}" ${S} stroke-width="1.2"/>`;
+  const staff=`<path d="M53 90 L53 22 Q53 13 46 15" fill="none" stroke="#7a4a20" stroke-width="3" stroke-linecap="round"/>`;
+  if(k==='mary')return robe('#efe2c6')+`<path d="M18 34 Q14 60 12 72 L48 72 Q46 60 42 34Z" fill="#3f6fb5" ${S}/>`+`<path d="M18 32 Q16 11 30 11 Q44 11 42 32 L44 46 L16 46Z" fill="#3f6fb5" ${S}/><path d="M21 30 Q21 17 30 17 Q39 17 39 30Z" fill="#fffaf0"/>`+face(30,26);
+  if(k==='joseph')return robe('#8a5a2b','#6a4220')+`<rect x="16" y="56" width="28" height="4" fill="#c9a26a"/>`+head('#d9c39a','#8a5a2b')+face(30,26)+beard('#5a3a1a');
+  if(k==='shep')return staff+robe('#b98a5a')+`<path d="M15 40 Q30 46 45 40 L45 52 Q30 56 15 52Z" fill="#f2efe6" ${S}/>`+head('#e8d8b0','#a06a3a')+face(30,26);
+  if(k==='shep2')return staff+robe('#7a8a6a')+head('#cfc4a8','#5a6a4a')+face(30,26)+beard('#e6e6e6');
+  if(k==='keeper')return robe('#a35a3a','#7a3a22')+head('#f5efe0','#a35a3a')+face(30,26)+beard('#3a2a1a')+`<path d="M44 58 q8 -2 10 4 q-6 4 -10 0Z" fill="#c9883a" ${S}/><path d="M54 60 q3 -6 2 -8" stroke="#f2b632" stroke-width="2.5" fill="none"/>`;
+  if(k==='angel')return `<path d="M17 42 Q-2 30 2 58 Q10 54 18 56Z M43 42 Q62 30 58 58 Q50 54 42 56Z" fill="#fff" ${S}/>`+robe('#fffaf0')+`<path d="M18 52 L42 52" stroke="#f2c21e" stroke-width="3"/><ellipse cx="30" cy="9" rx="10" ry="3" fill="none" stroke="#f2c21e" stroke-width="3"/><path d="M20 26 Q20 14 30 14 Q40 14 40 26 Q36 18 30 19 Q24 18 20 26Z" fill="#f2c96a" ${S}/>`+face(30,26);
+  return ''}
+/* 跪下的牧羊人另外畫（身體矮一點、頭低一點） */
+function kneelG(){return `<g transform="translate(0 16)">${figG('shep2').replace('<path d="M53 90 L53 22 Q53 13 46 15" fill="none" stroke="#7a4a20" stroke-width="3" stroke-linecap="round"/>','')}</g>`}
+function figSVG(k,h){h=h||40;if(typeof h==='number')h=h+'px';return `<svg viewBox="0 0 60 90" style="height:${h};width:auto;vertical-align:middle;overflow:visible">${k==='kneel'?kneelG():figG(k)}</svg>`}
+/* 馬槽（100×100） */
+function mangerG(baby){const S=`stroke="${K}" stroke-width="3" stroke-linejoin="round"`;
+  return `<path d="M14 40 L86 40 L74 74 L26 74Z" fill="#c99566" ${S}/>
+  <path d="M20 40 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8" fill="#f2c21e" stroke="#c99a10" stroke-width="2"/>
+  <line x1="26" y1="74" x2="16" y2="94" ${S}/><line x1="74" y1="74" x2="84" y2="94" ${S}/><line x1="34" y1="74" x2="44" y2="94" ${S}/><line x1="66" y1="74" x2="56" y2="94" ${S}/>
+  ${baby?`<ellipse cx="50" cy="34" rx="22" ry="12" fill="#f5efe0" ${S}/><path d="M34 30 h30 M38 36 h26" stroke="#d8cdb4" stroke-width="2"/><circle cx="34" cy="30" r="9" fill="#e9bf96" ${S}/><path d="M30 30 q2 2 4 0 M36 30 q2 2 4 0" stroke="${K}" stroke-width="1.5" fill="none"/><circle cx="34" cy="30" r="14" fill="none" stroke="#ffe14d" stroke-width="2" opacity=".8"/>`:''}`}
+/* 馬廄（100×100）：前面敞開的木頭棚子、茅草屋頂、乾草、馬槽和動物 */
+function stableG(){const S=`stroke="${K}" stroke-width="2.5" stroke-linejoin="round"`;
+  let planks='';for(let x=20;x<84;x+=9)planks+=`<line x1="${x}" y1="38" x2="${x}" y2="86" stroke="#3e2410" stroke-width="1.5"/>`;
+  let straw='';for(let x=10;x<92;x+=7)straw+=`<line x1="${x}" y1="${x<50?40-(x-4)*0.55:40-(96-x)*0.55}" x2="${x+2}" y2="${x<50?46-(x-4)*0.55:46-(96-x)*0.55}" stroke="#9a7428" stroke-width="1.5"/>`;
+  return `<rect x="14" y="36" width="72" height="52" fill="#5a3a1e"/>${planks}
+  <rect x="0" y="84" width="100" height="16" fill="#e8c35a"/><path d="M4 86 l4 -6 l4 6 l4 -5 l4 5 M76 86 l4 -6 l4 6 l4 -5 l4 5" fill="none" stroke="#c99a10" stroke-width="2"/>
+  <rect x="8" y="34" width="7" height="56" fill="#8a5a2b" ${S}/><rect x="85" y="34" width="7" height="56" fill="#8a5a2b" ${S}/>
+  <path d="M0 42 L50 12 L100 42 L94 46 L50 20 L6 46Z" fill="#c9a24a" ${S}/>${straw}
+  <text x="28" y="80" font-size="16" text-anchor="middle">🐂</text><text x="74" y="80" font-size="15" text-anchor="middle">🫏</text>
+  <g transform="translate(36 60) scale(.3)">${mangerG(1)}</g><text x="50" y="10" font-size="14" text-anchor="middle">⭐</text>`}
+/* 客棧（100×100）：平屋頂、拱門 */
+function innG(lit){const S=`stroke="${K}" stroke-width="3" stroke-linejoin="round"`;
+  return `<rect x="10" y="24" width="80" height="70" fill="#e8d8b8" ${S}/><rect x="6" y="18" width="88" height="8" fill="#cbb08a" ${S}/>
+  <path d="M40 94 L40 66 Q50 54 60 66 L60 94Z" fill="#6a4220" ${S}/><path d="M20 40 Q26 32 32 40 L32 52 L20 52Z M68 40 Q74 32 80 40 L80 52 L68 52Z" fill="${lit?'#ffd36a':'#5a4a3a'}" ${S} stroke-width="2"/>`}
+/* 伯利恆小城：一群平屋頂的房子 */
+function townG(){const S=`stroke="${K}" stroke-width="2.5" stroke-linejoin="round"`;
+  return `<rect x="6" y="46" width="30" height="44" fill="#e8d8b8" ${S}/><rect x="30" y="30" width="36" height="60" fill="#d9c39a" ${S}/><path d="M38 30 Q48 14 58 30Z" fill="#cbb08a" ${S}/><rect x="62" y="50" width="32" height="40" fill="#e8d8b8" ${S}/>
+  <path d="M44 90 L44 74 Q48 68 52 74 L52 90Z M14 90 L14 78 Q18 72 22 78 L22 90Z M74 90 L74 76 Q78 70 82 76 L82 90Z" fill="#6a4220"/><circle cx="48" cy="44" r="3" fill="#6a4220"/><text x="78" y="22" font-size="16" text-anchor="middle">⭐</text>`}
+/* 圓形的單字圖 */
+const PIC={worried:['😟','#fff3c4'],good:['👍','#e2f5e2'],said:['💬','#e8f0ff'],see:['👀','#fff3c4'],came:['🏃','#e2f5e2'],went:['🚶','#efe6d8'],father:['👨','#e8f0ff'],sun:['☀️','#cfeaff'],moon:['🌙','#2a3f7a'],tree:['🌴','#dff0d0'],house:['🏠','#f6e7c8'],cow:['🐄','#efe6d8'],lamp:['🪔','#fff3c4'],door:['🚪','#f6e7c8'],mother:['👩‍🍼','#ffe2ea'],son:['👦','#e8f0ff'],family:['👨‍👩‍👧','#ffe9c8'],sing:['🎶','#e8f0ff'],smile:['😊','#fff3c4'],hug:['🫂','#ffe2ea'],king:['👑','#fff3c4'],Bible:['📖','#f6e7c8'],church:['⛪','#e8f0ff'],angel:['f','#e8f0ff'],Mary:['f','#d6e8ff'],Joseph:['f','#f2e2c8'],shepherds:['f','#dff0d0'],'baby Jesus':['m','#fff3c4'],star:['⭐','#2a3f7a'],sheep:['🐑','#dff0d0'],
+  stable:['s','#ffe9c8'],manger:['m0','#fff3c4'],inn:['i','#f6e7c8'],gift:['🎁','#ffe2ea'],Bethlehem:['t','#f6e7c8'],dream:['💭','#e6e0ff'],donkey:['🫏','#efe6d8'],God:['G','#fff8d6'],shepherd:['f','#dff0d0'],world:['🌍','#dff0ff'],friend:['🤝','#ffe9c8'],pray:['🙏','#fff3c4'],hope:['🌈','#e8f0ff'],
+  Christmas:['🌟','#2a3f7a'],love:['💞','#ffe2ea'],heart:['❤️','#ffe2ea'],lamb:['🐑','#dff0d0'],lamp:['🪔','#fff3c4'],light:['🕯️','#fff3c4'],night:['🌙','#2a3f7a'],sky:['🌌','#2a3f7a'],
+  news:['📜','#fff3c4'],peace:['🕊️','#e8f0ff'],hay:['🌾','#fff3c4'],earth:['🌍','#dff0ff'],joy:['😊','#fff3c4'],kind:['🤝','#ffe9c8'],born:['👶','#fff3c4'],baby:['👶','#fff3c4'],town:['t','#f6e7c8']};
+const FIGK={angel:'angel',Mary:'mary',Joseph:'joseph',shepherds:'shep',shepherd:'shep2'};
+/* 抽象的字畫成具體的場景 */
+const SCENE={
+ big:`<circle cx="50" cy="50" r="46" fill="#2a3f7a" stroke="${K}" stroke-width="3"/><text x="24" y="72" font-size="16" text-anchor="middle">⭐</text><text x="58" y="76" font-size="54" text-anchor="middle">⭐</text><path d="M30 70 L40 66" stroke="#fff" stroke-width="2"/>`,
+ long:`<circle cx="50" cy="50" r="46" fill="#ffe2b0" stroke="${K}" stroke-width="3"/><path d="M48 92 Q30 70 50 56 Q70 44 52 30 Q44 24 50 16" fill="none" stroke="#c9a46a" stroke-width="10" stroke-linecap="round"/><text x="72" y="84" font-size="22" text-anchor="middle">🫏</text><text x="62" y="22" font-size="14">🏘️</text>`,
+ full:`<circle cx="50" cy="50" r="46" fill="#f6e7c8" stroke="${K}" stroke-width="3"/><g transform="translate(16 18) scale(.68)">${innG(1)}</g><rect x="26" y="40" width="48" height="18" rx="4" fill="#d9302c" stroke="${K}" stroke-width="2"/><text x="50" y="54" font-size="13" font-weight="900" text-anchor="middle" fill="#fff" font-family="Arial">FULL</text>`,
+ yes:`<circle cx="50" cy="50" r="46" fill="#e2f5e2" stroke="${K}" stroke-width="3"/><path d="M18 28 h64 a8 8 0 0 1 8 8 v22 a8 8 0 0 1 -8 8 h-30 l-10 10 l-2 -10 h-22 a8 8 0 0 1 -8 -8 v-22 a8 8 0 0 1 8 -8Z" fill="#fff" stroke="${K}" stroke-width="2.5"/><text x="50" y="55" font-size="22" font-weight="900" text-anchor="middle" fill="#2f9e5b" font-family="Arial">Yes!</text>`,
+ put:`<circle cx="50" cy="50" r="46" fill="#fff3c4" stroke="${K}" stroke-width="3"/><g transform="translate(14 30) scale(.72)">${mangerG(1)}</g><path d="M50 10 L50 30" stroke="#d9302c" stroke-width="4"/><path d="M42 24 L50 34 L58 24" fill="none" stroke="#d9302c" stroke-width="4" stroke-linejoin="round"/>`,
+ born:`<circle cx="50" cy="50" r="46" fill="#fff3c4" stroke="${K}" stroke-width="3"/><text x="50" y="68" font-size="44" text-anchor="middle">👶</text><text x="22" y="34" font-size="16">✨</text><text x="70" y="32" font-size="16">✨</text><text x="74" y="80" font-size="14">✨</text>`,
+ trip:`<circle cx="50" cy="50" r="46" fill="#ffe2b0" stroke="${K}" stroke-width="3"/><path d="M5 60 Q50 48 95 60 L95 72 Q50 100 5 72Z" fill="#e8c88e"/><circle cx="76" cy="28" r="9" fill="#ffb347"/><text x="44" y="76" font-size="34" text-anchor="middle">🫏</text><text x="22" y="58" font-size="16">🌴</text>`,
+ thank:`<circle cx="50" cy="50" r="46" fill="#ffe2ea" stroke="${K}" stroke-width="3"/><rect x="18" y="30" width="64" height="44" rx="6" fill="#fffaf0" stroke="${K}" stroke-width="2.5"/><text x="50" y="50" font-size="13" font-weight="900" text-anchor="middle" fill="#d9302c" font-family="Arial">Thank</text><text x="50" y="65" font-size="13" font-weight="900" text-anchor="middle" fill="#d9302c" font-family="Arial">you!</text><text x="76" y="34" font-size="16" text-anchor="middle">❤️</text>`,
+ hay:`<circle cx="50" cy="50" r="46" fill="#fff3c4" stroke="${K}" stroke-width="3"/><path d="M20 78 Q22 40 50 34 Q78 40 80 78Z" fill="#e8c35a" stroke="${K}" stroke-width="2.5"/>${[30,40,50,60,70].map(x=>`<path d="M${x} 76 L${x+2} 46" stroke="#b9901a" stroke-width="2"/>`).join('')}<path d="M10 80 h80" stroke="#b9901a" stroke-width="4"/>`,
+ field:`<circle cx="50" cy="50" r="46" fill="#bfe6ff" stroke="${K}" stroke-width="3"/><path d="M5 60 Q30 44 55 58 T96 54 L96 70 Q50 100 5 70Z" fill="#7cc35a" stroke="${K}" stroke-width="2"/><path d="M4 72 Q50 62 96 72 L90 84 Q50 100 10 84Z" fill="#5fae4a"/><text x="36" y="74" font-size="16">🐑</text><text x="60" y="70" font-size="14">🐑</text>`,
+ road:`<circle cx="50" cy="50" r="46" fill="#ffe2b0" stroke="${K}" stroke-width="3"/><path d="M5 58 Q50 46 95 58 L95 70 Q50 100 5 70Z" fill="#e8c88e"/><path d="M42 92 Q46 70 50 56 Q54 70 60 92Z" fill="#c9a46a" stroke="${K}" stroke-width="2"/><text x="24" y="58" font-size="18">🌴</text><circle cx="74" cy="30" r="9" fill="#ffb347"/>`,
+ God:`<circle cx="50" cy="50" r="46" fill="#fff8d6" stroke="${K}" stroke-width="3"/><g stroke="#f2c21e" stroke-width="3" stroke-linecap="round">${[-150,-125,-100,-80,-55,-30].map(a=>{const r=a*Math.PI/180;return `<line x1="${50+10*Math.cos(r)}" y1="${26+10*Math.sin(r)}" x2="${50+30*Math.cos(r)}" y2="${26+30*Math.sin(r)}"/>`}).join('')}</g><g fill="#fff" stroke="${K}" stroke-width="2"><ellipse cx="38" cy="28" rx="14" ry="8"/><ellipse cx="62" cy="28" rx="14" ry="8"/><ellipse cx="50" cy="23" rx="15" ry="9"/></g><rect x="26" y="28" width="48" height="8" fill="#fff"/><g stroke="#ffe680" stroke-width="5" opacity=".7"><line x1="40" y1="38" x2="34" y2="56"/><line x1="60" y1="38" x2="66" y2="56"/><line x1="50" y1="38" x2="50" y2="56"/></g><path d="M14 74 Q14 60 28 62 L40 70 Q50 76 60 70 L72 62 Q86 60 86 74 Q80 90 50 92 Q20 90 14 74Z" fill="#ffd9b3" stroke="${K}" stroke-width="2.5"/><circle cx="50" cy="70" r="15" fill="#6fb3e6" stroke="${K}" stroke-width="2"/><path d="M42 64 q6 -4 10 2 q4 6 -2 10 M54 72 q4 -2 6 2" fill="#5fae4a"/>`,
+ Christmas:`<circle cx="50" cy="50" r="46" fill="#2a3f7a" stroke="${K}" stroke-width="3"/><text x="50" y="30" font-size="22" text-anchor="middle">⭐</text><rect x="54" y="8" width="0" height="0"/><g transform="translate(20 34) scale(.6)">${mangerG(1)}</g><rect x="58" y="62" width="30" height="26" rx="3" fill="#fff" stroke="${K}" stroke-width="2"/><rect x="58" y="62" width="30" height="9" fill="#d9302c"/><text x="73" y="70" font-size="7" font-weight="900" text-anchor="middle" fill="#fff" font-family="Arial">DEC</text><text x="73" y="85" font-size="13" font-weight="900" text-anchor="middle" fill="${K}" font-family="Arial">25</text>`,
+ hope:`<circle cx="50" cy="50" r="46" fill="#ffe2c4" stroke="${K}" stroke-width="3"/><circle cx="50" cy="62" r="20" fill="#ffb347"/><g stroke="#ffb347" stroke-width="3" stroke-linecap="round"><line x1="50" y1="34" x2="50" y2="24"/><line x1="30" y1="44" x2="22" y2="38"/><line x1="70" y1="44" x2="78" y2="38"/></g><path d="M6 66 Q50 54 94 66 L94 80 Q50 100 6 80Z" fill="#5fae4a" stroke="${K}" stroke-width="2"/><path d="M50 74 L50 60" stroke="#3f8a3a" stroke-width="3"/><path d="M50 64 q-10 -8 -14 -2 q6 6 14 2Z M50 62 q10 -8 14 -2 q-6 6 -14 2Z" fill="#7cc35a" stroke="#3f8a3a" stroke-width="1.5"/>`,
+ news:`<circle cx="50" cy="50" r="46" fill="#fff3c4" stroke="${K}" stroke-width="3"/><g transform="translate(4 18) scale(.62)">${figG('angel')}</g><rect x="44" y="36" width="44" height="34" rx="4" fill="#fffaf0" stroke="${K}" stroke-width="2"/><text x="66" y="50" font-size="9" font-weight="900" text-anchor="middle" fill="#d9302c" font-family="Arial">Good</text><text x="66" y="62" font-size="9" font-weight="900" text-anchor="middle" fill="#d9302c" font-family="Arial">News!</text>`,
+ sky:`<circle cx="50" cy="50" r="46" fill="#9fd4f2" stroke="${K}" stroke-width="3"/><circle cx="72" cy="30" r="10" fill="#ffd54a"/><g fill="#fff"><ellipse cx="34" cy="44" rx="16" ry="8"/><ellipse cx="44" cy="40" rx="10" ry="7"/><ellipse cx="62" cy="64" rx="18" ry="8"/><ellipse cx="54" cy="60" rx="9" ry="6"/></g><path d="M22 70 q4 -4 8 0 q4 -4 8 0" fill="none" stroke="${K}" stroke-width="2"/>`,
+ night:`<circle cx="50" cy="50" r="46" fill="#1f2f63" stroke="${K}" stroke-width="3"/><circle cx="44" cy="44" r="18" fill="#fff3b0"/><circle cx="54" cy="38" r="16" fill="#1f2f63"/><g fill="#fff"><circle cx="72" cy="28" r="2"/><circle cx="26" cy="68" r="2"/><circle cx="74" cy="70" r="2.5"/><circle cx="30" cy="26" r="1.5"/></g><path d="M8 74 Q30 64 50 74 T92 72 L90 84 Q50 100 10 84Z" fill="#2c4a3a"/>`,
+ dream:`<circle cx="50" cy="50" r="46" fill="#e6e0ff" stroke="${K}" stroke-width="3"/><rect x="10" y="70" width="58" height="10" rx="4" fill="#c99566" stroke="${K}" stroke-width="2"/><text x="30" y="72" font-size="30" text-anchor="middle">😴</text><g fill="#fff" stroke="${K}" stroke-width="2"><circle cx="40" cy="52" r="3"/><circle cx="48" cy="44" r="4"/><ellipse cx="68" cy="30" rx="22" ry="18"/></g><g transform="translate(58 14) scale(.34)">${figG('angel')}</g><text x="46" y="66" font-size="11" font-weight="900" fill="#6a6ab0">z z</text>`,
+ joy:`<circle cx="50" cy="50" r="46" fill="#fff3c4" stroke="${K}" stroke-width="3"/><text x="50" y="66" font-size="44" text-anchor="middle">😄</text><text x="20" y="34" font-size="16">🎵</text><text x="70" y="34" font-size="16">🎶</text><text x="76" y="80" font-size="14">✨</text>`,
+ love:`<circle cx="50" cy="50" r="46" fill="#ffe2ea" stroke="${K}" stroke-width="3"/><path d="M50 84 C20 64 14 46 26 34 C36 24 48 30 50 40 C52 30 64 24 74 34 C86 46 80 64 50 84Z" fill="#e2302c" stroke="${K}" stroke-width="2.5"/><text x="50" y="66" font-size="28" text-anchor="middle">🤗</text>`,
+ peace:`<circle cx="50" cy="50" r="46" fill="#e8f0ff" stroke="${K}" stroke-width="3"/><text x="50" y="64" font-size="44" text-anchor="middle">🕊️</text><path d="M14 80 Q50 70 86 80" fill="none" stroke="#9fc6e0" stroke-width="4"/>`,
+ friend:`<circle cx="50" cy="50" r="46" fill="#ffe9c8" stroke="${K}" stroke-width="3"/><text x="50" y="68" font-size="44" text-anchor="middle">🧑‍🤝‍🧑</text><text x="50" y="26" font-size="16" text-anchor="middle">❤️</text>`
+};
+function picG(k){if(SCENE[k])return SCENE[k];const p=PIC[k];let g=`<circle cx="50" cy="50" r="46" fill="${p[1]}" stroke="${K}" stroke-width="3"/>`;
+  if(p[0]==='G')g+=`<g stroke="#f2c21e" stroke-width="4" stroke-linecap="round">${[-160,-135,-110,-90,-70,-45,-20].map(a=>{const r=a*Math.PI/180;return `<line x1="${50+14*Math.cos(r)}" y1="${54+14*Math.sin(r)}" x2="${50+36*Math.cos(r)}" y2="${54+36*Math.sin(r)}"/>`}).join('')}</g><circle cx="50" cy="54" r="12" fill="#ffe680"/><g fill="#fff" stroke="${K}" stroke-width="2"><ellipse cx="34" cy="70" rx="18" ry="11"/><ellipse cx="66" cy="70" rx="18" ry="11"/><ellipse cx="50" cy="64" rx="20" ry="13"/></g><rect x="18" y="70" width="64" height="10" fill="#fff"/>`;
+  else if(p[0]==='f')g+=k==='shepherds'?`<g transform="translate(8 14) scale(.78)">${figG('shep2')}</g><g transform="translate(44 18) scale(.74)">${figG('shep')}</g>`:`<g transform="translate(24 10) scale(.88)">${figG(FIGK[k])}</g>`;
+  else if(p[0]==='m')g+=`<g transform="translate(10 12) scale(.8)">${mangerG(1)}</g>`;
+  else if(p[0]==='m0')g+=`<g transform="translate(10 12) scale(.8)">${mangerG(0)}</g>`;
+  else if(p[0]==='s')g+=`<g transform="translate(10 8) scale(.8)">${stableG()}</g>`;
+  else if(p[0]==='i')g+=`<g transform="translate(12 10) scale(.76)">${innG(1)}</g>`;
+  else if(p[0]==='t')g+=`<g transform="translate(10 8) scale(.8)">${townG()}</g>`;
+  else g+=`<text x="50" y="68" font-size="50" text-anchor="middle">${p[0]}</text>`;
+  if(k==='star'||k==='Christmas')g+=`<g fill="#fff"><circle cx="24" cy="30" r="2"/><circle cx="76" cy="28" r="2"/><circle cx="70" cy="76" r="2"/></g>`;
+  return g}
+function picSVG(k,cls){return `<svg class="item ${cls||''}" viewBox="0 0 100 100" role="img" aria-label="${k}">${picG(k)}</svg>`}
+const itemG=picG,itemSVG=picSVG;
+/* 馬廄屋（封面、過關畫面用） */
+function nativityHouse(){return `<svg viewBox="0 0 200 236" style="width:100%;height:auto;display:block">
+  <path d="M100 8 L192 92 L8 92Z" fill="#a8693f" stroke="${K}" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M40 70 q10 -16 22 0 M138 70 q10 -16 22 0" fill="none" stroke="#f2c21e" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="58" r="17" fill="#2a3f7a" stroke="${K}" stroke-width="4"/><text x="100" y="66" font-size="20" text-anchor="middle">⭐</text>
+  <rect x="28" y="88" width="144" height="140" rx="10" fill="#a8693f" stroke="${K}" stroke-width="5"/>
+  <rect x="36" y="99" width="128" height="28" rx="8" fill="#fffaf0" stroke="${K}" stroke-width="3"/><text x="100" y="119" font-size="15" font-weight="700" text-anchor="middle" textLength="112" lengthAdjust="spacingAndGlyphs" font-family="Andika,Arial,sans-serif" fill="#d9533c">Merry Christmas</text>
+  <rect x="40" y="132" width="120" height="88" rx="8" fill="#2a3f7a" stroke="${K}" stroke-width="3"/><g fill="#fff"><circle cx="56" cy="146" r="2"/><circle cx="140" cy="150" r="2"/><circle cx="120" cy="142" r="1.5"/></g>
+  <g transform="translate(68 168) scale(.64)">${mangerG(1)}</g><g transform="translate(44 160) scale(.62)">${figG('mary')}</g><g transform="translate(120 158) scale(.64)">${figG('joseph')}</g>
+</svg>`}
+
+/* ================= 這個故事的英文 ================= */
+/* 故事單字 16 個（g:'s'）、上帝的愛 10 個（g:'l'）；人名不考 */
+const VOC=[['God','上帝'],['love','愛'],['world','世界'],['angel','天使'],['baby','小寶寶'],['son','兒子'],['dream','夢'],['trip','旅程'],['inn','客棧'],['stable','馬廄'],
+  ['manger','馬槽'],['star','星星'],['sky','天空'],['shepherds','牧羊人'],['news','消息'],['gift','禮物']].map(x=>({w:x[0],z:x[1],g:'s'})).concat(
+  [['worried','擔心的'],['big','大的'],['long','長的'],['full','滿的'],['good','好的'],['yes','是、好'],['said','說'],['see','看'],['came','來'],['went','去'],['put','放'],['born','出生']].map(x=>({w:x[0],z:x[1],g:'a'})))
+VOC.forEach(v=>v.n=picSVG(v.w));
+const VW={};VOC.forEach(v=>VW[v.w]=v);
+const vocPic=(w,cls)=>picSVG(w,cls);
+const TIPS={shepherds:'shepherds 是牧羊人。Angels told the shepherds the good news. 天使告訴牧羊人好消息。',worried:'worried 是「擔心的」。Joseph was worried. 約瑟很擔心。',big:'big 是「大的」。A big star was in the sky. 天上有一顆大星星。',long:'long 是「長的」。It was a long trip. 路好遠好遠。',
+  full:'full 是「滿的」。The inn was full. 客棧客滿了。',good:'good 是「好的」。good news 是好消息。',yes:'yes 是「好、是的」。Mary said, Yes, I will. 馬利亞說：好，我願意。',
+  said:'said 是「說」。The angel said … 天使說……',see:'see 是「看」。The shepherds came to see Jesus. 牧羊人來看耶穌。',came:'came 是「來」。牧羊人來看耶穌。',
+  went:'went 是「去」。They went to Bethlehem. 他們去伯利恆。',put:'put 是「放」。Mary put Him in a manger. 馬利亞把他放在馬槽裡。',born:'born 是「出生」。Baby Jesus was born. 小寶寶耶穌誕生了。',trip:'trip 是旅程。他們走了很遠的路。',father:'father 是爸爸。上帝是我們天上的爸爸。',sun:'sun 是太陽。',moon:'moon 是月亮。',tree:'tree 是樹。',house:'house 是房子。',angel:'angel 是天使。上帝差遣天使加百列，帶來好消息。',star:'star 是星星。一顆明亮的星星，慶祝耶穌誕生。',night:'night 是夜晚。',sky:'sky 是天空。night sky 就是夜空。',
+  dream:'dream 是夢。天使在夢裡對約瑟說話。',baby:'baby 是小寶寶。耶穌是一個小寶寶的時候，誕生在馬廄裡。',stable:'stable 是馬廄，動物住的地方。',manger:'manger 是馬槽，裝飼料給動物吃的槽。小寶寶耶穌就睡在馬槽裡。',
+  inn:'inn 是客棧，旅客住的地方。',donkey:'donkey 是驢子，以前的人常騎驢子走遠路。',sheep:'sheep 是羊。牧羊人照顧羊群。',shepherd:'shepherd 是牧羊人。天使把好消息告訴牧羊人。',
+  gift:'gift 是禮物。耶穌是上帝送給我們最好的禮物。',town:'town 是小城。伯利恆是一個小城。',news:'news 是消息。good news 是好消息。',Christmas:'Christmas 是聖誕節，慶祝耶穌誕生的日子。',
+  God:'God 是上帝。上帝創造世界，也很愛你。',love:'love 是愛。God is love. 神就是愛。',heart:'heart 是心。耶穌用愛填滿我們的心。',light:'light 是光。耶穌是世界的光。',
+  peace:'peace 是平安。天使說，地上有平安。',joy:'joy 是喜樂。耶穌誕生，大家都很喜樂。',pray:'pray 是禱告。禱告就是和上帝說話。',hope:'hope 是希望。耶穌帶給我們希望。',
+  world:'world 是世界。上帝愛世界上的每一個人。',friend:'friend 是朋友。耶穌是我們最好的朋友。',cow:'cow 是牛。馬廄裡有牛、驢子和羊。',hay:'hay 是乾草，馬槽裡鋪著乾草。',lamp:'lamp 是油燈，以前的人晚上點油燈照亮。',field:'field 是田野。牧羊人在田野裡看守羊群。',road:'road 是路。他們走了很遠的路到伯利恆。',door:'door 是門。客棧的門口寫著客滿了。',mother:'mother 是媽媽。馬利亞是耶穌的媽媽。',son:'son 是兒子。He is God\'s Son. 他是上帝的兒子。',family:'family 是家人。約瑟、馬利亞和耶穌是一家人。',sing:'sing 是唱歌。天使唱歌讚美上帝。',smile:'smile 是微笑。',hug:'hug 是擁抱。上帝的愛像溫暖的擁抱。',king:'king 是國王。耶穌是愛的君王。',Bible:'Bible 是聖經。耶穌誕生的故事寫在聖經裡。',church:'church 是教會。聖誕節我們在教會一起慶祝耶穌誕生。',thank:'thank 是感謝。Thank you, God! 謝謝上帝！'};
+const pickO=(w,n)=>shuffle([w,...shuffle(VOC.map(v=>v.w).filter(x=>x!==w)).slice(0,(n||3)-1)]);
+/* 故事畫面的小圖：人物用古代服裝的圖，其他用小圖示 */
+function tokHTML(t){if(t==='God'||t==='world'||t==='friend'||t==='pray')return `<svg viewBox="0 0 100 100" style="height:1.3em;width:auto;vertical-align:middle">${picG(t)}</svg>`;if(/^[a-z]+2?$/.test(t)&&(t in {mary:1,joseph:1,shep:1,shep2:1,keeper:1,angel:1,kneel:1}))return figSVG(t,'1.6em');
+  if(t==='manger1')return `<svg viewBox="0 0 100 100" style="height:1.3em;width:auto;vertical-align:middle">${mangerG(1)}</svg>`;
+  if(t==='stable')return `<svg viewBox="0 0 100 100" style="height:1.3em;width:auto;vertical-align:middle">${stableG()}</svg>`;
+  if(t==='inn')return `<svg viewBox="0 0 100 100" style="height:1.3em;width:auto;vertical-align:middle">${innG(1)}</svg>`;
+  if(t==='town')return `<svg viewBox="0 0 100 100" style="height:1.3em;width:auto;vertical-align:middle">${townG()}</svg>`;
+  return `<span>${t}</span>`}
+const evPic=toks=>`<span class="evp">${toks.map(tokHTML).join('')}</span>`;
+/* ================= 畫面切換 ================= */
+const P=()=>$('#prompt'),F=()=>$('#field');
+function setBarH(){const b=$('#bar');const h=b.hidden?0:b.getBoundingClientRect().height;document.documentElement.style.setProperty('--barH',h+'px')}
+function show(id,barCfg){
+  $$('.screen').forEach(s=>s.hidden=s.id!==id);G.screen=id;$('#ov').hidden=true;
+  const bar=$('#bar');bar.hidden=!barCfg;
+  if(barCfg){$('#bBack').hidden=!barCfg.back;if(barCfg.back)$('#bBack').textContent=barCfg.back;$('#bPause').hidden=!barCfg.pause;$('#starPill').hidden=!barCfg.stars}
+  setBarH();fitCheck()}
+function fitCheck(){requestAnimationFrame(()=>{const s=$$('.screen').find(x=>!x.hidden);$('#fitHint').hidden=!s||s.scrollHeight<=s.clientHeight+4})}
+addEventListener('resize',()=>{fitCanvas();setBarH();fitCheck()});
+$$('.screen').forEach(s=>s.addEventListener('scroll',()=>{if(s.scrollTop+s.clientHeight>=s.scrollHeight-6)$('#fitHint').hidden=true}));
+function updVoice(){$('#bVoice').textContent=SP.voice?'不要語音說明':'要語音說明';$('#vOn').classList.toggle('on',SP.homeVoice);$('#vOff').classList.toggle('on',!SP.homeVoice)}
+function addStar(){G.stars++;$('#starN').textContent=G.stars;const p=$('#starPill');p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump')}
+function instrItem(key,full,short){const t=G.seen[key]?short:full;G.seen[key]=1;$('#instr').textContent=t;return {t,zh:1,gap:350}}
+function begin(lead,items){G.promptItems=items;say([...lead,...items])}
+function readOpts(btns){return btns.map(b=>({t:b.dataset.say,on:()=>b.classList.add('reading'),off:()=>b.classList.remove('reading'),gap:600}))}
+const esc=s=>String(s).replace(/"/g,'&quot;');
+function optBtns(arr,cls){return arr.map(o=>`<button class="opt ${cls||''} ${o.cls||''}" data-say="${esc(o.s||'')}" data-ok="${o.ok?1:''}">${o.h}</button>`).join('')}
+
+/* 答對／答錯（亂按不會有好玩的效果：答錯的選項變灰、不能再按） */
+function good(el,after,delay){
+  if(G.locked)return;G.locked=true;hush();
+  if(el)el.classList.add('yes');
+  if(G.mode==='group'){G.teams[G.turn].s++;drawBoard()}else addStar();
+  celebrate(el);later(after||advance,delay||1300)}
+function bad(el){
+  if(G.locked||!el||el.classList.contains('no'))return;
+  hush();FX.boop();el.classList.add('no');G.wrong++;
+  if(G.mode==='group'){G.locked=true;revealOk();later(advance,1900);return}
+  if(G.wrong>=2)revealOk();
+  later(()=>say([{t:'再試一次',zh:1,gap:250},...G.promptItems]),350)}
+function revealOk(){$$('#stage [data-ok="1"]').forEach(e=>e.classList.add('hint'))}
+function advance(){G.qi++;if(G.mode==='group')G.turn=(G.turn+1)%G.teams.length;nextQ()}
+
+/* ================= 小教室（一張一張卡，自動往下） ================= */
+function runCards(cards,then,head){
+  const list=cards.filter(Boolean);if(!list.length){then();return}
+  let i=0,step=0,alive=true;$('#dots').innerHTML='';
+  const finish=()=>{if(!alive)return;alive=false;G.onReplay=null;hush();then()};
+  const go=()=>{if(!alive)return;if(i<list.length-1){i++;card()}else{alive=false;G.onReplay=null;say([{t:'開始玩囉！',zh:1}]);later(()=>{hush();then()},1300)}};
+  const card=()=>{
+    const c=list[i];$('#instr').textContent=head||'先認識這些英文';P().innerHTML='';
+    F().innerHTML=`<div class="lesson"><div class="zhLine">${i+1} / ${list.length}</div><button class="lcard" id="lcard">${c.html}</button><div class="lnav"><button class="tb" id="lPrev" ${i?'':'disabled'}>上一個</button><button class="tb" id="lNext">下一個</button><button class="wb green" id="lGo" style="padding:9px 18px">開始玩</button></div></div>`;
+    const items=typeof c.items==='function'?c.items():c.items;G.promptItems=items;
+    const play=lead=>{const m=++step;say([...(lead||[]),...items],()=>later(()=>{if(m===step&&alive)go()},c.wait||900))};
+    G.onReplay=()=>{hush();play()};
+    play(i===0&&head!==null?[{t:head||'先認識這些英文',zh:1,gap:400}]:[]);
+    $('#lcard').onclick=()=>{hush();play()};
+    $('#lPrev').onclick=()=>{if(i){hush();i--;card()}};
+    $('#lNext').onclick=()=>{hush();go()};
+    $('#lGo').onclick=finish;
+    c.after&&c.after();fitCheck()};
+  card()}
+/* 單字卡：英文、中文、圖，唸英文→中文→英文 */
+const wordCard=(pic,en,zh,tip)=>({html:`<span class="pic">${pic}</span><span class="big">${en}</span><span class="zh">${zh}</span>${tip?`<span class="tip">${tip}</span>`:''}`,
+  items:[{t:en,gap:700},{t:zh,mean:1,gap:600},{t:en,gap:600},...(tip?[{t:tip,zh:1,gap:500}]:[])]});
+</script>
+<script>
+/* ================= 手寫描字（照筆順一筆一筆描） =================
+   座標是 100×100 的英文四線格：上線 10、中線 36.7、基線 63.3、下線 90。 */
+const STROKES={
+ a:['M60 41 Q54 36.7 46 36.7 Q32 36.7 32 50 Q32 63.3 46 63.3 Q54 63.3 60 58','M60 36.7 L60 63.3'],
+ c:['M62 41 Q55 36.7 47 36.7 Q33 36.7 33 50 Q33 63.3 47 63.3 Q55 63.3 62 59'],
+ e:['M33 50 L62 50 Q62 36.7 47.5 36.7 Q33 36.7 33 50 Q33 63.3 47.5 63.3 Q56 63.3 61 58'],
+ f:['M62 16 Q58 10 52 10 Q44 10 44 20 L44 63.3','M34 36.7 L58 36.7'],
+ h:['M36 10 L36 63.3','M36 47 Q40 36.7 50 36.7 Q62 36.7 62 48 L62 63.3'],
+ i:['M48 36.7 L48 63.3','M48 22 L48 24.5'],
+ n:['M36 36.7 L36 63.3','M36 47 Q40 36.7 50 36.7 Q62 36.7 62 48 L62 63.3'],
+ o:['M50 36.7 Q34 36.7 34 50 Q34 63.3 50 63.3 Q66 63.3 66 50 Q66 36.7 50 36.7'],
+ r:['M38 36.7 L38 63.3','M38 48 Q42 36.7 52 36.7 Q58 36.7 62 40'],
+ t:['M46 16 L46 57 Q46 63.3 54 63.3 Q58 63.3 61 60','M36 36.7 L58 36.7'],
+ v:['M34 36.7 L50 63.3 L66 36.7'],
+ w:['M26 36.7 L37 63.3 L50 40 L63 63.3 L74 36.7'],
+ y:['M34 36.7 L50 63.3','M66 36.7 L50 63.3 L40 90'],
+ '-':['M38 50 L62 50'],
+ g:['M60 41 Q54 36.7 46 36.7 Q32 36.7 32 50 Q32 63.3 46 63.3 Q54 63.3 60 58','M60 36.7 L60 78 Q60 90 47 90 Q39 90 34 85'],
+ d:['M62 10 L62 63.3','M62 42 Q56 36.7 49 36.7 Q36 36.7 36 50 Q36 63.3 49 63.3 Q56 63.3 62 58'],
+ x:['M36 36.7 L62 63.3','M62 36.7 L36 63.3'],
+ b:['M36 10 L36 63.3','M36 42 Q42 36.7 49 36.7 Q62 36.7 62 50 Q62 63.3 49 63.3 Q42 63.3 36 58'],
+ k:['M38 10 L38 63.3','M60 36.7 L38 53','M45 48 L62 63.3'],
+ l:['M48 10 L48 63.3'],
+ m:['M28 36.7 L28 63.3','M28 46 Q31 36.7 39 36.7 Q48 36.7 48 46 L48 63.3','M48 46 Q51 36.7 59 36.7 Q68 36.7 68 46 L68 63.3'],
+ p:['M38 36.7 L38 90','M38 42 Q44 36.7 51 36.7 Q64 36.7 64 50 Q64 63.3 51 63.3 Q44 63.3 38 58'],
+ s:['M60 40 Q56 36.7 48 36.7 Q37 36.7 37 43.5 Q37 50 48 50 Q60 50 60 56.5 Q60 63.3 48 63.3 Q40 63.3 35 59'],
+ u:['M36 36.7 L36 52 Q36 63.3 48 63.3 Q60 63.3 62 52','M62 36.7 L62 63.3']
+};
+let TRACING=false;
+function setTracing(on){TRACING=on;document.documentElement.classList.toggle('tracing',on)}
+/* 描字時整個網頁鎖住，手指移動時畫面不會跟著浮動 */
+document.addEventListener('touchmove',e=>{if(TRACING&&e.cancelable)e.preventDefault()},{passive:false});
+document.addEventListener('gesturestart',e=>{if(TRACING)e.preventDefault()});
+const NS='http://www.w3.org/2000/svg';
+const LBOX={};
+function lbox(ch){if(LBOX[ch])return LBOX[ch];const sv=document.createElementNS(NS,'svg');sv.style.cssText='position:absolute;width:0;height:0;visibility:hidden';document.body.appendChild(sv);
+  let X0=1e9,X1=-1e9;STROKES[ch].forEach(d=>{const p=document.createElementNS(NS,'path');p.setAttribute('d',d);sv.appendChild(p);const b=p.getBBox();X0=Math.min(X0,b.x);X1=Math.max(X1,b.x+b.width)});sv.remove();
+  return LBOX[ch]={x:X0-7.5,w:X1-X0+15}}
+/* 左邊圖文欄裡的字母：正在描的紅框；還沒描的灰色，並一筆一筆播放筆順 */
+function letterSVG(ch,cls,hp){const b=lbox(ch),out=cls==='cur'?'#e2513c':'#c5cfd9',inn=cls==='cur'?'#ffffff':'#f3f6f9',D=STROKES[ch],SC=['#e2513c','#2f6db5','#2f9e5b'];let extra='';
+  if(cls==='todo'){const n=D.length,T=n+1.4;
+    extra=D.map((d,i)=>`<path d="${d}" pathLength="1" stroke="${SC[i%3]}" stroke-width="6" stroke-dasharray="1 1" stroke-dashoffset="1"><animate attributeName="stroke-dashoffset" values="1;1;0;0" keyTimes="0;${(i/T).toFixed(3)};${((i+.85)/T).toFixed(3)};1" dur="${T}s" repeatCount="indefinite"/></path>`).join('')}
+  return `<svg class="lsv ${cls}" viewBox="${b.x} 4 ${b.w} 92" style="height:${hp}px;width:${hp*b.w/92}px;overflow:visible"><g fill="none" stroke-linecap="round" stroke-linejoin="round">${D.map(d=>`<path d="${d}" stroke="${out}" stroke-width="14"/>`).join('')}${D.map(d=>`<path d="${d}" stroke="${inn}" stroke-width="10"/>`).join('')}${extra}</g></svg>`}
+const wait=ms=>new Promise(r=>later(r,ms));
+/* 在 host 裡描一個字母；描完呼叫 onDone(snap)，snap 是小朋友描好的字母圖 */
+function makeTrace(host,ch,opt,onDone){
+  host.querySelectorAll('canvas').forEach(c=>{try{c.width=c.height=0}catch(e){}});host.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='traceWrap';
+  wrap.innerHTML='<div class="board2"></div>';
+  const bg=document.createElement('canvas');bg.className='gridcv';const cv=document.createElement('canvas');cv.className='cv';
+  const ov=document.createElementNS(NS,'svg');ov.setAttribute('class','sov');
+  wrap.appendChild(bg);wrap.appendChild(cv);wrap.appendChild(ov);setTracing(true);
+  const mk=(cls,txt)=>{const b=document.createElement('button');b.className=cls;b.textContent=txt;wrap.appendChild(b);return b};
+  const redo=mk('tbtn redo','重畫'),again=mk('tbtn sob','看筆順');
+  const bar=document.createElement('div');bar.className='tbar';bar.innerHTML='<i></i>';wrap.appendChild(bar);
+  if(INAPP){const lb=mk('lineb','✏️ 畫面會亂跑？按我用瀏覽器開啟');lb.onclick=()=>{hush();openExt({go:'trace',lv:G.lv})}}
+  host.appendChild(wrap);
+  const w=host.clientWidth,h=host.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);
+  [bg,cv].forEach(c=>{c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px'});
+  const SW=11,D=STROKES[ch],paths=D.map(d=>new Path2D(d));
+  const tmp=document.createElementNS(NS,'g');ov.appendChild(tmp);
+  const pe=D.map(d=>{const p=document.createElementNS(NS,'path');p.setAttribute('d',d);tmp.appendChild(p);return p});
+  let X0=1e9,Y0=1e9,X1=-1e9,Y1=-1e9;pe.forEach(p=>{const b=p.getBBox();X0=Math.min(X0,b.x);Y0=Math.min(Y0,b.y);X1=Math.max(X1,b.x+b.width);Y1=Math.max(Y1,b.y+b.height)});
+  const starts=pe.map(p=>{const a=p.getPointAtLength(0),b=p.getPointAtLength(Math.min(2,p.getTotalLength()));return [a.x,a.y,b.x-a.x,b.y-a.y]});
+  const cl=pe.map(p=>{const L=p.getTotalLength(),n=Math.max(2,Math.ceil(L/3));const r=[];for(let i=0;i<=n;i++){const q=p.getPointAtLength(L*i/n);r.push([q.x,q.y])}return r});
+  tmp.remove();
+  const xr=Math.max(48,X1-X0+SW+18),yr=Math.max(48,Y1-Y0+SW+20),cxu=(X0+X1)/2,cyu=(Y0+Y1)/2;
+  /* 圖文欄：平常放左邊；單字字母多、放左邊會太小時，自動移到上面 */
+  let LW=0,TH=0,mode='';const lineH=INAPP?46:0;
+  if(opt&&opt.side){const sumW=opt.sumW||100,LWc=Math.round(w*(w<h?.40:.28)),leftHp=(LWc-24)*92/sumW;
+    if(leftHp<64){mode='top';TH=Math.round(Math.min(h*.30,170))+lineH}else{mode='left';LW=LWc}}
+  const aw=w-LW,ah=h-TH;
+  if(mode){const sp=document.createElement('div');sp.className='tside '+mode;sp.innerHTML=opt.side({mode,LW,TH:TH-lineH,w});
+    if(mode==='left'){sp.style.width=(LW-18)+'px'}else{sp.style.top=(16+lineH)+'px';sp.style.height=(TH-lineH-14)+'px'}wrap.appendChild(sp)}
+  const kFull=Math.min(aw*.92,ah-70)/100,k=Math.min(aw*.92/xr,(ah-70)/yr,kFull*1.4),ox=LW+aw/2-cxu*k,oy=TH+(ah-60)/2-cyu*k;
+  const ctx=cv.getContext('2d'),bx=bg.getContext('2d');
+  const tf=c=>c.setTransform(dpr*k,0,0,dpr*k,dpr*ox,dpr*oy);
+  tf(bx);[[10,'#cfe3f7',0],[36.7,'#cfe3f7',1],[63.3,'#ffb3a6',0],[90,'#cfe3f7',0]].forEach(([y,c,dash])=>{bx.strokeStyle=c;bx.lineWidth=.8;bx.setLineDash(dash?[2.5,2]:[]);bx.beginPath();bx.moveTo((LW+16-ox)/k,y);bx.lineTo((w-16-ox)/k,y);bx.stroke()});
+  const col=['#ffd23f','#ff8fb1','#7fd3ff','#9be36b','#ffb067'][ch.charCodeAt(0)%5];
+  let down=false,last=null,finished=false;
+  function guide(){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);tf(ctx);ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.strokeStyle='#1f2d1a';ctx.lineWidth=SW+1.8;paths.forEach(p=>ctx.stroke(p));
+    ctx.strokeStyle='#ffffff';ctx.lineWidth=SW;paths.forEach(p=>ctx.stroke(p));
+    ctx.strokeStyle='#8fa6bf';ctx.lineWidth=1.4;ctx.setLineDash([.1,3.2]);paths.forEach(p=>ctx.stroke(p));ctx.setLineDash([])}
+  guide();
+  const g=document.createElementNS(NS,'g');g.setAttribute('transform',`translate(${ox} ${oy}) scale(${k})`);ov.setAttribute('viewBox',`0 0 ${w} ${h}`);ov.appendChild(g);
+  const anim=document.createElementNS(NS,'g'),curLayer=document.createElementNS(NS,'g'),badges=document.createElementNS(NS,'g');g.appendChild(anim);g.appendChild(curLayer);g.appendChild(badges);
+  const placed=[];
+  D.forEach((d,i)=>{let [sx,sy,dx,dy]=starts[i];let L=Math.hypot(dx,dy);if(L<.01){dx=0;dy=1;L=1}
+    let bx0=sx-dx/L*8,by0=sy-dy/L*8;
+    /* 號碼不能蓋住別的筆畫（例如 i 上面的點），也不能和別的號碼疊在一起：蓋到就往旁邊移 */
+    const bx1=bx0,by1=by0,clash=(x,y)=>placed.some(([px,py])=>Math.hypot(px-x,py-y)<11)||cl.some((arr,j)=>j!==i&&arr.some(([qx,qy])=>Math.hypot(qx-x,qy-y)<10));
+    for(let t=1;t<=8&&clash(bx0,by0);t++){const m=Math.ceil(t/2)*6*(t%2?-1:1);bx0=bx1+(-dy/L)*m;by0=by1+(dx/L)*m}
+    placed.push([bx0,by0]);
+    const b=document.createElementNS(NS,'g');b.setAttribute('class','sbadge');b.innerHTML=`<circle cx="${bx0}" cy="${by0}" r="5" fill="#e2513c" stroke="#fff" stroke-width="1"/><text x="${bx0}" y="${by0+2.3}" text-anchor="middle" font-size="6.5" font-weight="900" fill="#fff">${i+1}</text>`;badges.appendChild(b)});
+  /* 先示範筆順；小朋友一摸畫面就停止示範，直接開始描 */
+  let demoOn=false,skip=false;
+  const stopDemo=()=>{skip=true;anim.innerHTML='';[...badges.children].forEach(b=>b.style.opacity=1);demoOn=false};
+  async function demo(){demoOn=true;skip=false;anim.innerHTML='';[...badges.children].forEach(b=>b.style.opacity=0);
+    if(!G.seen.stroke){G.seen.stroke=1;say([{t:'先看筆順，再照著號碼描',zh:1}])}
+    await wait(400);
+    for(let i=0;i<D.length&&!skip;i++){badges.children[i].style.opacity=1;
+      const p=document.createElementNS(NS,'path');p.setAttribute('d',D[i]);p.setAttribute('class','sdemo');anim.appendChild(p);
+      const len=p.getTotalLength()||1,dur=Math.max(450,len*22);
+      p.style.strokeDasharray=len+' '+len;p.style.strokeDashoffset=len;p.getBoundingClientRect();
+      p.style.transition=`stroke-dashoffset ${dur}ms linear`;p.style.strokeDashoffset=0;
+      await wait(dur+450)}
+    if(!skip){await wait(400);anim.innerHTML=''}
+    [...badges.children].forEach(b=>b.style.opacity=1);demoOn=false}
+  /* 照筆順一筆一筆描：只有「現在這一筆」會算，從頭描到尾、描到八成五就換下一筆（手指放開時八成也算），中間漏一小段或手指偏一點都沒關係 */
+  const cpts=cl.map(arr=>arr.map(([x,y])=>[ox+x*k,oy+y*k,false])),hw=SW*k/2,RC=hw*1.6;
+  let curS=0,gestGain=0,missN=0,onLen=0,offLen=0;
+  const near=(x,y)=>{if(curS>=cpts.length)return 0;let m=1e9;for(const q of cpts[curS]){const d=(q[0]-x)**2+(q[1]-y)**2;if(d<m)m=d}return Math.sqrt(m)};
+  /* 描字標準（不太嚴格、也不太寬鬆）：描到七成五就算，起筆收筆要描到，亂塗不算 */
+  const messy=()=>offLen>60&&offLen>onLen*.8;
+  const rate=si=>cpts[si].filter(p=>p[2]).length/cpts[si].length;
+  function showCur(){curLayer.innerHTML=curS<D.length?`<path class="scur" d="${D[curS]}"/>`:'';[...badges.children].forEach((b,i)=>{b.classList.toggle('now',i===curS);b.classList.toggle('past',i<curS)})}
+  showCur();
+  /* 手指旁邊可以偏一點（RC），但只算手指「最靠近」的那一小段，不會一次算走一大段 */
+  const markC=(x,y)=>{if(curS>=cpts.length)return;const cp=cpts[curS];let bj=-1,bd=RC*RC;
+    for(let j=0;j<cp.length;j++){const dx=cp[j][0]-x,dy=cp[j][1]-y,dd=dx*dx+dy*dy;if(dd<bd){bd=dd;bj=j}}
+    if(bj<0)return;for(let j=Math.max(0,bj-1);j<=Math.min(cp.length-1,bj+1);j++)if(!cp[j][2]){cp[j][2]=true;gestGain++}};
+  const snap=()=>{try{const x0=Math.max(0,ox+(X0-SW/2-2)*k),x1=Math.min(w,ox+(X1+SW/2+2)*k),y0=oy+4*k,y1=oy+96*k;
+    const H=150,Wd=Math.max(20,Math.round(H*(x1-x0)/(y1-y0)));const c=document.createElement('canvas');c.width=Wd;c.height=H;
+    c.getContext('2d').drawImage(cv,x0*dpr,y0*dpr,(x1-x0)*dpr,(y1-y0)*dpr,0,0,Wd,H);return c.toDataURL('image/png')}catch(e){return null}};
+  function complete(){if(finished)return;finished=true;down=false;setTracing(false);bar.firstChild.style.width='100%';curLayer.innerHTML='';
+    tf(ctx);ctx.strokeStyle=col;ctx.lineWidth=SW;ctx.lineCap='round';ctx.lineJoin='round';paths.forEach(p=>ctx.stroke(p));
+    const s=snap();later(()=>onDone(s),250)}
+  function check(lifted){if(finished)return;const r=rate(curS);
+    bar.firstChild.style.width=Math.min(100,(curS+Math.min(1,r/.75))/D.length*100)+'%';
+    const cp=cpts[curS],L=cp.length,e=Math.max(3,Math.round(L*.12)),endOk=cp.slice(0,e).some(p=>p[2])&&cp.slice(L-e).some(p=>p[2]);if(endOk&&!messy()&&(r>=.75||(lifted&&r>=.7))){curS++;onLen=offLen=0;if(curS>=D.length){complete();return}FX.pop();showCur()}}
+  function draw(a,b){ctx.setTransform(dpr,0,0,dpr,0,0);ctx.strokeStyle=col;ctx.lineWidth=hw*2.3;ctx.lineCap='round';ctx.lineJoin='round';ctx.globalCompositeOperation='source-atop';ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();ctx.globalCompositeOperation='source-over';
+    const d=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(d/(2*k)));for(let i=0;i<=n;i++){const x=a[0]+(b[0]-a[0])*i/n,y=a[1]+(b[1]-a[1])*i/n;markC(x,y);if(i)(near(x,y)<=RC*1.4?onLen+=d/n:offLen+=d/n)}check(false)}
+  const pos=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+  cv.addEventListener('touchstart',e=>e.preventDefault(),{passive:false});cv.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+  cv.onpointerdown=e=>{e.preventDefault();gestureUnlock();if(finished||SP.paused)return;if(demoOn)stopDemo();down=true;gestGain=0;last=pos(e);draw(last,last);if(cv.setPointerCapture)try{cv.setPointerCapture(e.pointerId)}catch(_){}};
+  cv.onpointermove=e=>{if(!down||finished)return;const p=pos(e);draw(last,p);last=p};
+  cv.onpointerup=cv.onpointercancel=()=>{if(down&&!finished){down=false;check(true);
+    if(!finished&&messy()){cpts[curS].forEach(p=>p[2]=false);onLen=offLen=0;gestGain=1;missN=0;bar.firstChild.style.width=(curS/D.length*100)+'%';say([{t:'沿著虛線，慢慢描',zh:1}])}
+    if(!finished&&gestGain===0&&++missN>=2){missN=0;say([{t:`先描第${HZ[curS+1]}筆`,zh:1}])}else if(gestGain>0)missN=0}down=false};
+  redo.onclick=()=>{if(finished)return;cpts.forEach(q=>q.forEach(p=>p[2]=false));curS=0;missN=0;onLen=offLen=0;showCur();bar.firstChild.style.width='0';guide()};
+  again.onclick=()=>{if(finished||demoOn)return;demo()};
+  cv._cl=cpts;
+  demo();
+  return {cv};
+}
+/* 描一個單字：看圖聽單字 → 一個字母一個字母描 → 用自己描的字母排出整個單字 */
+function traceWord(item,lead,onDone){
+  const w=item.w,snaps=[];let k=0;
+  P().innerHTML='';
+  F().innerHTML=`<div class="lesson"><div class="lcard"><span class="pic en" style="color:var(--blue)">${item.n}</span><span class="big">${w}</span><span class="zh">${item.z}</span></div></div>`;
+  $('#instr').textContent='看一看，聽一聽';
+  G.promptItems=[{t:w,gap:600},{t:item.z,mean:1}];
+  say([...(lead?[{t:lead,zh:1,gap:300}]:[]),{t:w,gap:600},{t:item.z,mean:1,gap:500},{t:w}],()=>later(nextLetter,700));
+  function nextLetter(){
+    if(k>=w.length){finishWord();return}
+    const ch=w[k];
+    $('#instr').textContent=k===0?'用手指，一個字母一個字母描':'描下一個字母';
+    F().innerHTML='<div class="traceHost" id="th"></div>';
+    const sumW=w.split('').reduce((a,c)=>a+lbox(c).w,0);
+    const side=Gm=>{const top=Gm.mode==='top';
+      const hp=top?Math.max(28,Math.min((Gm.TH-16)*.72,(Gm.w*.58-24)*92/sumW)):Math.max(28,Math.min(Gm.LW*.55,(Gm.LW-24)*92/sumW));
+      return `<div class="tpic"${top?` style="font-size:${Math.round((Gm.TH-16)*.42)}px"`:''}>${item.n}</div><div class="tword">${w.split('').map((c,j)=>j<k&&snaps[j]?`<img src="${snaps[j]}" alt="${c}" style="height:${hp}px;width:${hp*lbox(c).w/92}px">`:letterSVG(c,j===k?'cur':'todo',hp)).join('')}</div><div class="tzh">${item.z}</div>`};
+    G.promptItems=[{t:LN(ch)}];
+    say([...(k===0?[{t:'用手指，一個字母一個字母描',zh:1,gap:300}]:[]),{t:LN(ch)}]);
+    makeTrace($('#th'),ch,{side,sumW},s=>{snaps[k]=s;FX.ding();k++;later(nextLetter,350)});
+  }
+  function finishWord(){
+    setTracing(false);
+    $('#instr').textContent='你寫好了！';
+    F().innerHTML=`<div class="lesson"><div class="zhLine">${item.n}　${item.z}</div><div class="wDone en" id="wd">${w.split('').map((c,j)=>`<span class="lt">${snaps[j]?`<img src="${snaps[j]}" alt="${c}">`:c}</span>`).join('')}</div></div>`;
+    addStar();celebrate($('#wd'));
+    const lts=$$('#wd .lt');
+    const items=[...w.split('').map((c,j)=>({t:LN(c),gap:300,on:()=>lts[j].classList.add('say'),off:()=>lts[j].classList.remove('say')})),{t:w,gap:500},{t:item.z,mean:1}];
+    G.promptItems=items;
+    later(()=>say(items,()=>later(onDone,900)),900)}
+}
+</script>
+<script>
+/* ================= 關卡用到的資料（耶穌誕生的故事） ================= */
+/* 故事 17 句（中文的「祂」寫成「他」，語音才不會唸錯） */
+const EV=[
+ ["God loves the world.","神愛世人。",['🌍','❤️']],
+ ["God sent an angel to Mary.","上帝派天使去找馬利亞。",['angel','mary']],
+ ["The angel said, \"You will have a baby.\"","天使說：「你會生一個寶寶。」",['angel','👶']],
+ ["\"He is God's Son.\"","「他是上帝的兒子。」",['angel','✨','👶']],
+ ["Mary loved God.","馬利亞愛上帝。",['mary','❤️']],
+ ["She said, \"Yes, I will.\"","她說：「好，我願意。」",['mary','🙏']],
+ ["Joseph was worried.","約瑟很擔心。",['joseph','❓']],
+ ["An angel talked to him in a dream.","天使在夢裡對他說話。",['😴','💭','angel']],
+ ["So Joseph took care of Mary.","約瑟就照顧馬利亞。",['joseph','❤️','mary']],
+ ["Together, they went to Bethlehem.","他們一起去伯利恆。",['joseph','🫏','town']],
+ ["It was a long trip.","路好遠好遠。",['🫏','💦','🌴']],
+ ["The inn was full.","客棧客滿了。",['inn','🚫']],
+ ["They stayed in a stable.","他們住在馬廄裡。",['stable','🐄']],
+ ["Baby Jesus was born.","小寶寶耶穌誕生了。",['manger1','✨']],
+ ["Mary put Him in a manger.","馬利亞把他放在馬槽裡。",['mary','manger1']],
+ ["A big star was in the sky.","天上有一顆大星星。",['🌙','🌟']],
+ ["Angels told the shepherds the good news.","天使告訴牧羊人好消息。",['angel','📣','shep']],
+ ["The shepherds came to see Jesus.","牧羊人來看耶穌。",['shep','shep2','manger1']],
+ ["Jesus is God's gift of love.","耶穌是上帝愛的禮物。",['🎁','❤️']],
+ ["God loves you!","上帝愛你！",['💞','🧒']]];
+/* 誰？ */
+const WHOQ=[
+ ['Who sent the angel Gabriel to Mary?','誰差遣天使加百列去找馬利亞？','God'],
+ ['Who brought wonderful news to Mary?','誰帶給馬利亞美好的消息？','angel'],
+ ['Who would give birth to the Son of God?','誰要生下上帝的兒子？','Mary'],
+ ['Who had a dream?','誰做了一個夢？','Joseph'],
+ ['Who was born in the stable?','誰在馬廄裡誕生？','baby Jesus'],
+ ['Who heard the good news from the angels?','誰從天使那裡聽到好消息？','shepherds'],
+ ['What shone in the night sky?','什麼在夜空中閃爍？','star'],
+ ['Where did they go?','他們要去哪裡？','Bethlehem'],
+ ['Where did they put baby Jesus?','他們把小寶寶耶穌放在哪裡？','manger'],
+ ['What did the shepherds bring?','牧羊人帶來了什麼？','gift'],
+ ['When do we celebrate the birth of Jesus?','我們什麼時候慶祝耶穌誕生？','Christmas']];
+const WHOPIC={God:'God'};
+/* 對或錯 */
+const TF=[
+ ['God loves the world.',1,'神愛世人。'],['God sent an angel to Mary.',1,'上帝派天使去找馬利亞。'],['God sent a baby to Mary.',0,'上帝派小寶寶去找馬利亞。'],
+ ['Joseph was worried.',1,'約瑟很擔心。'],['An angel talked to Joseph in a dream.',1,'天使在夢裡對約瑟說話。'],['It was a long trip.',1,'路好遠好遠。'],
+ ['The inn was full.',1,'客棧客滿了。'],['The stable was full.',0,'馬廄客滿了。'],['Baby Jesus was born in the inn.',0,'小寶寶耶穌在客棧裡誕生。'],
+ ['Mary put Him in a manger.',1,'馬利亞把他放在馬槽裡。'],['A big star was in the sky.',1,'天上有一顆大星星。'],['A big star was in the manger.',0,'馬槽裡有一顆大星星。'],
+ ['Angels told the shepherds the good news.',1,'天使告訴牧羊人好消息。'],['The shepherds came to see Jesus.',1,'牧羊人來看耶穌。'],
+ ["Jesus is God's gift of love.",1,'耶穌是上帝愛的禮物。'],['God loves you.',1,'上帝愛你。']]
+/* 填空 */
+const CLOZE=[
+ ['God sent an ____ to Mary.','angel',['angel','inn','star'],'上帝派天使去找馬利亞。'],
+ ['The angel said, "You will have a ____."','baby',['baby','trip','sky'],'天使說：「你會生一個寶寶。」'],
+ ['An angel talked to Joseph in a ____.','dream',['dream','gift','star'],'天使在夢裡對約瑟說話。'],
+ ['It was a long ____.','trip',['trip','star','baby'],'路好遠好遠。'],
+ ['The ____ was full.','inn',['inn','sky','news'],'客棧客滿了。'],
+ ['They stayed in a ____.','stable',['stable','dream','star'],'他們住在馬廄裡。'],
+ ['Mary put Him in a ____.','manger',['manger','sky','trip'],'馬利亞把他放在馬槽裡。'],
+ ['A big ____ was in the sky.','star',['star','inn','gift'],'天上有一顆大星星。'],
+ ['Angels told the ____ the good news.','shepherds',['shepherds','world','sky'],'天使告訴牧羊人好消息。'],
+ ["Jesus is God's ____ of love.",'gift',['gift','trip','inn'],'耶穌是上帝愛的禮物。'],
+ ['God loves the ____.','world',['world','inn','manger'],'神愛世人。'],
+ ['Joseph was ____.','worried',['worried','big','full'],'約瑟很擔心。'],
+ ['The inn was ____.','full',['full','long','good'],'客棧客滿了。'],
+ ['It was a ____ trip.','long',['long','full','good'],'路好遠好遠。'],
+ ['The shepherds came to ____ Jesus.','see',['see','put','said'],'牧羊人來看耶穌。']]
+/* 排句子（短句） */
+const SENTS=[
+ {s:'God loves the world.',z:'神愛世人。',pic:()=>picSVG('world','sm')},
+ {s:'Mary loved God.',z:'馬利亞愛上帝。',pic:()=>picSVG('Mary','sm')},
+ {s:'Joseph was worried.',z:'約瑟很擔心。',pic:()=>picSVG('Joseph','sm')},
+ {s:'It was a long trip.',z:'路好遠好遠。',pic:()=>picSVG('trip','sm')},
+ {s:'The inn was full.',z:'客棧客滿了。',pic:()=>picSVG('inn','sm')},
+ {s:'They stayed in a stable.',z:'他們住在馬廄裡。',pic:()=>picSVG('stable','sm')},
+ {s:'Baby Jesus was born.',z:'小寶寶耶穌誕生了。',pic:()=>picSVG('baby Jesus','sm')},
+ {s:'A big star was in the sky.',z:'天上有一顆大星星。',pic:()=>picSVG('star','sm')},
+ {s:'The shepherds came to see Jesus.',z:'牧羊人來看耶穌。',pic:()=>picSVG('shepherds','sm')}];
+const LSENTS=[
+ {s:'God loves you.',z:'上帝愛你。',pic:()=>picSVG('love','sm')},
+ {s:'God loves the world.',z:'神愛世人。',pic:()=>picSVG('world','sm')},
+ {s:"Jesus is God's Son.",z:'耶穌是上帝的兒子。',pic:()=>picSVG('son','sm')},
+ {s:"Jesus is God's gift.",z:'耶穌是上帝的禮物。',pic:()=>picSVG('gift','sm')},
+ {s:'God is love.',z:'神就是愛。',pic:()=>picSVG('God','sm')}]
+const SPELL=VOC.map(v=>v.w).filter(w=>/^[a-z]+$/.test(w)&&w.length<=7).map(w=>({w,z:VW[w].z,k:w}))
+const TRACE1=['love','yes','good','big','see','put','son','sky'].filter(w=>/^[abcdefghiklmnoprstuvwxy]+$/.test(w)&&VW[w]).map(w=>({w,z:VW[w].z,n:picSVG(w)}));
+const TRACE2=['star','baby','gift','inn','dream','trip','came','went'].filter(w=>VW[w]).map(w=>({w,z:VW[w].z,n:picSVG(w)}));const TRACE3=['angel','manger','stable','world','long','full','news','born'].filter(w=>VW[w]).map(w=>({w,z:VW[w].z,n:picSVG(w)}));
+
+/* 聽力題的英文句子：可以按「不要顯示句子」藏起來（整次遊戲都記得） */
+function heardHTML(s,shown){return `<div class="heardBox"><div class="heard en ${shown?'show':''} ${G.hideSent?'off':''}" id="heard"><span class="txt">${s}</span><span class="q">❓ ❓ ❓</span></div><button class="tb sm" id="bHide">${G.hideSent?'要顯示句子':'不要顯示句子'}</button></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#bHide');if(!b)return;
+  G.hideSent=!G.hideSent;b.textContent=G.hideSent?'要顯示句子':'不要顯示句子';const h=$('#heard');if(h)h.classList.toggle('off',G.hideSent);FX.pop()});
+/* 「顯示英文」按鍵：平常藏起來，需要時按一下就看得到（整次遊戲都記得） */
+G.peek={};
+function peekHTML(key,text,what){const on=!!G.peek[key];return `<div class="peekBox" data-key="${key}" data-what="${what}"><div class="peek en ${on?'':'off'}">${text}</div><button class="tb sm peekBtn">${on?'不要顯示'+what:'顯示'+what}</button></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.peekBtn');if(!b)return;const box=b.parentNode,k=box.getAttribute('data-key'),w=box.getAttribute('data-what');
+  G.peek[k]=!G.peek[k];box.querySelector('.peek').classList.toggle('off',!G.peek[k]);b.textContent=G.peek[k]?'不要顯示'+w:'顯示'+w;FX.pop();fitCheck()});
+
+/* 誰？什麼？哪裡？ 答案是圖 */
+function whoQ(d){d=d||rnd(WHOQ);const pool=['God','angel','Mary','Joseph','baby Jesus','shepherds','star','Bethlehem','manger','gift','Christmas'];
+  const nm=x=>x==='God'?'God':x;const zh=x=>x==='God'?'上帝':VW[x].z;
+  const opts=shuffle([d[2],...shuffle(pool.filter(x=>x!==d[2])).slice(0,2)]);
+  return {ins:'聽問題，點一下對的圖。',p:`<div class="speech">${d[0]}</div><div class="zhLine">${d[1]}</div>`,lead:[{t:d[0],r:.85,gap:400},{t:d[1],mean:1,gap:400}],cls:'pic',
+    zread:1,o:opts.map(x=>({h:`${picSVG(x)}<span class="zhs">${nm(x)}　${zh(x)}</span>`,z:zh(x),ok:x===d[2],cls:'col'}))}}
+/* 聽句子，找圖 */
+function listenEvQ(){const ks=shuffle(EV.map((_,i)=>i)).slice(0,3),i=ks[0];
+  return {ins:'聽故事的句子，點一下對的圖。',p:`<div class="listen">👂</div>${heardHTML(EV[i][0],1)}`,say:[{t:EV[i][0],r:.8,gap:800},{t:EV[i][1],mean:1}],cls:'pic',
+    o:shuffle(ks).map(k=>({h:`<span style="font-size:clamp(30px,8vmin,46px);line-height:1.2">${evPic(EV[k][2])}</span>`,ok:k===i}))}}
+function tfQ(d){d=d||rnd(TF);
+  return {ins:'這句話和故事一樣嗎？一樣選 True，不一樣選 False。',p:`<div class="speech">${d[0]}</div><div class="zhLine">${d[2]}</div>`,lead:[{t:d[0],r:.85,gap:400},{t:d[2],mean:1,gap:400}],read:1,cls:'sent',
+    o:[{h:'⭕ True',s:'True',ok:d[1]===1},{h:'❌ False',s:'False',ok:d[1]===0}]}}
+function clozeQ(d){d=d||rnd(CLOZE);
+  return {ins:'空格要填哪一個？',p:`<div class="speech">${d[0].replace('____','<u>　　　</u>')}</div><div class="zhLine">${d[3]}</div>`,lead:[{t:d[0].replace('____','blank'),r:.85,gap:400},{t:d[3],mean:1,gap:400}],read:1,cls:'sent',
+    o:shuffle(d[2]).map(x=>({h:x,s:x,ok:x===d[1]}))}}
+/* 考考你：讀一讀，回答問題（中文幫忙） */
+const EX=(ins,p,o,ans,lead,read)=>({ins,p:`<div class="speech" style="font-size:clamp(17px,4.8vmin,26px);line-height:1.5;text-align:left;max-width:92vw">${p}</div>`,
+  lead:lead?[{t:lead,r:.85,gap:500}]:[],read:read===false?0:1,cls:'sent',o:shuffle(o).map(x=>({h:x,s:x,ok:x===ans}))});
+const EXAM=[
+ ()=>EX('讀一讀：天使的名字是什麼？','God sent the loving angel Gabriel to Mary with wonderful news.',['Gabriel','Joseph','Mary'],'Gabriel','God sent the loving angel Gabriel to Mary with wonderful news.'),
+ ()=>EX('讀一讀：馬利亞覺得怎麼樣？',"Though surprised, Mary gracefully accepted God's plan.",['surprised','angry','sleepy'],'surprised',"Though surprised, Mary gracefully accepted God's plan."),
+ ()=>EX('讀一讀：約瑟一開始覺得怎麼樣？','Joseph was initially concerned and unsure what to do.',['concerned','happy','hungry'],'concerned','Joseph was initially concerned and unsure what to do.'),
+ ()=>EX('讀一讀：天使在哪裡向約瑟顯現？','An angel appeared to Joseph in a dream.',['in a dream','in a school','in a park'],'in a dream','An angel appeared to Joseph in a dream.'),
+ ()=>EX('讀一讀：他們為什麼住在馬廄？','Because every inn was full, a kind innkeeper offered them his warm stable.',['Every inn was full.','It was raining.','They liked animals.'],'Every inn was full.','Because every inn was full, a kind innkeeper offered them his warm stable.'),
+ ()=>EX('讀一讀：誰陪著小寶寶耶穌？','In that quiet stable, surrounded by gentle animals, baby Jesus was born.',['gentle animals','many teachers','big monsters'],'gentle animals','In that quiet stable, surrounded by gentle animals, baby Jesus was born.'),
+ ()=>EX('讀一讀：星星在哪裡閃爍？','A bright, beautiful star shone in the night sky to celebrate His arrival.',['in the night sky','in the sea','in the stable'],'in the night sky','A bright, beautiful star shone in the night sky to celebrate His arrival.'),
+ ()=>EX('讀一讀：天使帶來什麼好消息？','Joyful angels shared the good news of peace and love with the shepherds.',['peace and love','candy and cake','rain and snow'],'peace and love','Joyful angels shared the good news of peace and love with the shepherds.'),
+ ()=>EX('讀一讀：牧羊人怎麼歡迎小寶寶？','The shepherds hurried to find the baby and welcomed Him with open hearts.',['with open hearts','with angry faces','with loud music'],'with open hearts','The shepherds hurried to find the baby and welcomed Him with open hearts.'),
+ ()=>EX('讀一讀：耶穌用什麼填滿我們的心？','Jesus came to fill our hearts with endless love and light.',['love and light','water and juice','toys and games'],'love and light','Jesus came to fill our hearts with endless love and light.'),
+ ()=>EX('讀一讀：聖誕節提醒我們什麼？',"His birth is celebrated every Christmas, reminding us of God's great love.",["God's great love",'Chinese New Year','summer vacation'],"God's great love","His birth is celebrated every Christmas, reminding us of God's great love."),
+ ()=>EX('聖誕節的時候要說什麼？','🎄🎁',['Merry Christmas!','Trick or treat!','Happy Chinese New Year!'],'Merry Christmas!',null)];
+/* 故事排順序：選三個事件，照故事先後點 */
+function orderQ(){const st=Math.random()*(EV.length-4)|0,ids=[st,st+1+(Math.random()*2|0)];ids.push(ids[1]+1+(Math.random()*2|0));return {order:ids.filter(i=>i<EV.length)}}
+
+/* ================= 新的單字、片語遊戲 ================= */
+/* 單字接龍：上一個字的最後一個字母，就是下一個字的第一個字母 */
+const CHAIN=[['God','上帝'],['love','愛'],['loves','愛'],['world','世界'],['angel','天使'],['baby','小寶寶'],['son','兒子'],['dream','夢'],['trip','旅程'],['inn','客棧'],
+  ['stable','馬廄'],['manger','馬槽'],['star','星星'],['sky','天空'],['shepherds','牧羊人'],['news','消息'],['gift','禮物'],['big','大的'],['long','長的'],['full','滿的'],
+  ['good','好的'],['yes','是的'],['see','看'],['said','說'],['came','來'],['went','去'],['put','放'],['sent','派'],['born','出生'],['told','告訴'],['you','你'],['stayed','住'],['talked','說話']]
+const CZ={};CHAIN.forEach(c=>CZ[c[0]]=c[1]);
+const cpic=w=>PIC[w]?picSVG(w):PIC[w.toLowerCase()]?picSVG(w.toLowerCase()):w==='loves'?picSVG('love'):w==='told'||w==='talked'?picSVG('said'):w==='sent'?picSVG('angel'):w==='stayed'?picSVG('stable'):'';
+const nextOf=w=>CHAIN.map(c=>c[0]).filter(x=>x!==w&&x[0].toLowerCase()===w[w.length-1].toLowerCase());
+/* 找一條 5 個字的接龍 */
+function makeChain(){/* 故事裡的字 */for(let t=0;t<200;t++){const path=[rnd(CHAIN)[0]];
+  while(path.length<5){const n=nextOf(path[path.length-1]).filter(x=>!path.includes(x));if(!n.length)break;path.push(rnd(n))}
+  if(path.length>=5)return path}return ['sky','yes','said','dream','manger']}
+/* 片語：兩個字合在一起（故事裡的片語） */
+const PHR=[['good','news','好消息'],['big','star','大星星'],['baby','Jesus','小寶寶耶穌'],['long','trip','很遠的路'],["God's",'Son','上帝的兒子'],["God's",'gift','上帝的禮物'],
+  ['took','care','照顧'],['in a','dream','在夢裡'],['in a','manger','在馬槽裡'],['in a','stable','在馬廄裡'],['in the','sky','在天空中'],['the','shepherds','牧羊人'],['loves','you','愛你'],['the','world','世界']]
+const PHPIC={news:'📜',star:'🌟',Jesus:'manger1',trip:'🫏',Son:'👶',gift:'🎁',care:'❤️',dream:'💭',manger:'manger1',stable:'stable',sky:'🌌',shepherds:'shep',you:'💞',world:'🌍'};
+function phraseQ(){const p=rnd(PHR),blankFirst=Math.random()<.5,ans=blankFirst?p[0]:p[1],col=blankFirst?0:1;
+  const opts=shuffle([ans,...shuffle([...new Set(PHR.map(x=>x[col]).filter(x=>x!==ans))]).slice(0,2)]);
+  const show=blankFirst?`<u>　　　</u> ${p[1]}`:`${p[0]} <u>　　　</u>`;
+  return {ins:'片語拼拼樂：兩個字合在一起，選出缺的那個字。',p:`<div style="font-size:clamp(40px,11vmin,64px)">${evPic([PHPIC[p[1]]||'✨'])}</div><div class="speech en" style="font-size:clamp(26px,7vmin,42px)">${show}</div><div class="zhLine">${p[2]}</div>`,
+    lead:[{t:p[2],mean:1,gap:400}],read:1,cls:'sent',o:opts.map(x=>({h:x,s:x,ok:x===ans})),after:`${p[0]} ${p[1]}`}}
+/* 缺了哪個字母？ */
+const MISS=VOC.map(v=>v.w).filter(w=>/^[A-Za-z]+$/.test(w)&&w.length>=3);
+function missQ(w0){const w=w0||rnd(MISS),i=1+(Math.random()*(w.length-1)|0),c=w[i].toLowerCase();
+  const pool='abcdefghijklmnoprstuvwy'.split('').filter(x=>x!==c),opts=shuffle([c,...shuffle(pool).slice(0,2)]);
+  return {ins:'這個字少了一個字母，是哪一個？',p:`${cpic(w)?cpic(w).replace('class="item ','class="item sm '):''}<div class="speech en" style="font-size:clamp(32px,9vmin,56px);letter-spacing:4px">${w.slice(0,i)}<span style="color:var(--red)">_</span>${w.slice(i+1)}</div><div class="zhLine">${CZ[w]||(VW[w]&&VW[w].z)||''}</div>`,
+    lead:[{t:w,gap:400},{t:CZ[w]||(VW[w]&&VW[w].z)||'',mean:1,gap:400}],cls:'tile',o:opts.map(x=>({h:`<span class="en" style="font-size:clamp(28px,8vmin,44px)">${x}</span>`,s:LN(x),ok:x===c})),read:1}}
+
+
+/* 翻牌配對：圖和英文配成一對 */
+const MEMLV={name:'翻牌配對',icon:'🃏',gen:()=>[0,1].map(()=>({mem:shuffle(VOC).slice(0,4)})),show(q){
+  const cards=shuffle(q.mem.flatMap(v=>[{w:v.w,t:'p'},{w:v.w,t:'w'}]));let open=[],done=0,busy=false;
+  P().innerHTML=`<div class="zhLine">翻開兩張牌，圖和英文一樣就配成一對。</div>`;
+  F().innerHTML=`<div class="memGrid">${cards.map((c,i)=>`<button class="mcard" data-i="${i}"><span class="back">⭐</span><span class="face">${c.t==='p'?vocPic(c.w):`<b class="en">${c.w}</b><small>${VW[c.w].z}</small>`}</span></button>`).join('')}</div>`;
+  const bs=$$('.mcard');
+  bs.forEach(b=>b.onclick=()=>{if(busy||G.locked||b.classList.contains('up'))return;const c=cards[+b.dataset.i];b.classList.add('up');FX.pop();hush();say([{t:c.w,gap:200},{t:VW[c.w].z,mean:1}]);open.push(b);
+    if(open.length<2)return;const [x,y]=open;open=[];
+    if(cards[+x.dataset.i].w===cards[+y.dataset.i].w){x.classList.add('ok');y.classList.add('ok');done++;FX.ding();
+      if(done>=q.mem.length){G.locked=true;addStar();celebrate($('.memGrid'));later(()=>say([{t:'全部配對成功！',zh:1}],()=>later(advance,500)),900)}}
+    else{busy=true;later(()=>{FX.boop();x.classList.remove('up');y.classList.remove('up');busy=false},1100)}});
+  begin([instrItem('LM','翻開兩張牌，圖和英文一樣，就配成一對。','翻兩張牌，找一對。')],[])}};
+/* 單字接龍 */
+const CHAINLV={name:'單字接龍',icon:'🐛',gen:()=>[{teach:1},{chain:makeChain()},{chain:makeChain()}],show(q){
+  if(q.teach){runCards([{html:`<div class="chainRow en"><span>star</span>→<span><b>r</b>…</span></div><span class="big" style="font-size:clamp(24px,7vmin,40px)">angel → lamb → baby</span><span class="tip">上一個字的<b style="color:var(--red)">最後一個字母</b>，<br>就是下一個字的<b style="color:var(--red)">第一個字母</b>。<br>angel 最後是 l，下一個字 lamb 用 l 開頭。</span>`,
+    items:[{t:'單字接龍：上一個字的最後一個字母，就是下一個字的第一個字母。',zh:1,gap:300},{t:'angel',gap:200},{t:'最後是',zh:1,gap:150},{t:LN('l'),gap:300},{t:'下一個字',zh:1,gap:150},{t:'lamb',gap:200},{t:'用',zh:1,gap:150},{t:LN('l'),gap:150},{t:'開頭。',zh:1}]}],()=>later(advance,200),'單字接龍');return}
+  const path=q.chain;let k=1;
+  const draw=()=>{const cur=path[k-1],last=cur[cur.length-1];
+    P().innerHTML=`<div class="chainRow en">${path.slice(0,k).map((w,j)=>`<span class="${j===k-1?'cur':''}">${j===k-1?w.slice(0,-1)+`<b>${w.slice(-1)}</b>`:w}</span>`).join('→')}→<span class="q">${last.toLowerCase()}…</span></div><div class="zhLine">下一個字要用 ${last.toLowerCase()} 開頭</div>`;
+    const ans=path[k],bad=shuffle(CHAIN.map(c=>c[0]).filter(x=>x!==ans&&!path.includes(x)&&x[0].toLowerCase()!==last.toLowerCase())).slice(0,2),opts=shuffle([ans,...bad]);
+    F().innerHTML=`<div class="opts">${opts.map(x=>`<button class="opt col" data-ok="${x===ans?1:''}" data-say="${esc(x)}"><span class="cp">${cpic(x)}</span><span class="en">${x}</span><span class="zhs">${CZ[x]}</span></button>`).join('')}</div>`;
+    const bs=$$('#field .opt');G.wrong=0;
+    bs.forEach(b=>b.onclick=()=>{if(G.locked)return;if(!b.dataset.ok){bad1(b);return}
+      hush();FX.pop();k++;if(k>=path.length){G.locked=true;addStar();celebrate($('.chainRow'));
+        P().innerHTML=`<div class="chainRow en">${path.map(w=>`<span>${w}</span>`).join('→')}</div>`;F().innerHTML='';
+        later(()=>say(path.map(w=>({t:w,gap:300})),()=>later(advance,600)),600);return}
+      draw()});
+    begin([instrItem('LC','上一個字的最後一個字母是 '+last.toLowerCase()+'，選出用 '+last.toLowerCase()+' 開頭的字。','選出用 '+last.toLowerCase()+' 開頭的字。'),{t:cur,gap:200},{t:LN(last.toLowerCase()),gap:400}],readOpts(bs))};
+  const bad1=b=>{if(b.classList.contains('no'))return;hush();FX.boop();b.classList.add('no');G.wrong++;if(G.wrong>=2)$$('#field [data-ok="1"]').forEach(e=>e.classList.add('hint'))};
+  draw()}};
+const PHRLV={name:'片語拼拼樂',icon:'🔗',gen:()=>[{teach:1},...Array.from({length:6},phraseQ)],show(q){
+  if(q.teach){runCards([{html:`<span class="pic">${evPic(['⭐'])}</span><span class="big" style="font-size:clamp(26px,7vmin,44px)">bright + star<br>= bright star</span><span class="zh">明亮的 ＋ 星星 ＝ 明亮的星星</span><span class="tip">兩個字合在一起，就變成故事裡的片語。</span>`,
+    items:[{t:'bright',gap:200},{t:'star',gap:300},{t:'bright star',gap:400},{t:'明亮的星星。兩個字合在一起，就變成故事裡的片語。',mean:1}]}],()=>later(advance,200),'片語拼拼樂');return}
+  P().innerHTML='';cardQ(q)}};
+const MISSLV={name:'缺了哪個字母',icon:'🔍',gen:()=>{const w=shuffle(MISS).slice(0,6);let i=0;return w.map(()=>missQ(w[i++]))},show(q){P().innerHTML='';cardQ(q)}};
+/* ================= 上帝的愛：福音句子、經文 ================= */
+const LOVECARDS=[
+ {html:`<span class="pic">${picSVG('God')}${picSVG('love')}</span><span class="big" style="font-size:clamp(30px,9vmin,54px)">God is love.</span><span class="zh">神就是愛。</span><span class="tip">📖 約翰一書 4 章 8 節</span>`,
+  items:[{t:'God is love.',r:.8,gap:500},{t:'神就是愛。',mean:1,gap:400},{t:'God',gap:200},{t:'是上帝，',zh:1,gap:150},{t:'love',gap:200},{t:'是愛。',zh:1}]},
+ {html:`<span class="pic">${picSVG('world')}${picSVG('heart')}</span><span class="big" style="font-size:clamp(20px,5.6vmin,34px)">For God so loved the world,<br>that He gave His one and only Son.</span><span class="zh">神愛世人，甚至將他的獨生子賜給他們。</span><span class="tip">📖 約翰福音 3 章 16 節<br>上帝很愛世界上的每一個人，也很愛你。</span>`,
+  items:[{t:'For God so loved the world, that He gave His one and only Son.',r:.75,gap:500},{t:'神愛世人，甚至將他的獨生子賜給他們。',mean:1,gap:400},{t:'上帝很愛世界上的每一個人，也很愛你。',zh:1}]},
+ {html:`<span class="pic">${picSVG('baby Jesus')}</span><span class="big" style="font-size:clamp(24px,7vmin,42px)">Jesus was born for you.</span><span class="zh">耶穌為你誕生。</span><span class="tip">聖誕節，就是慶祝耶穌誕生的日子。</span>`,
+  items:[{t:'Jesus was born for you.',r:.8,gap:500},{t:'耶穌為你誕生。聖誕節，就是慶祝耶穌誕生的日子。',mean:1}]},
+ {html:`<span class="pic">${picSVG('love')}</span><span class="big" style="font-size:clamp(28px,8vmin,48px)">Jesus loves me.</span><span class="zh">耶穌愛我。</span><span class="tip">不管你開心還是難過，耶穌都愛你。</span>`,
+  items:[{t:'Jesus loves me.',r:.8,gap:500},{t:'耶穌愛我。不管你開心還是難過，耶穌都愛你。',mean:1}]},
+ {html:`<span class="pic">${picSVG('light')}</span><span class="big" style="font-size:clamp(24px,7vmin,42px)">I am the light of the world.</span><span class="zh">我是世界的光。</span><span class="tip">📖 約翰福音 8 章 12 節：這是耶穌說的話。</span>`,
+  items:[{t:'I am the light of the world.',r:.8,gap:500},{t:'我是世界的光。這是耶穌說的話。',mean:1}]},
+ {html:`<span class="pic">${picSVG('friend')}</span><span class="big" style="font-size:clamp(28px,8vmin,48px)">Jesus is my friend.</span><span class="zh">耶穌是我的好朋友。</span>`,
+  items:[{t:'Jesus is my friend.',r:.8,gap:500},{t:'耶穌是我的好朋友。',mean:1}]},
+ {html:`<span class="pic">${picSVG('pray')}</span><span class="big" style="font-size:clamp(24px,7vmin,42px)">I can pray to God.<br>Thank you, God!</span><span class="zh">我可以向上帝禱告。謝謝上帝！</span><span class="tip">禱告就是和上帝說話，什麼時候都可以。</span>`,
+  items:[{t:'I can pray to God. Thank you, God!',r:.8,gap:500},{t:'我可以向上帝禱告。謝謝上帝！禱告就是和上帝說話，什麼時候都可以。',mean:1}]},
+ {html:`<span class="pic">${picSVG('heart')}</span><span class="big" style="font-size:clamp(22px,6.4vmin,38px)">We love Him,<br>because He first loved us.</span><span class="zh">我們愛，因為神先愛我們。</span><span class="tip">📖 約翰一書 4 章 19 節</span>`,
+  items:[{t:'We love Him, because He first loved us.',r:.75,gap:500},{t:'我們愛，因為神先愛我們。',mean:1}]}];
+const LOVEQ=[
+ ['God is ____.','love',['love','worried','full'],'神就是愛。','God'],
+ ['God ____ the world.','loves',['loves','put','stayed'],'神愛世人。','world'],
+ ['God loves the ____.','world',['world','inn','trip'],'神愛世人。','world'],
+ ["Jesus is God's ____.",'Son',['Son','inn','sky'],'耶穌是上帝的兒子。','son'],
+ ["Jesus is God's ____ of love.",'gift',['gift','trip','inn'],'耶穌是上帝愛的禮物。','gift'],
+ ['God loves ____!','you',['you','said','put'],'上帝愛你！','love'],
+ ['The angels told the good ____.','news',['news','inn','star'],'天使說出好消息。','news'],
+ ['Baby Jesus was ____.','born',['born','worried','full'],'小寶寶耶穌誕生了。','born']]
+function loveQ(d){d=d||rnd(LOVEQ);
+  return {ins:'空格要填哪一個？',p:`${picSVG(d[4],'sm')}<div class="speech">${d[0].replace('____','<u>　　　</u>')}</div><div class="zhLine">${d[3]}</div>`,
+    lead:[{t:d[3],mean:1,gap:400},{t:d[0].replace('____','blank'),r:.85,gap:400}],read:1,cls:'sent',o:shuffle(d[2]).map(x=>({h:x,s:x,ok:x===d[1]}))}}
+function vocabLV(name,icon,grp,title){return {name,icon,gen:()=>{const pick=shuffle(VOC.filter(v=>v.g===grp)).slice(0,8);return [{teach:1,pick},...shuffle(pick).slice(0,6).map(v=>({v,pick}))]},show(q){
+  const list=q.pick;
+  if(q.teach){runCards([{html:`<span class="pic">${list.slice(0,3).map(v=>picSVG(v.w)).join('')}</span><span class="zh">${title}：今天要學 8 個單字</span><span class="tip">${list.map(v=>v.z).join('、')}<br>每次玩，學到的單字都不一樣喔！</span>`,items:[{t:title+'。今天要學八個單字：'+list.map(v=>v.z).join('、')+'。',zh:1}]},
+    ...list.map(v=>wordCard(v.n,v.w,v.z,TIPS[v.w]))],()=>later(advance,200),name);return}
+  P().innerHTML=vocPic(q.v.w)+`<div class="zhLine" style="font-size:clamp(22px,6vmin,32px)">${VW[q.v.w].z}</div>`;
+  const o=shuffle([q.v.w,...shuffle(list.map(v=>v.w).filter(x=>x!==q.v.w)).slice(0,2)]);
+  F().innerHTML=`<div class="opts">${optBtns(o.map(x=>({h:x,s:x,ok:x===q.v.w})),'sent')}</div>`;
+  const bs=$$('#field .opt');bs.forEach(b=>b.onclick=()=>b.dataset.ok?good(b):bad(b));
+  begin([instrItem('L4q','看圖，選出對的英文。','選出對的英文。')],readOpts(bs))}}}
+const LV=[
+/* 1 */ {name:'聖誕故事屋',icon:'📖',story:1,gen:()=>[],show(){}},
+/* 💡 */ {name:'故事小教室',icon:'💡',story:1,teach:1,opt:1,gen:()=>[],show(){}},
+vocabLV('故事單字','⭐','s','故事裡的單字'),
+vocabLV('動作和感覺','🏃','a','故事裡的動作和感覺'),
+/* 5 */ {name:'手寫單字',icon:'✍️',gen:()=>[rnd(TRACE1),rnd(TRACE2),rnd(TRACE3)],show(q){
+  traceWord(q,G.qi===0?'這一關要用手指寫英文單字':'',()=>{G.qi++;nextQ()})}},
+
+/* 5 */ {name:'聽音找圖',icon:'👂',gen:()=>shuffle(VOC).slice(0,7).map(v=>({v})),show(q){
+  const w=q.v.w;
+  P().innerHTML=`<div class="listen">👂</div>${peekHTML('lw',w,'英文單字')}`;
+  F().innerHTML=`<div class="opts">${pickO(w).map(x=>`<button class="opt pic col" data-ok="${x===w?1:''}">${vocPic(x)}<span class="zhs">${VW[x].z}</span></button>`).join('')}</div>`;
+  $$('#field .opt').forEach(b=>b.onclick=()=>b.dataset.ok?good(b):bad(b));
+  begin([instrItem('L5','仔細聽英文，點一下對的圖。','點一下對的圖。')],[{t:w,gap:900},{t:w}])}},
+
+MISSLV,
+/* 10 */ {name:'拼字小達人',icon:'🔤',gen:()=>shuffle(SPELL).slice(0,4),show(q){
+  const w=q.w;let k=0;
+  P().innerHTML=`${vocPic(q.k,'sm')}<span class="zhLine">${q.z}</span>${peekHTML('spell',w,'英文單字')}`;
+  F().innerHTML=`<div class="slots en">${w.split('').map((_,i)=>`<span class="slot" id="sl${i}"></span>`).join('')}</div><div class="tiles">${shuffle(w.split('')).map(c=>`<button class="opt tile en" data-c="${c}">${c}</button>`).join('')}</div>`;
+  const mark=()=>{$$('.slot').forEach(s=>s.classList.remove('next'));const s=$('#sl'+k);if(s)s.classList.add('next')};mark();
+  const wordItems=[{t:w,gap:500},{t:q.z,mean:1}];
+  $$('.tile').forEach(b=>b.onclick=()=>{if(G.locked||b.classList.contains('used'))return;
+    if(b.dataset.c!==w[k]){hush();FX.boop();b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),400);G.wrong++;
+      if(G.wrong>=2)$$('.tile').forEach(t=>{if(!t.classList.contains('used')&&t.dataset.c===w[k])t.classList.add('hint')});
+      return}
+    hush();FX.pop();b.classList.add('used');b.classList.remove('hint');const s=$('#sl'+k);s.textContent=w[k];s.classList.add('full');k++;G.wrong=0;mark();
+    if(k<w.length){say([{t:LN(b.dataset.c)}]);return}
+    G.locked=true;addStar();FX.coo();celebrate($('.slots'));
+    later(()=>say([...w.split('').map(c=>({t:LN(c),gap:300})),{t:w,gap:400},{t:q.z,mean:1}],()=>later(advance,600)),700)});
+  begin([instrItem('L10','聽單字，照順序點字母，拼出英文。','拼出這個英文。')],wordItems)}},
+
+CHAINLV,PHRLV,
+/* 9 */ {name:'排句子',icon:'🧩',gen:()=>shuffle([...shuffle(LSENTS).slice(0,2),...shuffle(SENTS).slice(0,3)]),show(q){
+  const toks=q.s.replace(/([?.!])$/,' $1').split(' '),full=q.s,zh=q.z;
+  P().innerHTML=q.pic()+`<div class="zhLine">「${zh}」英文怎麼說？</div>`+peekHTML('sent',full,'英文句子');
+  F().innerHTML=`<div class="sentRow en" id="sr"></div><div class="tiles">${shuffle(toks.map((t,i)=>({t,i}))).map(o=>`<button class="opt wtile en" data-t="${esc(o.t)}">${o.t}</button>`).join('')}</div>`;
+  let k=0;const sr=$('#sr');
+  const need=()=>toks[k],sayTok=t=>/^[.?!]$/.test(t)?null:{t:t.replace(/,$/,'')};
+  $$('.wtile').forEach(b=>b.onclick=()=>{if(G.locked||b.classList.contains('used'))return;
+    if(b.dataset.t!==need()){hush();FX.boop();b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),400);G.wrong++;
+      if(G.wrong>=2)$$('.wtile').forEach(x=>{if(!x.classList.contains('used')&&x.dataset.t===need())x.classList.add('hint')});
+      const s=sayTok(need());if(s)later(()=>say([s]),250);return}
+    hush();FX.pop();b.classList.add('used');b.classList.remove('hint');sr.insertAdjacentHTML('beforeend',`<span>${b.dataset.t}</span>`);k++;G.wrong=0;
+    const s=sayTok(b.dataset.t);if(s)say([s]);
+    if(k>=toks.length){G.locked=true;addStar();celebrate(sr);later(()=>say([{t:full,r:.85,gap:400},{t:zh,mean:1}],()=>later(advance,600)),700)}});
+  begin([instrItem('L9','聽句子，照順序點出英文。','照順序點出英文。')],[{t:full,r:.8,gap:500},{t:zh,mean:1}])}},
+
+{name:'愛我的耶穌',icon:'❤️',gen:()=>[{teach:1},...shuffle(LOVEQ).slice(0,6).map(d=>loveQ(d))],show(q){
+  if(q.teach){runCards(LOVECARDS,()=>later(advance,200),'認識愛我的耶穌');return}
+  P().innerHTML='';cardQ(q)}},
+/* 11 */ {name:'對或錯',icon:'⭕',gen:()=>shuffle(TF).slice(0,6).map(d=>tfQ(d)),show(q){P().innerHTML='';cardQ(q)}},
+/* 12 */ {name:'句子填空',icon:'✏️',gen:()=>shuffle(CLOZE).slice(0,5).map(d=>clozeQ(d)),show(q){P().innerHTML='';cardQ(q)}},
+];
+function mixQ(types){
+  const t=rnd(types);
+  if(t==='listenPic'){const v=rnd(VOC);return {ins:'聽英文，點一下對的圖。',p:`<div class="listen">👂</div>${peekHTML('lw',v.w,'英文單字')}`,say:[{t:v.w,gap:800},{t:v.w}],o:pickO(v.w).map(x=>({h:vocPic(x)+`<span class="zhs">${VW[x].z}</span>`,ok:x===v.w,cls:'col'})),cls:'pic'}}
+  if(t==='lookWord'){const v=rnd(VOC);return {ins:'看圖，選出對的英文。',p:vocPic(v.w,'sm')+`<div class="zhLine">${VW[v.w].z}</div>`,read:1,cls:'sent',o:pickO(v.w).map(x=>({h:x,s:x,ok:x===v.w}))}}
+  if(t==='love')return loveQ();
+  if(t==='tf')return tfQ();
+  if(t==='cloze')return clozeQ();
+  if(t==='chain')return phraseQ();
+  return listenEvQ();
+}
+function cardQ(q,onRight){
+  const box=F();
+  box.innerHTML=`<div class="cq"><div class="cqP">${q.p}</div><div class="opts">${optBtns(q.o,q.cls||'')}</div></div>`;
+  const bs=[...box.querySelectorAll('.opt')];
+  bs.forEach(b=>b.onclick=()=>{if(b.dataset.ok){if(G.locked)return;onRight&&onRight();good(b)}else bad(b)});
+  const lead=[];
+  if(G.mode==='group'){const tm=G.teams[G.turn];$('#instr').textContent=`輪到${tm.n}：${q.ins}`;if(G.qi===0)lead.push({t:'每一組輪流回答，每組三題，答對得一顆星。',zh:1,gap:400});lead.push({t:`輪到${tm.n}`,zh:1,gap:300},{t:q.ins,zh:1,gap:300})}
+  else lead.push(instrItem('mix'+q.ins,q.ins,q.ins));
+  begin(lead,[...(q.lead||[]),...(q.say||[]),...(q.read?readOpts(bs):[]),...(q.zread?bs.map((b,i)=>({t:q.o[i].z,zh:1,gap:500,on:()=>b.classList.add('reading'),off:()=>b.classList.remove('reading')})):[])])}
+
+/* ================= 流程 ================= */
+function startLevel(i){
+  if(LV[i].story){G.run++;hush();setTracing(false);G.lv=i;SP.voice=SP.homeVoice;updVoice();startStory(true,LV[i].teach);return}
+  G.run++;hush();setTracing(false);G.mode='solo';G.lv=i;G.qs=LV[i].gen();G.qi=0;SP.voice=SP.homeVoice;updVoice();
+  show('game',{back:'回闖關地圖',pause:1,stars:1});$('#board').hidden=true;$('#dots').hidden=false;
+  $('#lvTitle').textContent=`第 ${i+1} 關　${LV[i].icon} ${LV[i].name}`;nextQ()}
+function nextQ(){
+  G.locked=false;G.wrong=0;G.onReplay=null;setTracing(false);
+  if(G.qi>=G.qs.length){G.mode==='group'?groupEnd():levelClear();return}
+  $('#dots').innerHTML=G.mode==='group'?'':G.qs.map((_,i)=>`<i class="${i<G.qi?'d':i===G.qi?'c':''}"></i>`).join('');
+  P().innerHTML='';F().querySelectorAll('canvas').forEach(c=>{try{c.width=c.height=0}catch(e){}});F().innerHTML='';
+  if(G.mode==='group'){drawBoard();cardQ(G.qs[G.qi])}else LV[G.lv].show(G.qs[G.qi]);
+  fitCheck()}
+/* 下一關：從剛玩完的那一關往後找還沒過的關；後面都過了，才回頭找前面沒過的關 */
+const nextIdx=()=>{const s=G.lastDone>=0?G.lastDone+1:0;for(let k=0;k<LV.length;k++){const i=(s+k)%LV.length;if(!G.cleared[i]&&!LV[i].opt)return i}return -1};
+function levelClear(){
+  hush();G.cleared[G.lv]=1;G.lastDone=G.lv;const i=G.lv,nx=nextIdx(),last=nx<0;
+  const fin=()=>{FX.fanfare();setTimeout(FX.coo,900);fireworks(last?8:4);
+    const ov=$('#ov'),pn=$('#ovPanel');ov.hidden=false;
+    if(last){pn.innerHTML=`<div class="big">全部過關！</div><div style="width:150px;margin:6px auto">${nativityHouse()}</div><p>⭐ ${G.stars} 顆星星</p><p class="en" style="font-size:22px">Merry Christmas!</p><div class="row"><button class="wb green" id="ovHome">回首頁</button></div>`;
+      say([{t:'全部過關了！你好厲害！',zh:1,gap:400},{t:'Merry Christmas!'}]);$('#ovHome').onclick=goHome;return}
+    pn.innerHTML=`<div class="big">第 ${i+1} 關 過關！</div><div class="trophy">${LV[i].icon}</div><p>⭐ ${G.stars} 顆星星</p><p id="cd">5 秒後進入第 ${nx+1} 關</p><div class="row"><button class="wb green" id="ovNext">馬上開始第 ${nx+1} 關</button><button class="tb back" id="ovMap">回闖關地圖</button></div>`;
+    say([{t:'過關了！',zh:1}]);
+    let c=5;const tick=()=>{c--;const cd=$('#cd');if(c<=0){startLevel(nx);return}if(cd)cd.textContent=`${c} 秒後進入第 ${nx+1} 關`;later(tick,1000)};later(tick,1000);
+    $('#ovNext').onclick=()=>startLevel(nx);$('#ovMap').onclick=()=>showMap(false)};
+  if(LV[i].boss){P().innerHTML=`<div style="width:clamp(140px,34vmin,220px)">${nativityHouse()}</div>`;F().innerHTML=`<div class="speech en" style="font-size:clamp(24px,7vmin,40px)">Merry Christmas! 🌟</div>`;
+    FX.chime();later(()=>say([{t:'跟著星星，找到小寶寶耶穌了！',zh:1,gap:300},{t:'Merry Christmas!'}],()=>later(fin,600)),900);return}
+  fin()}
+
+/* ================= 首頁、地圖 ================= */
+function renderBuddies(){$('#buddies').innerHTML=BUDDIES.map((b,i)=>`<button class="bd ${i===G.buddy?'sel':''}" data-i="${i}">${b.e}<small>${b.n}</small></button>`).join('');
+  $$('.bd').forEach(b=>b.onclick=()=>{G.buddy=+b.dataset.i;store.set('bible1buddy',G.buddy);$$('.bd').forEach(x=>x.classList.toggle('sel',x===b));FX.pop()})}
+const readName=()=>{G.name=$('#nameIn').value.trim().slice(0,8);store.set('bible1name',G.name)};
+function goHome(){G.run++;hush();G.onReplay=null;G.mapTick=null;setTracing(false);G.mode='solo';renderBuddies();$('#nameIn').value=G.name;show('home',{});
+  if(SP.homeVoice)say([{t:'歡迎來到聖誕馬廄！我們要用英文聽耶穌誕生的溫馨故事，認識愛我們的上帝和耶穌。寫上你的名字，選一個好朋友，再按開始闖關。第一關是聖誕故事屋。先聽故事，再認識單字、寫單字，玩單字遊戲，也一起認識愛我們的耶穌喔！',zh:1}])}
+function showMap(auto){
+  G.run++;hush();setTracing(false);G.mode='solo';show('map',{back:'回首頁',stars:1});
+  const portrait=innerWidth<innerHeight;const fa=$('#facade');fa.style.setProperty('--mc',portrait?2:7);fa.classList.toggle('wide',!portrait);
+  $('#roof').innerHTML=`<svg viewBox="0 0 600 90" preserveAspectRatio="none"><path d="M10 88 L300 4 L590 88Z" fill="#d9533c" stroke="${K}" stroke-width="5" stroke-linejoin="round"/></svg>
+    <div style="position:absolute;left:50%;top:14%;height:84%;transform:translateX(-50%)"><svg viewBox="0 0 100 100" style="height:100%;width:auto">${picG('star')}</svg></div>`;
+  const nx=nextIdx(),who=G.name||'小勇士';
+  fa.innerHTML=LV.map((l,i)=>`<button class="win ${G.cleared[i]?'done':''} ${i===nx?'next':''}" data-i="${i}"><span class="num">${i+1}</span><span class="ic">${l.icon}</span><span class="nm">${l.name}</span>${i===nx?`<span class="me">${BUDDIES[G.buddy].e}</span>`:''}</button>`).join('');
+  $$('.win').forEach(b=>b.onclick=()=>{hush();startLevel(+b.dataset.i)});
+  const gb=$('#goNext');
+  if(nx<0){gb.textContent='全部過關！再玩一次';gb.onclick=()=>{G.cleared={};G.lastDone=-1;showMap(true)}}
+  else{gb.textContent=`開始第 ${nx+1} 關`;gb.onclick=()=>{hush();startLevel(nx)};
+    if(auto){let c=3;const lab=()=>gb.textContent=`${c} 秒後開始第 ${nx+1} 關`;const tick=()=>{c--;if(c<=0){startLevel(nx);return}lab();later(tick,1000)};G.mapTick=()=>{G.mapTick=null;lab();later(tick,1000)}}}
+  G.promptItems=[{t:auto?`${who}，這是闖關地圖。聖誕馬廄有十四扇窗，一扇窗就是一關。馬上開始囉！`:'這是闖關地圖。點一下要玩的窗戶，或是按上面的回首頁。',zh:1}];
+  if(!auto)G.mapTick=null;G.onReplay=()=>say(G.promptItems,()=>{if(G.mapTick)later(G.mapTick,300)});G.onReplay();fitCheck()}
+
+/* ================= 暫停、上方按鈕 ================= */
+function replayNow(){hush();if(G.screen==='story'){storyRead();return}if(G.onReplay)G.onReplay();else say(G.promptItems)}
+$('#bPause').onclick=()=>{if(SP.paused)return;SP.paused=true;hush();const ov=$('#ov'),pn=$('#ovPanel');ov.hidden=false;
+  pn.innerHTML=`<div style="width:80px;margin:0 auto">${picSVG('star')}</div><div class="big">休息一下</div><p>好了再按「繼續玩」</p><div class="row"><button class="wb green" id="pGo">繼續玩</button></div>`;
+  $('#pGo').onclick=()=>{ov.hidden=true;SP.paused=false;replayNow()}};
+$('#bBack').onclick=()=>{SP.paused=false;if((G.screen==='game'&&G.mode==='solo')||(G.screen==='story'&&G.fromMap))showMap(false);else goHome()};
+$('#bVoice').onclick=()=>{SP.voice=!SP.voice;updVoice();if(!SP.voice)hush();else replayNow()};
+$('#bAgain').onclick=replayNow;
+$('#bSlow').onclick=()=>{SP.rate=Math.max(.55,+(SP.rate-.15).toFixed(2));replayNow()};
+$('#bFast').onclick=()=>{SP.rate=Math.min(1.45,+(SP.rate+.15).toFixed(2));replayNow()};
+$('#vOn').onclick=()=>{SP.homeVoice=SP.voice=true;updVoice();say([{t:'要語音說明',zh:1}])};
+$('#vOff').onclick=()=>{SP.homeVoice=SP.voice=false;updVoice();hush()};
+$('#nameIn').addEventListener('input',readName);
+</script>
+<script>
+/* ================= 趣味故事屋 ================= */
+function bgSVG(kind){
+  const shed=()=>{let p='';for(let x=86;x<320;x+=18)p+=`<line x1="${x}" y1="86" x2="${x}" y2="196" stroke="#3e2410" stroke-width="2"/>`;let st='';for(let x=50;x<352;x+=12){const y=x<200?84-(x-40)*.36:84-(360-x)*.36;st+=`<line x1="${x}" y1="${y}" x2="${x+3}" y2="${y+10}" stroke="#9a7428" stroke-width="2"/>`}
+    return `<rect x="70" y="80" width="260" height="116" fill="#5a3a1e"/>${p}<rect y="190" width="400" height="50" fill="#e8c35a"/><path d="M20 196 l8 -10 l8 10 l8 -9 l8 9 M340 196 l8 -10 l8 10 l8 -9 l8 9" fill="none" stroke="#c99a10" stroke-width="3"/>
+    <rect x="60" y="74" width="14" height="124" fill="#8a5a2b" stroke="${K}" stroke-width="3"/><rect x="326" y="74" width="14" height="124" fill="#8a5a2b" stroke="${K}" stroke-width="3"/>
+    <path d="M30 88 L200 26 L370 88 L356 96 L200 40 L44 96Z" fill="#c9a24a" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>${st}
+    <rect x="80" y="168" width="44" height="24" rx="4" fill="#e8c35a" stroke="#a88020" stroke-width="2"/><rect x="280" y="168" width="44" height="24" rx="4" fill="#e8c35a" stroke="#a88020" stroke-width="2"/>`};
+  const stars=`<g fill="#fff">${[[30,30],[90,50],[150,20],[230,40],[290,24],[360,50],[60,90],[320,90]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.8"/>`).join('')}</g>`;
+  const night=`<rect width="400" height="240" fill="#1f2f63"/>${stars}`;
+  if(kind==='heaven')return `<defs><radialGradient id="hv" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#fffbe0"/><stop offset="1" stop-color="#ffd98a"/></radialGradient></defs><rect width="400" height="240" fill="url(#hv)"/><g fill="#fff" opacity=".9"><ellipse cx="80" cy="200" rx="90" ry="30"/><ellipse cx="320" cy="205" rx="100" ry="30"/><ellipse cx="200" cy="215" rx="120" ry="30"/></g>`;
+  if(kind==='house')return `<rect width="400" height="240" fill="#e8d8b8"/><g stroke="#cbb08a" stroke-width="2">${[30,60,90,120,150].map(y=>`<line x1="0" y1="${y}" x2="400" y2="${y}"/>`).join('')}</g><rect y="180" width="400" height="60" fill="#b99a6a"/><path d="M280 40 Q310 14 340 40 L340 100 L280 100Z" fill="#9fc6e0" stroke="${K}" stroke-width="4"/><rect x="30" y="150" width="60" height="30" rx="4" fill="#8a5a2b" stroke="${K}" stroke-width="3"/><text x="40" y="150" font-size="30">🏺</text><text x="76" y="150" font-size="22">🪔</text>`;
+  if(kind==='dream')return `<rect width="400" height="240" fill="#2a3a78"/>${stars}<rect y="180" width="400" height="60" fill="#5a4a7a"/><rect x="40" y="160" width="160" height="30" rx="8" fill="#c99566" stroke="${K}" stroke-width="3"/><g fill="#fff" opacity=".85"><circle cx="260" cy="80" r="40"/><circle cx="300" cy="66" r="34"/><circle cx="330" cy="90" r="30"/><circle cx="220" cy="120" r="8"/><circle cx="200" cy="140" r="5"/></g>`;
+  if(kind==='road')return `<rect width="400" height="240" fill="#ffd9a0"/><circle cx="340" cy="50" r="26" fill="#ffb347"/><path d="M0 150 Q120 120 200 150 T400 140 L400 240 L0 240Z" fill="#e8c88e"/><path d="M0 190 Q200 170 400 200" fill="none" stroke="#c9a46a" stroke-width="16"/><text x="40" y="150" font-size="36">🌴</text><g transform="translate(320 92) scale(.6)">${townG()}</g>`;
+  if(kind==='town')return night+`<rect y="170" width="400" height="70" fill="#8a7458"/><g transform="translate(10 80) scale(.95)">${innG(1)}</g><g transform="translate(130 70) scale(1.05)">${townG()}</g><g transform="translate(290 84) scale(.9)">${innG(1)}</g>`;
+  if(kind==='stable')return night+shed();
+  if(kind==='field')return night+`<path d="M0 160 Q120 130 220 160 T400 150 L400 240 L0 240Z" fill="#3f6b45"/>`;
+  if(kind==='christmas')return night+shed()+`<g stroke="#ffe9a0" stroke-width="3" opacity=".55">${[0,1,2,3,4,5,6].map(i=>`<line x1="200" y1="14" x2="${60+i*46}" y2="190"/>`).join('')}</g>`;
+  return night}
+const WHO={donkey:'🫏',cow:'🐄',sheep:'🐑',nar:'📖',baby:'👶'};const FIGS={angel:1,mary:1,joseph:1,shep:1,shep2:1,keeper:1,kneel:1,sleep:1};
+function whoIcon(w){if(w==='sleep')w='joseph';return FIGS[w]?figSVG(w,'1.5em'):(WHO[w]||'📖')}
+var AMB={heaven:[['✨',80,60,16,'tw'],['✨',330,50,14,'tw',1],['🕊️',0,40,18,'cross']],house:[['✨',300,70,14,'tw']],dream:[['✨',280,70,14,'tw'],['⭐',60,40,12,'tw',1]],
+  road:[['🐦',0,40,16,'cross'],['☁️',120,40,26,'drift']],town:[['⭐',200,40,14,'tw']],stable:[['⭐',200,22,26,'tw'],['✨',120,60,14,'tw',1],['✨',290,60,14,'tw']],
+  field:[['✨',100,60,16,'tw'],['✨',300,50,14,'tw',1]],christmas:[['✨',60,40,14,'tw'],['✨',150,60,12,'tw',1],['✨',260,50,14,'tw'],['✨',350,40,12,'tw',1]]};
+function ambSVG(kind){return (AMB[kind]||[]).map(function(a){return '<text class="'+(a[4]==='flake'?'amb flake':'amb amb-'+a[4]+(a[5]?' d2':''))+'" x="'+a[1]+'" y="'+a[2]+'" font-size="'+a[3]+'" text-anchor="middle">'+a[0]+'</text>'}).join('')}
+function propSVG(p,pi){const sz=p[3]||40,cls=`pp ${p[4]?'act':''}`;
+  if(p[0]==='@manger')return `<g data-p="p${pi}" class="${cls}"><g transform="translate(${p[1]-sz/2} ${p[2]-sz}) scale(${sz/100})">${mangerG(p[6]?1:0)}</g></g>`;
+  if(p[0]==='@inn')return `<g data-p="p${pi}" class="${cls}"><g transform="translate(${p[1]-sz/2} ${p[2]-sz}) scale(${sz/100})">${innG(1)}</g></g>`;
+  if(p[0]==='@stable')return `<g data-p="p${pi}" class="${cls}"><g transform="translate(${p[1]-sz/2} ${p[2]-sz}) scale(${sz/100})">${stableG()}</g></g>`;
+  return `<text data-p="p${pi}" class="${cls}" x="${p[1]}" y="${p[2]}" font-size="${sz}" text-anchor="middle">${p[0]}</text>`}
+function sceneSVG(pg){
+  let s=bgSVG(pg.bg)+ambSVG(pg.bg);const props=pg.props||[];
+  props.forEach((p,pi)=>{if(p[5]!=='top')s+=propSVG(p,pi)});
+  (pg.cast||[]).forEach(c=>{const [w,x]=c,dy=c[2]||0,sz=c[3]||54;
+    let body;if(FIGS[w]){const h=(c[3]||54)*1.5,sc=h/90;
+      body=w==='sleep'?`<g transform="translate(${x-45} 200) rotate(-90) scale(.8)">${figG('joseph')}</g>`:`<g transform="translate(${x-30*sc} ${230-90*sc}) scale(${sc})">${w==='kneel'?kneelG():figG(w)}</g>`}
+    else body=`<text x="${x}" y="226" font-size="${sz}" text-anchor="middle">${WHO[w]}</text>`;
+    s+=`<g class="who" data-who="${w}" data-x="${x}"><g transform="translate(0 ${dy})"><g class="idle" style="animation-delay:${-(x%7)*.3}s">${body}</g></g></g>`});
+  props.forEach((p,pi)=>{if(p[5]==='top')s+=propSVG(p,pi)});
+  return `<svg viewBox="0 0 400 240">${s}</svg>`}
+/* 故事 16 句，一句一頁（「祂」寫成「他」） */
+const STORY_ALL=[
+ {n:1,tip:'God 是上帝，love 是愛，world 是世界。',act:[['p0','aSpin'],['p1','aPop',500]],w:'nar',en:EV[0][0],zh:EV[0][1],bg:'heaven',sfx:'harp',props:[['🌍',200,170,70,1],['❤️',260,90,34,1]]},
+ {n:2,tip:'sent 是「派」，angel 是天使。',act:[['angel','aLand'],['mary','aTilt',800]],w:'nar',en:EV[1][0],zh:EV[1][1],bg:'house',sfx:'harp',cast:[['angel',120,-40],['mary',280]]},
+ {n:3,tip:'baby 是小寶寶。',act:[['angel','aBounce'],['p0','aPop',400]],w:'angel',en:EV[2][0],zh:EV[2][1],bg:'house',sfx:'sparkle',cast:[['angel',120,-40],['mary',280]],props:[['👶',205,110,34,1]]},
+ {n:4,tip:"Son 是兒子。God's Son 是上帝的兒子。",act:[['p0','aSpin'],['mary','aStartle',300]],w:'angel',en:EV[3][0],zh:EV[3][1],bg:'house',sfx:'twinkle',cast:[['angel',120,-40],['mary',280]],props:[['✨',205,100,40,1]]},
+ {n:5,tip:'loved 是「愛」。',act:[['mary','aBounce'],['p0','aPop',300]],w:'nar',en:EV[4][0],zh:EV[4][1],bg:'house',sfx:'warm',cast:[['mary',200]],props:[['❤️',200,90,36,1]]},
+ {n:6,tip:'Yes, I will. 是「好，我願意」。',act:[['mary','aProud'],['p0','aPop',300]],w:'mary',en:EV[5][0],zh:EV[5][1],bg:'house',sfx:'sparkle',cast:[['angel',120,-40],['mary',280]],props:[['🙏',330,160,28,1]]},
+ {n:7,tip:'worried 是「擔心的」。',act:[['joseph','aTilt'],['p0','aPop',300]],w:'nar',en:EV[6][0],zh:EV[6][1],bg:'road',sfx:'hmm',cast:[['joseph',200]],props:[['❓',200,100,32,1]]},
+ {n:8,tip:'dream 是夢，talked 是「說話」。',act:[['angel','aFloatUp'],['p0','aFloat']],w:'nar',en:EV[7][0],zh:EV[7][1],bg:'dream',sfx:'dream',cast:[['sleep',150,-20],['angel',300,-100,40]],props:[['💤',150,120,22,1]]},
+ {n:9,tip:'took care of 是「照顧」。',act:[['joseph','aBounce'],['mary','aBounce',200],['p0','aPop',400]],w:'nar',en:EV[8][0],zh:EV[8][1],bg:'house',sfx:'warm',cast:[['joseph',150],['mary',250]],props:[['❤️',200,100,30,1]]},
+ {n:10,tip:'together 是「一起」。Bethlehem 是伯利恆。',act:[['donkey','aRun'],['mary','aRun'],['joseph','aRun']],w:'nar',en:EV[9][0],zh:EV[9][1],bg:'road',sfx:'hoof',cast:[['joseph',100],['donkey',200,0,60],['mary',200,-40,38]]},
+ {n:11,tip:'long 是「長的」，trip 是旅程。',act:[['joseph','aSway'],['p0','aDrip',300]],w:'nar',en:EV[10][0],zh:EV[10][1],bg:'road',sfx:'steps',cast:[['joseph',100],['donkey',200,0,60],['mary',200,-40,38]],props:[['💦',130,110,22,1]]},
+ {n:12,tip:'inn 是客棧，full 是「滿的」。',act:[['keeper','aShake'],['p0','aPop']],w:'nar',en:EV[11][0],zh:EV[11][1],bg:'town',sfx:'knock',cast:[['joseph',60],['mary',120],['keeper',340]],props:[['🚫',95,90,30,1]]},
+ {n:13,tip:'stayed 是「住」，stable 是馬廄。',act:[['cow','aSway'],['sheep','aSway',300]],w:'nar',en:EV[12][0],zh:EV[12][1],bg:'stable',sfx:'warm',cast:[['cow',90,0,46],['mary',150],['joseph',260],['sheep',330,0,40]],props:[['@manger',205,232,70,0,'top',0]]},
+ {n:14,tip:'born 是「出生」。',act:[['p0','aPop'],['cow','aSway',300],['sheep','aSway',500]],w:'nar',en:EV[13][0],zh:EV[13][1],bg:'stable',sfx:'baby',cast:[['cow',90,0,46],['mary',150],['joseph',260],['sheep',330,0,40]],props:[['@manger',205,232,70,1,'top',1]]},
+ {n:15,tip:'put 是「放」，manger 是馬槽。',act:[['mary','aBounce'],['p0','aPop',300]],w:'nar',en:EV[14][0],zh:EV[14][1],bg:'stable',sfx:'lullaby',cast:[['mary',130],['joseph',280]],props:[['@manger',205,232,74,1,'top',1]]},
+ {n:16,tip:'big 是「大的」，star 是星星，sky 是天空。',act:[['p0','aSpin']],w:'nar',en:EV[15][0],zh:EV[15][1],bg:'stable',sfx:'twinkle',cast:[['mary',130],['joseph',280]],props:[['🌟',200,70,52,1],['@manger',205,232,70,0,'top',1]]},
+ {n:17,tip:'shepherds 是牧羊人，good news 是好消息。',act:[['angel','aLand'],['shep','aStartle',600],['shep2','aStartle',700]],w:'nar',en:EV[16][0],zh:EV[16][1],bg:'field',sfx:'choir',cast:[['shep',90],['shep2',170],['sheep',250,0,40],['angel',320,-100,48]]},
+ {n:18,tip:'came 是「來」，see 是「看」。',act:[['shep','aRun'],['shep2','aRun',200]],w:'nar',en:EV[17][0],zh:EV[17][1],bg:'stable',sfx:'steps',cast:[['shep',60],['shep2',130],['mary',310]],props:[['@manger',225,232,64,0,'top',1]]},
+ {n:19,tip:'gift 是禮物。耶穌是上帝送給我們最好的禮物。',act:[['p0','aPop'],['p1','aFloat',300]],w:'nar',en:EV[18][0],zh:EV[18][1],bg:'christmas',sfx:'gift',cast:[['mary',120],['joseph',290]],props:[['🎁',150,110,34,1],['❤️',255,100,32,1],['@manger',205,232,74,0,'top',1]]},
+ {n:20,tip:'God loves you! 上帝愛你！你也可以說：I love you, God!',act:[['angel','aFloat'],['p0','aPop',200],['p1','aPop',500]],w:'nar',en:EV[19][0],zh:EV[19][1],bg:'christmas',sfx:'bells',cast:[['mary',120],['joseph',290],['angel',345,-90,40]],props:[['❤️',150,70,30,1],['💞',250,70,30,1],['@manger',205,232,74,0,'top',1]]}
+];
+let STORY=STORY_ALL;
+const ST={i:0,tok:0,sndUntil:0};
+/* ================= 故事音效（用 WebAudio 現場合成，不用下載音檔） ================= */
+const SFX={
+  /* 豎琴往上滑 */
+  harp(){[523,659,784,1047,1319,1568].forEach((f,i)=>tone(f,i*.12,.9,'sine',.09));return 1.5},
+  sparkle(){[1568,1760,2093,2349,2637].forEach((f,i)=>tone(f,i*.08,.3,'sine',.08));return 1},
+  gasp(){tone(400,0,.4,'sine',.13,800);return .6},
+  hmm(){tone(330,0,.35,'triangle',.11,392);tone(300,.5,.4,'triangle',.1,260);return 1},
+  /* 夢裡的聲音 */
+  dream(){[784,659,523,659,784,1047].forEach((f,i)=>tone(f,i*.22,.6,'sine',.07));return 1.6},
+  warm(){[392,494,587,784].forEach((f,i)=>tone(f,i*.18,.6,'triangle',.1));return 1.2},
+  /* 驢子走路 */
+  hoof(){for(let i=0;i<8;i++){noise(i*.22,.05,.5,800+(i%2)*400);tone(200+(i%2)*60,i*.22,.05,'sine',.1)}return 1.9},
+  knock(){for(let i=0;i<3;i++){noise(i*.28,.06,.8,600);tone(150,i*.28,.08,'sine',.2,90)}tone(330,1.1,.4,'triangle',.1,260);return 1.6},
+  /* 小寶寶出生：輕輕的鈴聲 */
+  baby(){[1047,1319,1568,2093].forEach((f,i)=>tone(f,i*.2,.8,'sine',.08));return 1.6},
+  /* 搖籃曲（〈平安夜〉的開頭幾個音） */
+  lullaby(){[[392,0,.7],[440,.75,.25],[392,1,.5],[330,1.5,1.2]].forEach(([f,t,d])=>tone(f,t,d,'sine',.12));return 2.8},
+  twinkle(){for(let i=0;i<8;i++)tone(1800+(i%3)*400,i*.15,.2,'sine',.06);return 1.4},
+  /* 天使合唱 */
+  choir(){[[523,659,784],[587,698,880],[659,784,1047]].forEach((ch,j)=>ch.forEach(f=>tone(f,j*.6,.9,'sine',.05)));return 2},
+  steps(){for(let i=0;i<8;i++){noise(i*.18,.06,.35,i%2?260:340);tone(70,i*.18,.08,'sine',.1)}return 1.6},
+  gift(){[784,988,1175,1568].forEach((f,i)=>tone(f,i*.1,.4,'sine',.12));return 1},
+  /* 聖誕鈴聲（〈聖誕鈴聲〉的開頭） */
+  bells(){[[659,0],[659,.25],[659,.5],[659,.9],[659,1.15],[659,1.4],[659,1.8],[784,2.05],[523,2.3],[587,2.55],[659,2.8]].forEach(([f,t])=>{tone(f,t,.3,'sine',.12);tone(f*2,t,.15,'sine',.04)});return 3.3}
+};
+function playSfx(cb,cap){const m0=ST.tok;let n=0;
+  const wait=()=>{if(m0!==ST.tok&&cb)return;if(synth&&synth.speaking&&n++<15){try{synth.cancel()}catch(e){}later(wait,100);return}playSfxNow(cb,cap)};wait()}
+function playSfxNow(cb,cap){const k=STORY[ST.i].sfx;doActs();if(!k||!SFX[k]||!ac()){cb&&cb();return}
+  const sc=$('#sScene');sc.classList.remove('snd');void sc.offsetWidth;sc.classList.add('snd');
+  const d=SFX[k]();ST.sndUntil=performance.now()+d*1000;const m=ST.tok;
+  let wt=Math.round(d*1000)+250;if(cap)wt=Math.min(wt,cap);later(()=>{if(m===ST.tok&&cb)cb()},wt);later(()=>sc.classList.remove('snd'),Math.round(d*1000)+250)}
+
+/* 解說裡的英文用英文聲音唸，中文用中文聲音唸 */
+function tipItems(tip){const box=()=>$('#sText .sTip');
+  const parts=tip.split(/([A-Za-z][A-Za-z'’ ,.!?…]*[A-Za-z.!?…]|[A-Za-z])/).map(x=>x.trim()).filter(x=>x&&!/^[，。、「」：；…（）\s]+$/.test(x));
+  return parts.map((x,i)=>{const en=/[A-Za-z]/.test(x);const it=en?{t:x.replace(/…/g,''),r:.85,gap:120}:{t:x,mean:1,gap:120};
+    if(i===0)it.on=()=>{const b=box();b&&b.classList.add('say')};if(i===parts.length-1){it.off=()=>{const b=box();b&&b.classList.remove('say')};it.gap=500}return it})}
+/* 動作音效：角色、道具一動，就有對應的聲音 */
+const lnoise=(t0,d,v,f)=>noise(t0,d,v*1.2,f);
+var ACTSND={
+  aJump:function(){tone(260,0,.22,'triangle',.13,720)},aHop:function(){tone(320,0,.18,'triangle',.11,760)},
+  aBounce:function(){tone(200,0,.15,'sine',.12,420);tone(220,.5,.15,'sine',.1,460)},
+  aStartle:function(){tone(500,0,.28,'sine',.13,1400)},aTilt:function(){tone(330,0,.3,'triangle',.08,420)},
+  aTiptoe:function(){for(var i=0;i<5;i++)tone(900+(i%2)*120,i*.25,.06,'sine',.06)},
+  aHide:function(){tone(700,0,.45,'sine',.08,300)},aProud:function(){tone(523,0,.12,'triangle',.1);tone(784,.12,.22,'triangle',.1)},
+  aShake:function(){for(var i=0;i<4;i++)tone(220+(i%2)*40,i*.1,.08,'square',.035)},
+  aWobble:function(){for(var i=0;i<6;i++)tone(380+(i%2)*70,i*.1,.09,'sine',.06)},
+  aChomp:function(){for(var i=0;i<5;i++){noise(i*.35,.07,.6,700);noise(i*.35+.05,.05,.4,1800)}},
+  aGrowBig:function(){tone(140,0,1.8,'sawtooth',.05,620);tone(280,0,1.8,'sine',.06,1240)},
+  aShrinkBack:function(){tone(1000,0,1.4,'sine',.1,260)},
+  aRun:function(){for(var i=0;i<7;i++){noise(i*.15,.05,.45,300);tone(80,i*.15,.06,'sine',.1)}},
+  aSlip:function(){tone(800,0,.5,'sine',.12,150);noise(.5,.25,.6,400);tone(90,.5,.25,'sine',.18,50)},
+  aCry:function(){for(var i=0;i<3;i++)tone(540-i*30,i*.5,.4,'sine',.09,450-i*30)},
+  aDizzy:function(){for(var i=0;i<7;i++)tone(1500+(i%2)*300,i*.13,.08,'sine',.06)},
+  aFloatUp:function(){lnoise(0,1.6,.4,700);tone(400,0,1.6,'sine',.06,1000)},
+  aLand:function(){tone(700,0,.35,'sine',.08,200);tone(110,.4,.25,'sine',.22,50);noise(.4,.18,.6,300)},
+  aPop:function(){tone(500,0,.1,'sine',.15,1500)},aRise:function(){tone(400,0,.45,'sine',.1,1100)},
+  aSpin:function(){[1568,1760,2093,2637].forEach(function(f,i){tone(f,i*.07,.22,'sine',.07)})},
+  aGiftShake:function(){for(var i=0;i<6;i++)noise(i*.12,.05,.5,4200);tone(988,1,.25,'sine',.12);tone(1319,1.1,.4,'sine',.12)},
+  aGive:function(){noise(0,.35,.35,2500)},aEaten:function(){noise(0,.08,.6,2600);noise(.14,.08,.5,1800);noise(.3,.08,.4,1400)},
+  aWave:function(){tone(1200,0,.1,'sine',.07);tone(1500,.13,.12,'sine',.07)},
+  aDrop:function(){tone(700,0,.45,'sine',.1,200);tone(90,.5,.3,'sine',.24,50);noise(.5,.22,.7,300)},
+  aBall:function(){tone(250,.35,.12,'sine',.18,140);tone(240,.65,.1,'sine',.15,130);tone(230,.95,.08,'sine',.11,120)},
+  aDriveIn:function(){tone(90,0,1,'sawtooth',.05,230);tone(520,1,.12,'triangle',.09);tone(520,1.18,.16,'triangle',.09)},
+  aSlideIn:function(){noise(0,.8,.25,1200)},aFloat:function(){tone(700,0,.6,'sine',.05,950)},
+  aBlowAway:function(){lnoise(0,1.6,.45,900);tone(600,0,1.2,'sine',.05,1500)},
+  aDrip:function(){tone(1300,0,.08,'sine',.09,1900);tone(1200,1,.08,'sine',.08,1800)},
+  aPoint:function(){tone(880,0,.08,'triangle',.07);tone(1100,.1,.08,'triangle',.07)}
+};
+var sndLast={};
+function actSnd(k){try{if(!ACTSND[k]||!ac())return;var now=Date.now();if(sndLast[k]&&now-sndLast[k]<180)return;sndLast[k]=now;ACTSND[k]()}catch(e){}}
+/* 動畫：這一頁的角色、道具照劇本動起來 */
+function doActs(){const pg=STORY[ST.i],m=ST.tok;(pg.act||[]).forEach(a=>{
+  const el=/^p\d$/.test(a[0])?$(`#sScene [data-p="${a[0]}"]`):$(`#sScene .who[data-who="${a[0]}"]`);if(!el)return;
+  setTimeout(()=>{if(m!==ST.tok)return;el.classList.remove('aEnter',a[1]);void el.getBoundingClientRect();el.classList.add(a[1]);actSnd(a[1])},a[2]||0)})}
+/* 進場：上一頁沒有的角色，從旁邊跑進來 */
+function enterCast(i){const prev=i>0?(STORY[i-1].cast||[]).map(c=>c[0]):[];if((STORY[i].cast||[]).some(c=>prev.indexOf(c[0])<0))try{if(ac()){noise(0,.45,.3,1400);tone(300,0,.4,'sine',.05,700)}}catch(e){}
+  $$('#sScene .who').forEach((g,k)=>{const w=g.getAttribute('data-who');if(prev.indexOf(w)>=0)return;
+    g.style.setProperty('--fx',(+g.getAttribute('data-x')<200?-260:260)+'px');g.style.animationDelay=(k*.12)+'s';g.classList.add('aEnter');
+    g.addEventListener('animationend',function f(){g.classList.remove('aEnter');g.style.animationDelay='';g.removeEventListener('animationend',f)})})}
+function storyRead(){
+  const pg=STORY[ST.i],m=++ST.tok,row=$('#sText .sLine'),teach=ST.teach;
+  const talk=on=>$$('#sScene .who').forEach(g=>g.classList.toggle('talk',on&&g.getAttribute('data-who')===pg.w));
+  const narHL=on=>{const b=$('#sText .sNar');b&&b.classList.toggle('say',on)};
+  const first=[],key=teach?'storyT':'story';
+  if(teach&&ST.i===0&&!G.seen[key]){G.seen[key]=1;first.push({t:teach?'歡迎來到故事小教室，我們來學故事裡的英文。':'歡迎來到聖誕故事屋，我們來聽耶穌誕生的故事。',zh:1,gap:400})}
+  const line=[{t:pg.en,r:.8,gap:600,on:()=>{row.classList.add('say');talk(true)},off:()=>talk(false)},{t:pg.zh,mean:1,gap:500,off:()=>row.classList.remove('say')}];
+  const next=()=>later(()=>{if(m!==ST.tok||G.screen!=='story')return;storyGo(1)},teach?1300:500);
+  if(teach){doActs();const nar=pg.nar?[{t:pg.nar,mean:1,gap:300}]:[];say([...first,...nar,...line,...tipItems(pg.tip)],next);return}
+  /* 說故事：音效＋動畫 → 角色說英文 → 中文翻譯，一頁接一頁，中間不插說明 */
+  playSfx(()=>{if(m!==ST.tok)return;say(line,next)},1800)}
+function storyShow(i){
+  G.run++;hush();ST.i=i;const pg=STORY[i];
+  $('#sPage').textContent=`第 ${i+1} 頁 / 共 ${STORY.length} 頁`;
+  $('#sScene').innerHTML=sceneSVG(pg);enterCast(i);
+  $('#sScene').onclick=()=>{if(performance.now()<ST.sndUntil)return;playSfx()};
+  $('#sText').innerHTML=`<div class="sLine one"><span class="sNo">${pg.n||"★"}</span><span class="sWho">${whoIcon(pg.w)}</span><div class="sBody"><div class="sEn2 en">${pg.en.split(' ').map(w=>`<span class="w">${w}</span>`).join(' ')}</div><div class="sZh2">${pg.zh}</div></div></div>${ST.teach?(pg.nar?`<div class="sTip sNar">📖 ${pg.nar}</div>`:'')+`<div class="sTip">💡 ${pg.tip}</div>`:''}`;
+  $$('#sText .w').forEach(sp=>sp.onclick=()=>{ST.tok++;hush();const w=sp.textContent.replace(/[.,!?]/g,'');sp.classList.add('say');say([{t:w,r:.75}],()=>sp.classList.remove('say'))});
+  $('#sPrev').disabled=i===0;$('#sNext').textContent=i===STORY.length-1?'看完了':'下一頁';
+  storyRead();fitCheck()}
+function storyGo(d){const n=ST.i+d;if(n<0)return;if(n>=STORY.length){storyEnd();return}storyShow(n)}
+function storyEnd(){if(G.fromMap){G.run++;hush();if(ST.teach){levelClear();return}storyDone();return}
+  G.run++;hush();FX.fanfare();fireworks(3);const ov=$('#ov'),pn=$('#ovPanel');ov.hidden=false;
+  pn.innerHTML=`<div class="big">故事看完了！</div><div style="width:120px;margin:4px auto">${nativityHouse()}</div><p class="en" style="font-size:20px">God loves us.</p><div class="row"><button class="wb green" id="seMap">去闖關</button><button class="wb gold" id="seAgain">再看一次</button><button class="tb back" id="seHome">回首頁</button></div>`;
+  say([{t:'故事看完了！你可以去闖關，或是再看一次。',zh:1}]);
+  $('#seMap').onclick=()=>goMapBtn();$('#seAgain').onclick=()=>{ov.hidden=true;storyShow(0)};$('#seHome').onclick=goHome}
+/* 故事聽完：不自動進小教室，讓小朋友自己選 */
+function storyDone(){
+  const i=G.lv;G.cleared[i]=1;G.lastDone=i;FX.fanfare();fireworks(3);
+  const ti=LV.findIndex(l=>l.teach),gi=nextIdx(),ov=$('#ov'),pn=$('#ovPanel');ov.hidden=false;
+  pn.innerHTML=`<div class="big">故事聽完了！</div><div style="width:120px;margin:4px auto">${nativityHouse()}</div><p>你想做什麼？</p>
+   <div class="row" style="flex-direction:column;align-items:stretch">${gi>=0?`<button class="wb green" id="sdGame">${LV[gi].icon} 去玩遊戲</button>`:''}<button class="wb gold" id="sdTeach">💡 故事小教室</button><button class="wb gold" id="sdStory">📖 再聽一次故事</button><button class="tb back" id="sdMap">回闖關地圖</button></div>`;
+  const hl=(id,on)=>{const e=$(id);if(e)e.style.outline=on?'5px solid #ff8a00':''};
+  const opts=[[gi>=0?'#sdGame':null,'去玩遊戲'],['#sdTeach','故事小教室'],['#sdStory','再聽一次故事'],['#sdMap','回闖關地圖']].filter(o=>o[0]);
+  say([{t:'故事聽完了！你想做什麼？',zh:1,gap:500},...opts.map(o=>({t:o[1],zh:1,gap:500,on:()=>hl(o[0],1),off:()=>hl(o[0],0)}))]);
+  const close=()=>{ov.hidden=true;hush()};
+  if($('#sdGame'))$('#sdGame').onclick=()=>{close();startLevel(gi)};
+  $('#sdTeach').onclick=()=>{close();startLevel(ti)};
+  $('#sdStory').onclick=()=>{close();startLevel(i)};
+  $('#sdMap').onclick=()=>{close();showMap(false)};
+}
+function startStory(fromMap,teach){G.mode='solo';G.fromMap=!!fromMap;ST.teach=!!teach;STORY=teach?STORY_ALL.filter(p=>p.tip&&!p.noTip):STORY_ALL;
+  show('story',{back:fromMap?'回闖關地圖':'回首頁',pause:1,stars:1});
+  $('.sTop span').textContent=fromMap?`第 ${G.lv+1} 關　${teach?'💡 故事小教室':'📖 聖誕故事屋'}`:'📖 聖誕故事屋';storyShow(0)}
+$('#sPrev').onclick=()=>storyGo(-1);$('#sNext').onclick=()=>storyGo(1);$('#sAgain').onclick=()=>{hush();storyShow(ST.i)};
+
+/* ================= 小組競賽 ================= */
+const TEAMC=['#ffb3c7','#bde0ff','#c8f0a8','#ffe28a'],TEAMN=['第一組','第二組','第三組','第四組'];
+function drawBoard(){$('#board').innerHTML=G.teams.map((t,i)=>`<span class="team ${i===G.turn?'now':''}" style="background:${t.c}">${t.n} ⭐${t.s}</span>`).join('')}
+function groupSetup(){G.run++;hush();const ov=$('#ov'),pn=$('#ovPanel');show('home',{});ov.hidden=false;
+  pn.innerHTML=`<div class="big">小組競賽</div><p>有幾組要比賽？</p><div class="row">${[2,3,4].map(n=>`<button class="wb green" data-n="${n}">${n} 組</button>`).join('')}</div><div class="row"><button class="tb back" id="gCancel">回首頁</button></div>`;
+  say([{t:'小組競賽。有幾組要比賽？',zh:1}]);
+  $$('#ovPanel [data-n]').forEach(b=>b.onclick=()=>{ov.hidden=true;startGroup(+b.dataset.n)});$('#gCancel').onclick=()=>{ov.hidden=true;goHome()}}
+function startGroup(n){
+  G.run++;hush();setTracing(false);G.mode='group';G.teams=Array.from({length:n},(_,i)=>({n:TEAMN[i],c:TEAMC[i],s:0}));G.turn=0;G.qi=0;
+  const types=['listenPic','lookWord','love','tf','cloze','listenEv'];G.qs=Array.from({length:n*3},(_,i)=>mixQ([types[i%types.length]]));G.qs=shuffle(G.qs);
+  show('game',{back:'回首頁',pause:1});$('#lvTitle').textContent='🏆 小組競賽';$('#dots').hidden=true;$('#board').hidden=false;
+  nextQ()}
+function groupEnd(){hush();FX.fanfare();fireworks(5);
+  const rk=G.teams.slice().sort((a,b)=>b.s-a.s),top=rk[0].s,win=rk.filter(t=>t.s===top);
+  const ov=$('#ov'),pn=$('#ovPanel');ov.hidden=false;
+  pn.innerHTML=`<div class="big">比賽結束！</div><div class="rank">${rk.map((t,i)=>`<div style="background:${t.c};border:3px solid ${K};border-radius:14px;padding:6px 12px;margin:5px 0;font-weight:900;font-size:20px">${['🥇','🥈','🥉','🏅'][i]} ${t.n}　⭐ ${t.s}</div>`).join('')}</div><div class="row"><button class="wb green" id="gAgain">再比一次</button><button class="tb back" id="gHome">回首頁</button></div>`;
+  say([{t:win.length>1?`${win.map(t=>t.n).join('和')}一樣多，都是冠軍！`:`${win[0].n}得到冠軍！大家都很棒！`,zh:1}]);
+  $('#gAgain').onclick=()=>{ov.hidden=true;startGroup(G.teams.length)};$('#gHome').onclick=goHome}
+
+/* ================= 換到瀏覽器（LINE、Facebook 裡面） ================= */
+const QK=['go','lv','nm','bd','openExternalBrowser'];
+function extUrl(extra){const u=new URL(location.href.split('#')[0]);QK.forEach(k=>u.searchParams.delete(k));
+  if(extra)Object.keys(extra).forEach(k=>{const v=extra[k];if(v!==undefined&&v!==null&&v!=='')u.searchParams.set(k,v)});return u.toString()}
+const toChrome=u=>{location.href='intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end'};
+function openExt(extra){extra=Object.assign({nm:G.name,bd:G.buddy},extra||{});const u=extUrl(extra);
+  if(/\bLine\//i.test(UA)){location.href=u+(u.indexOf('?')<0?'?':'&')+'openExternalBrowser=1';return}
+  if(/Android/i.test(UA)){toChrome(u);return}
+  extHelp(u)}
+function extHelp(u){const ios=/iPhone|iPad|iPod/i.test(UA),ov=$('#ov'),pn=$('#ovPanel');ov.hidden=false;
+  pn.innerHTML=`<div style="font-size:48px">🌐</div><div class="big">請用瀏覽器開啟</div><p style="line-height:1.8">${ios?'請按畫面右下角或右上角的「⋯」或「分享」，<br>選「用 Safari 開啟」。':'請按右上角的「⋮」，選「用瀏覽器開啟」。'}<br>也可以按「複製網址」，貼到 Safari 或 Chrome。</p><div class="row"><button class="wb green" id="ehc">複製網址</button><button class="tb back" id="ehx">先在這裡玩</button></div>`;
+  $('#ehc').onclick=()=>{const ok=()=>{$('#ehc').textContent='網址已複製'};
+    try{navigator.clipboard.writeText(u).then(ok,()=>prompt('請複製這個網址',u))}catch(e){prompt('請複製這個網址',u)}};
+  $('#ehx').onclick=()=>{G.stayHere=true;ov.hidden=true;if(G.screen==='home')showMap(true)}}
+
+/* ================= 首頁按鈕、封面、開機 ================= */
+function goMapBtn(){readName();hush();if(INAPP&&!G.stayHere){openExt({go:'start'});return}showMap(true)}
+$('#goMap').onclick=goMapBtn;
+$('#goGroup').onclick=()=>{readName();groupSetup()};
+$('#coverHouse').innerHTML=nativityHouse();
+let needUnlock=false;
+document.addEventListener('click',e=>{if(!needUnlock)return;needUnlock=false;
+  if(e.target.closest&&e.target.closest('button'))return;
+  setTimeout(()=>{if(G.screen==='map'||G.screen==='game'){hush();G.onReplay?G.onReplay():say(G.promptItems)}},150)},{capture:true});
+(function boot(){
+  let q;try{q=new URLSearchParams(location.search)}catch(e){q=null}
+  const go=q&&q.get('go'),failed=q&&LINEISH&&q.get('openExternalBrowser')!==null;
+  if(q&&q.get('nm')!==null){G.name=q.get('nm').slice(0,8);store.set('bible1name',G.name)}
+  if(q&&q.get('bd')!==null&&BUDDIES[+q.get('bd')]){G.buddy=+q.get('bd');store.set('bible1buddy',G.buddy)}
+  const lv=q?Math.max(0,Math.min(LV.length-1,+q.get('lv')||0)):0;
+  try{const u=new URL(location.href);QK.forEach(k=>u.searchParams.delete(k));history.replaceState(null,'',u.toString())}catch(e){}
+  updVoice();
+  if(failed){const ex={go};if(go==='trace')ex.lv=lv;show('home',{});renderBuddies();$('#nameIn').value=G.name;
+    const u=extUrl(Object.assign({nm:G.name,bd:G.buddy},ex));if(/Android/i.test(UA))toChrome(u);else extHelp(u);return}
+  if(go&&!INAPP&&(go==='start'||go==='trace')){needUnlock=true;
+    if(go==='trace'){for(let i=0;i<lv;i++)G.cleared[i]=1;startLevel(lv)}else showMap(true);return}
+  show('cover',null);
+  let done=false;const start=()=>{if(done)return;done=true;goHome()};
+  $('#cover').onclick=start;
+})();
+</script>
+</body>
+</html>
