@@ -485,7 +485,8 @@ function zhSpoken(s){return String(s).replace(/數綿羊/g,'鼠綿羊').replace(
 function enSpoken(s){return String(s).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}️‍]/gu,'').replace(/—/g,', ').replace(/_{2,}/g,' blank ').replace(/\s+/g,' ')}
 // vEn：一般英文聲音；vGirl：說故事用的英文女聲（再把音調調高，聽起來像外國小女孩）；vZh：國語聲音
 const TTS={ok:'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='undefined',gen:0,vEn:null,vGirl:null,vZh:null,
-  stop(){this.gen++;try{this.ok&&speechSynthesis.cancel()}catch(e){}},
+  // 停止語音；如果剛剛有在唸，記下停止的時間（Safari 剛停完馬上再唸會沒有聲音，要等一下）
+  stop(){try{if(this.ok&&(speechSynthesis.speaking||speechSynthesis.pending))this.cut=Date.now()}catch(e){}this.gen++;try{this.ok&&speechSynthesis.cancel()}catch(e){}},
   est(t,en){return Math.max(450,String(t).length*(en?78:260)/S.rate)},
   // 唸一段話：en=英文、girl=用小女孩的聲音（只有說故事用）、onB=唸到哪個字的通知、rm=速度倍數
   one(text,en,gen,done,onB,rm,girl){
@@ -547,7 +548,7 @@ function speakSeq(items,onAll,gap){
     TTS.one(txt,en,gen,done,hl?hl.b:null,it.rm,it.girl);
   };
   st.next=next;if(CLK.paused){CLK.pend.push(()=>{if(gen===TTS.gen)next()});return}
-  if(busy)setTimeout(()=>{if(gen===TTS.gen)next()},160);else next();   // Safari 要等一下，不然新的話會被吃掉
+  if(busy||Date.now()-(TTS.cut||0)<400)setTimeout(()=>{if(gen===TTS.gen)next()},220);else next();   // Safari 要等一下，不然新的話會被吃掉
 }
 function sayEn(w,then){speakSeq([{t:w,en:true}],then)}
 function hush(){try{if(TTS.ok){speechSynthesis.pause();speechSynthesis.cancel()}}catch(e){}}
