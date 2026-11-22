@@ -603,10 +603,16 @@ const TTS={ok:'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='un
 function pickVoices(){
   if(!TTS.ok)return;let vs=[];try{vs=speechSynthesis.getVoices()||[]}catch(e){}
   const L=v=>(v.lang||'').replace('_','-');
-  TTS.vEn=vs.find(v=>/^en-US/i.test(L(v))&&/Samantha|Google US|Jenny|Aria|Ava|Allison|Zira/i.test(v.name))||vs.find(v=>/^en-US/i.test(L(v)))||vs.find(v=>/^en/i.test(L(v)))||null;
-  // 說故事的小女孩聲音：優先找英文女聲（Safari／Mac 常見 Samantha、Ava、Allison；Windows 常見 Zira、Jenny、Aria）
-  TTS.vGirl=vs.find(v=>/^en/i.test(L(v))&&/child|kid|junior/i.test(v.name))||vs.find(v=>/^en-US/i.test(L(v))&&/Samantha|Ava|Allison|Susan|Zoe|Nicky|Jenny|Aria|Ana|Zira|Google US English|Female/i.test(v.name))||vs.find(v=>/^en-(GB|AU|IE)/i.test(L(v))&&/Karen|Moira|Kate|Serena|Fiona|Tessa|Female/i.test(v.name))||TTS.vEn;
-  TTS.vZh=vs.find(v=>/^zh-TW/i.test(L(v)))||vs.find(v=>/^zh/i.test(L(v))&&/Taiwan|台灣|臺灣|Mei-?Jia|Hanhan|Yating/i.test(v.name))||vs.find(v=>/^(zh-CN|cmn)/i.test(L(v)))||null;
+  // iPhone 新版系統多了很多「特效聲音」（Eddy、Flo、Grandma、Rocko…），聽起來模糊、像機器人，一律不用
+  const BADV=/eloquence|speech\.synthesis\.voice|Eddy|Flo\b|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Kathy|Ralph|奶奶|爺爺/i;
+  const ok=v=>!BADV.test((v.voiceURI||'')+' '+v.name);
+  // 打分數：名字對、加強版（enhanced／premium）、裝在手機上的，分數比較高
+  const best=(langRe,goodRe)=>{let b=null,bs=-1;vs.forEach(v=>{if(!langRe.test(L(v))||!ok(v))return;
+    let s=1;if(goodRe&&goodRe.test(v.name))s+=10;if(/premium|enhanced|高品質|增強/i.test((v.voiceURI||'')+v.name))s+=5;if(v.localService)s+=1;
+    if(s>bs){bs=s;b=v}});return b};
+  TTS.vEn=best(/^en-US/i,/Samantha|Google US|Jenny|Aria|Ava|Allison|Zira|Nicky|Susan/i)||best(/^en/i)||null;
+  TTS.vGirl=TTS.vEn;
+  TTS.vZh=best(/^zh-TW/i,/Mei-?Jia|美佳|Hanhan|Yating|Taiwan|台灣|臺灣/i)||best(/^(zh-CN|cmn)/i,/Ting-?Ting|婷婷|Lili|Xiaoxiao/i)||null;
 }
 if(TTS.ok){pickVoices();try{speechSynthesis.addEventListener('voiceschanged',pickVoices)}catch(e){try{speechSynthesis.onvoiceschanged=pickVoices}catch(e2){}}}
 
