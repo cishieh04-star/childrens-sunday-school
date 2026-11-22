@@ -520,6 +520,17 @@ svg.scn .lbl{font-family:"Comic Sans MS","Chalkboard SE","Arial Rounded MT Bold"
    要改故事內容：改下面的 STORY；要改考的單字：改 GV、SPELL、FILL；經文：改 LOVE
    ===================================================================== */
 'use strict';
+/* 從 LINE 打開時：自動改用手機的瀏覽器（Safari／Chrome）打開，LINE 裡面的瀏覽器常常沒有語音 */
+(function(){try{const ua=navigator.userAgent||'';if(/\bLine\//i.test(ua)&&!/openExternalBrowser=1/.test(location.search)){location.replace(location.href.replace(/#.*$/,'')+(location.search?'&':'?')+'openExternalBrowser=1'+location.hash)}}catch(e){}})();
+/* 手機唸不出聲音時，出現提醒（給大人看） */
+function ttsWarn(){
+  if(ttsWarn.shown||!S.voice)return;ttsWarn.shown=true;
+  const inApp=/\bLine\/|FBAN|FBAV|Instagram|MicroMessenger|; wv\)/i.test(navigator.userAgent||'');
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;left:3%;right:3%;bottom:3%;z-index:99;background:#fff8d6;color:#1d2b3a;border:3px solid #f0c040;border-radius:16px;padding:12px 14px;font-size:16px;line-height:1.5;box-shadow:0 6px 18px #0006;font-weight:700';
+  d.innerHTML='🔇 <b>這台手機現在沒有唸出聲音</b><br>'+(inApp?'👉 請不要在 LINE／Facebook 裡面打開。請按右上角「⋯」，選「用瀏覽器開啟」。<br>':'')+
+    '👉 請檢查：手機音量（媒體音量）有開大、iPhone 側邊的靜音鍵沒有打開。<br>👉 建議用 <b>Chrome</b>（安卓）或 <b>Safari</b>（iPhone）打開。<br><button style="margin-top:8px;padding:6px 18px;border-radius:12px;background:#ffd54f;font-weight:900;font-size:16px">知道了</button>';
+  d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d)}
 /* ================= 基本工具 ================= */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
@@ -555,19 +566,22 @@ const TTS={ok:'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='un
   stop(){try{if(this.ok&&(speechSynthesis.speaking||speechSynthesis.pending))this.cut=Date.now()}catch(e){}this.gen++;try{this.ok&&speechSynthesis.cancel()}catch(e){}},
   est(t,en){return Math.max(450,String(t).length*(en?78:260)/S.rate)},
   // 唸一段話：en=英文、girl=用小女孩的聲音（只有說故事用）、onB=唸到哪個字的通知、rm=速度倍數
-  one(text,en,gen,done,onB,rm,girl){
+  one(text,en,gen,done,onB,rm,girl,_try){
     if(gen!==this.gen)return;
     let fin=false;const f=()=>{if(fin)return;fin=true;clearTimeout(tm);done&&done()};
     const est=this.est(text,en)/(rm||1);
     const tm=setTimeout(f,est*1.8+1400);
+    // 有些安卓手機：選好的聲音不能用、或語音引擎卡住 → 先停掉，改用手機預設的聲音再唸一次
+    const retry=()=>{if(fin||gen!==this.gen)return;fin=true;clearTimeout(tm);try{speechSynthesis.cancel()}catch(e){}setTimeout(()=>this.one(text,en,gen,done,onB,rm,girl,1),300)};
     try{
-      const u=new SpeechSynthesisUtterance(text);u.lang=en?'en-US':'zh-TW';const v=en?this.vEn:this.vZh;if(v)u.voice=v; // 說故事也用原本的英文聲音（小孩聲音效果不理想，已取消）
+      const u=new SpeechSynthesisUtterance(text);u.lang=en?'en-US':'zh-TW';const v=en?this.vEn:this.vZh;if(v&&!_try)u.voice=v;
       u.rate=Math.max(.3,S.rate*(rm||1)*(en?.95:1));u.pitch=1;
-      let st0=false;u.onstart=()=>{st0=true;onB&&onB(-1)};u.onend=f;u.onerror=f;
+      let st0=false;u.onstart=()=>{st0=true;TTS.fail=0;onB&&onB(-1)};u.onend=f;
+      u.onerror=e=>{const er=e&&e.error||'';if(!st0&&!_try&&!/interrupted|canceled/.test(er))return retry();f()};
       if(onB)u.onboundary=e=>{if(gen===this.gen&&(!e.name||e.name==='word'))onB(e.charIndex)};
-      try{if(speechSynthesis.paused)speechSynthesis.resume()}catch(e){}TTS.spoke=(TTS.spoke||0)+1;speechSynthesis.speak(u);
-      setTimeout(()=>{if(!st0&&!fin&&gen===this.gen){clearTimeout(tm);setTimeout(f,Math.max(400,est*.8))}},2500);
-    }catch(e){clearTimeout(tm);setTimeout(f,est)}
+      try{if(!IOS||speechSynthesis.paused)speechSynthesis.resume()}catch(e){}TTS.spoke=(TTS.spoke||0)+1;speechSynthesis.speak(u);
+      setTimeout(()=>{if(!st0&&!fin&&gen===this.gen){if(!_try)return retry();TTS.fail=(TTS.fail||0)+1;ttsWarn();clearTimeout(tm);setTimeout(f,Math.max(400,est*.8))}},2500);
+    }catch(e){clearTimeout(tm);ttsWarn();setTimeout(f,est)}
   }
 };
 function pickVoices(){
@@ -603,6 +617,7 @@ function wordHL(W,txt,alive,rm){ // W：每個字的位置
 const SP={paused:false,cur:null,frz:false};
 // 依序唸出 items；按「暫停」會停在這一句，按「繼續」從這一句重新唸
 function speakSeq(items,onAll,gap){
+  if(S.voice&&!TTS.ok)ttsWarn();
   let busy=false;try{busy=TTS.ok&&(speechSynthesis.speaking||speechSynthesis.pending)}catch(e){}
   TTS.stop();const gen=TTS.gen;gap=gap==null?300:gap;
   items=(items||[]).filter(Boolean).map(x=>typeof x==='string'?{t:x}:x);
