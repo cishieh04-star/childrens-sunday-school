@@ -562,10 +562,10 @@ const TTS={ok:'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='un
     const tm=setTimeout(f,est*1.8+1400);
     try{
       const u=new SpeechSynthesisUtterance(text);u.lang=en?'en-US':'zh-TW';const v=en?this.vEn:this.vZh;if(v)u.voice=v; // 說故事也用原本的英文聲音（小孩聲音效果不理想，已取消）
-      u.rate=Math.max(.3,S.rate*(rm||1)*(en?.95:1));u.pitch=1.05;
+      u.rate=Math.max(.3,S.rate*(rm||1)*(en?.95:1));u.pitch=1;
       let st0=false;u.onstart=()=>{st0=true;onB&&onB(-1)};u.onend=f;u.onerror=f;
       if(onB)u.onboundary=e=>{if(gen===this.gen&&(!e.name||e.name==='word'))onB(e.charIndex)};
-      try{speechSynthesis.resume()}catch(e){}speechSynthesis.speak(u);
+      try{if(speechSynthesis.paused)speechSynthesis.resume()}catch(e){}TTS.spoke=(TTS.spoke||0)+1;speechSynthesis.speak(u);
       setTimeout(()=>{if(!st0&&!fin&&gen===this.gen){clearTimeout(tm);setTimeout(f,Math.max(400,est*.8))}},2500);
     }catch(e){clearTimeout(tm);setTimeout(f,est)}
   }
@@ -617,7 +617,7 @@ function speakSeq(items,onAll,gap){
   if(busy||Date.now()-(TTS.cut||0)<400)setTimeout(()=>{if(gen===TTS.gen)next()},220);else next();   // Safari 要等一下，不然新的話會被吃掉
 }
 function sayEn(w,then){speakSeq([{t:w,en:true}],then)}
-function hush(){try{if(TTS.ok){speechSynthesis.pause();speechSynthesis.cancel()}}catch(e){}}
+function hush(){try{if(TTS.ok){if(!IOS)speechSynthesis.pause();speechSynthesis.cancel()}}catch(e){}}
 function spPause(){
   SP.paused=true;document.body.classList.add('sp-paused');if(!CLK.paused){CLK.paused=true;SP.frz=true}
   const c=SP.cur;if(c){c.ep++;c.waiting=true;c.hl&&c.hl.kill()}hush();
@@ -626,7 +626,7 @@ function spPause(){
 function spResume(){
   SP.paused=false;clearInterval(SP.iv);document.body.classList.remove('sp-paused');
   if(SP.frz){SP.frz=false;CLK.paused=false;const q=CLK.pend;CLK.pend=[];setTimeout(()=>q.forEach(f=>f()),200)}
-  const c=SP.cur;if(c&&c.waiting&&c.gen===TTS.gen){c.waiting=false;try{TTS.ok&&speechSynthesis.resume()}catch(e){}setTimeout(()=>{if(SP.cur===c&&!SP.paused&&c.gen===TTS.gen)c.next()},180)}
+  const c=SP.cur;if(c&&c.waiting&&c.gen===TTS.gen){c.waiting=false;try{TTS.ok&&speechSynthesis.paused&&speechSynthesis.resume()}catch(e){}setTimeout(()=>{if(SP.cur===c&&!SP.paused&&c.gen===TTS.gen)c.next()},180)}
   spSync();
 }
 function spUnpause(){if(SP.paused){SP.paused=false;clearInterval(SP.iv);document.body.classList.remove('sp-paused');if(SP.frz){SP.frz=false;CLK.paused=false;CLK.pend=[]}}spSync()}
@@ -658,24 +658,49 @@ document.addEventListener('click',e=>{
 
 /* ================= 音效 ================= */
 let AC=null;
-function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')try{AC.resume()}catch(e){}return AC}
+/* iPhone 修正：
+   1. 所有音效先經過「總音量＋壓縮器」，好幾個聲音疊在一起時不會爆音、沙沙聲
+   2. iPhone 唸完語音後，音效引擎的取樣率會跑掉（聲音變尖、變沙、變機器人），所以唸過語音後，下次點螢幕時重新建立音效引擎
+   3. 音效引擎被語音打斷（interrupted）時，先不排音效，免得恢復時一大堆音效同時擠出來 */
+const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let ACOUT=null,AC_SPK=0,AC_LAST=0,AC_BAD=0;
+function acMake(){
+  try{if(AC&&AC.state!=='closed')AC.close()}catch(e){}
+  AC=null;ACOUT=null;
+  try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){return null}
+  try{const comp=AC.createDynamicsCompressor();comp.threshold.value=-14;comp.knee.value=12;comp.ratio.value=8;comp.attack.value=.003;comp.release.value=.2;
+    const mg=AC.createGain();mg.gain.value=.8;mg.connect(comp);comp.connect(AC.destination);ACOUT=mg}catch(e){ACOUT=AC.destination}
+  AC_SPK=TTS.spoke||0;AC_BAD=0;
+  try{const b=AC.createBuffer(1,1,AC.sampleRate),s=AC.createBufferSource();s.buffer=b;s.connect(AC.destination);s.start(0)}catch(e){}   // iPhone 解鎖音效
+  try{AC.resume()}catch(e){}
+  return AC}
+function ac(){
+  if(!AC||AC.state==='closed')acMake();if(!AC)return null;
+  if(AC.state!=='running'){try{AC.resume()}catch(e){}if(!AC_BAD)AC_BAD=Date.now();return Date.now()-AC_BAD<400?AC:null}
+  AC_BAD=0;return AC}
+// 在小朋友點螢幕的那一刻（iPhone 只允許這時候開聲音），必要時重新建立音效引擎
+function acGesture(){
+  if(!IOS){ac();return}
+  const stale=!AC||AC.state==='closed'||AC.state==='interrupted'||((TTS.spoke||0)!==AC_SPK&&Date.now()-AC_LAST>800);
+  if(stale)acMake();else if(AC.state!=='running')try{AC.resume()}catch(e){}}
+['touchend','pointerup','click'].forEach(t=>document.addEventListener(t,acGesture,true));
 function tone(f,t0,d,type,vol,slide){
   const c=ac();if(!c||!S.sfx)return;
   const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,c.currentTime+t0);
   if(slide)o.frequency.exponentialRampToValueAtTime(slide,c.currentTime+t0+d);
   g.gain.setValueAtTime(0.0001,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(vol||0.15,c.currentTime+t0+0.02);g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+t0+d);
-  o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+0.05);
+  AC_LAST=Date.now();o.connect(g);g.connect(ACOUT||c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+0.05);
 }
 function noise(t0,d,vol,hp){
   const c=ac();if(!c||!S.sfx)return;
   const b=c.createBuffer(1,Math.floor(c.sampleRate*d),c.sampleRate),da=b.getChannelData(0);for(let i=0;i<da.length;i++)da[i]=(Math.random()*2-1)*(1-i/da.length);
   const s=c.createBufferSource();s.buffer=b;const g=c.createGain();g.gain.value=vol||0.2;const f=c.createBiquadFilter();f.type='highpass';f.frequency.value=hp||800;
-  s.connect(f);f.connect(g);g.connect(c.destination);s.start(c.currentTime+t0);
+  AC_LAST=Date.now();s.connect(f);f.connect(g);g.connect(ACOUT||c.destination);s.start(c.currentTime+t0);
 }
 const SFX={
   ok(){tone(784,0,.12,'triangle',.16);tone(988,.1,.12,'triangle',.16);tone(1319,.2,.25,'triangle',.16)},
   bad(){tone(220,0,.22,'sine',.12,130)},
-  tap(){tone(880,0,.05,'square',.04)},
+  tap(){tone(880,0,.05,'triangle',.06)},
   bell(){[1568,1760,1568,1319].forEach((f,i)=>{tone(f,i*.12,.3,'triangle',.12);tone(f*2,i*.12,.15,'sine',.04)})},
   jingle(){[659,659,659,0,659,659,659,0,659,784,523,587,659].forEach((f,i)=>{if(f)tone(f,i*.16,.18,'triangle',.14)})},
   floor(){SFX.bell();tone(1047,.6,.3,'triangle',.15)},
@@ -994,7 +1019,7 @@ var ACTSND={
   aStartle:function(){tone(500,0,.28,'sine',.13,1400)},aTilt:function(){tone(330,0,.3,'triangle',.08,420)},
   aTiptoe:function(){for(var i=0;i<5;i++)tone(900+(i%2)*120,i*.25,.06,'sine',.06)},
   aHide:function(){tone(700,0,.45,'sine',.08,300)},aProud:function(){tone(523,0,.12,'triangle',.1);tone(784,.12,.22,'triangle',.1)},
-  aShake:function(){for(var i=0;i<4;i++)tone(220+(i%2)*40,i*.1,.08,'square',.035)},
+  aShake:function(){for(var i=0;i<4;i++)tone(220+(i%2)*40,i*.1,.08,'triangle',.05)},
   aWobble:function(){for(var i=0;i<6;i++)tone(380+(i%2)*70,i*.1,.09,'sine',.06)},
   aChomp:function(){for(var i=0;i<5;i++){noise(i*.35,.07,.6,700);noise(i*.35+.05,.05,.4,1800)}},
   aGrowBig:function(){tone(140,0,1.8,'sawtooth',.05,620);tone(280,0,1.8,'sine',.06,1240)},
